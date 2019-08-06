@@ -1,0 +1,259 @@
+.inline-block {
+    display: inline-block;
+}
+
+.anime-url {
+    text-decoration: none;
+}
+
+.subheading {
+    padding: 4px 0;
+    color: #fff;
+}
+
+.metadata-line {
+    color: #999;
+}
+
+.lightbox {
+    box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
+    background-image: linear-gradient(to top, rgb(0, 0, 0) 0%, transparent 72px);
+}
+
+.recommendation {
+    margin-top: 20px;
+}
+
+.play-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.play-icon .v-icon {
+    color: red;
+    font-size: 4rem!important;
+    background: rgba(0, 0, 0, 0.75);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 2rem;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+.play-icon:hover .v-icon {
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.title-anime {
+    color: #aaa;
+}
+
+.title-anime a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #aaa!important;
+}
+
+.fansub-verify {
+    user-select: none;
+    color: #aaa!important;
+    padding-bottom: 1px;
+}
+
+div.siema {
+    cursor: pointer!important;
+}
+
+.myanime-home {
+    margin: auto;
+    max-width: 1284px
+}
+
+.anime-head-title {
+    padding: 15px 0;
+    font-weight: 350;
+}
+
+.episode-view::after {
+    content: '•';
+    margin: 0 4px;
+}
+
+.episode-title {
+    display: -webkit-box;
+    max-height: 2.4rem;
+    -webkit-box-orient: vertical;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 18px;
+    position: relative;
+    -webkit-line-clamp: 2;
+}
+
+.player-left-content {
+    width: 100%;
+}
+
+.anime-player {
+    position: relative;
+    width: 100%;
+}
+
+.player-fansub {
+    width: 100%;
+}
+
+.player-fansub-title {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.player-fansub-title a {
+    color: #fff!important;
+    text-decoration: none;
+}
+
+.player-update-at {
+    display: block;
+    color: #aaa;
+}
+
+.player-description, .player-show-more, .player-anime-card {
+    margin-left: 64px;
+}
+
+.player-anime-card-container-title {
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.player-anime-card-container-year, .player-anime-card-container-show-more {
+    color: #aaa;
+}
+
+.comments-count {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.player-episode-title {
+    font-size: 24px;
+}
+
+.views {
+    color: #aaa;
+    font-size: 16px;
+}
+
+.player-thumb_up {
+    cursor: pointer;
+}
+
+.player-thumb_down {
+    cursor: pointer;
+}
+
+.dplayer-comment, .dplayer-setting-showdan, .dplayer-setting-danunlimit, .dplayer-setting-danmaku {
+    display: none!important;
+}
+
+.anime-container {
+    margin: 0 74px;
+}
+
+.player-thumb_down.active .v-btn, .player-thumb_down.active .number {
+    color: #3ea6ff!important;
+}
+
+.player-thumb_up.active .v-btn, .player-thumb_up.active .number {
+    color: #3ea6ff!important;
+}
+
+.count-followers {
+    margin-left: 4px;
+}
+
+.comment-content {
+    display: block;
+}
+
+.comment-user .time {
+    color: #aaa;
+    font-weight: 300;
+}
+
+.reply-user .time {
+    color: #aaa;
+    font-weight: 300;
+    font-size: 13px;
+}
+
+.reply-user .name {
+    font-size: 15px;
+}
+
+.comment-user.avatar, .reply-user.avatar {
+    vertical-align: top !important;
+}
+
+.comment-user .add-reply {
+    position: relative;
+    width: 100%;
+}
+
+
+.comment-user, .reply-user {
+    display: inline-block;
+    width: 100%;
+}
+
+.click-to-show-reply {
+    cursor: pointer;
+}
+
+.comments-area:hover .comment-control {
+    opacity: 1;
+}
+
+.comment-control {
+    opacity: 0;
+    display: inline-flex;
+    vertical-align: top;
+}
+
+@media (max-width: 575.98px) {
+    .anime-container {
+        margin: 0 10px!important;
+    }
+    .dplayer-setting {
+        display: none!important;
+    }
+}
+
+@media (min-width: 1264px) {
+    .container {
+        max-width: 1904px!important;
+    }
+    .anime-container {
+        margin: 0 54px;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .container {
+        max-width: 1200px!important;
+        margin: 0!important;
+        margin-right: 0!important;
+    }
+    .anime-container {
+        margin: 0 24px;
+    }
+}
