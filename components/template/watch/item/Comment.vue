@@ -1,15 +1,5 @@
 <template>
   <div>
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="4000"
-      :color="messages.success ? 'green' : 'red'"
-    >
-      <span>{{messages.success ? messages.message : messages.error}}</span>
-      <v-btn text @click="snackbar = false" color="white">Close</v-btn>
-    </v-snackbar>
     <v-layout class="player-before-comments pt-3" align-center>
       <div class="comments-count pr-3">{{total}} Comments</div>
       <div class="comments-sort pr-3">
@@ -18,62 +8,87 @@
         </v-btn>
       </div>
     </v-layout>
-    <v-layout v-if="loading" justify-center align-center row wrap>
-      <v-progress-circular indeterminate></v-progress-circular>
-    </v-layout>
-    <v-layout v-else class="comment-input" row wrap pt-3>
-      <v-avatar class="mr-4 pt-4 avatar-comment">
-        <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
-      </v-avatar>
-      <v-textarea
-        v-model="comment"
-        @click="showAction"
-        rows="1"
-        auto-grow
-        placeholder="Push a publish comment..."
-      ></v-textarea>
-    </v-layout>
-    <v-layout v-if="show" class="comment-actions">
-      <v-flex class="text-right">
-        <v-btn @click="closeAction" text>Cancel</v-btn>
-        <v-btn @click="commentAction" :disabled="disabled" color="primary">Comment</v-btn>
+    <v-layout v-if="!$store.state.auth.isLogin" class="not-sign-in">
+      <v-flex text-center>
+        Sign in to post a comment!
+        <v-btn color="primary" @click="signIn">Sign in</v-btn>
       </v-flex>
     </v-layout>
-    <v-flex class="comments-area" v-for="comment in comments" :key="comment.comment_id" my-4>
-      <v-layout>
-        <v-avatar class="comment-user avatar">
+    <div class="signed-in" v-else>
+      <v-layout v-if="loading" justify-center align-center row wrap>
+        <v-progress-circular indeterminate></v-progress-circular>
+      </v-layout>
+      <v-layout v-else class="comment-input" row wrap pt-3>
+        <v-avatar class="mr-4 pt-4 avatar-comment">
           <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
         </v-avatar>
-        <div class="comment-user px-2">
-          <div class="comment-user name px-1">{{comment.user.username}}</div>
-          <div class="comment-user time px-1">{{comment.created_at | moment("from", "now")}}</div>
-          <div v-if="!comment.edit" class="comment-content px-1">{{comment.comment}}</div>
-          <div v-else class="comment-user editmode">
-            <v-textarea v-model="editContext" rows="1" auto-grow></v-textarea>
-            <v-flex class="text-right">
-              <v-btn @click="editMode(comment, false)" text>Cancel</v-btn>
-              <v-btn @click="editAction(comment)" color="primary">Save</v-btn>
-            </v-flex>
+        <v-textarea
+          v-model="comment"
+          @click="showAction"
+          rows="1"
+          auto-grow
+          placeholder="Post a publish comment..."
+        ></v-textarea>
+      </v-layout>
+      <v-layout v-if="show" class="comment-actions">
+        <v-flex class="text-right">
+          <v-btn @click="closeAction" text>Cancel</v-btn>
+          <v-btn @click="commentAction" :disabled="disabled" color="primary">Comment</v-btn>
+        </v-flex>
+      </v-layout>
+    </div>
+    <v-flex v-for="comment in comments" :key="comment.comment_id" my-4>
+      <v-layout column>
+        <div class="main-comment">
+          <v-avatar class="comment-user avatar">
+            <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
+          </v-avatar>
+          <div class="comment-user px-2">
+            <div class="comment-user name px-1">{{comment.user.username}}</div>
+            <div class="comment-user time px-1">{{comment.created_at | moment("from", "now")}}</div>
+            <div v-if="!comment.edit" class="comment-content px-1">{{comment.comment}}</div>
+            <div v-else class="comment-user editmode">
+              <v-textarea v-model="editContext" rows="1" auto-grow></v-textarea>
+              <v-flex class="text-right">
+                <v-btn @click="editMode(comment, false)" text>Cancel</v-btn>
+                <v-btn @click="editAction(comment)" color="primary">Save</v-btn>
+              </v-flex>
+            </div>
+            <div class="comment-user comment-actions pt-2">
+              <div class="heart">
+                <v-btn
+                  :class="comment.isHeart ? 'heart-count': ''"
+                  @click="attachHeart(comment)"
+                  x-small
+                  icon
+                  text
+                >
+                  <v-icon>mdi-heart</v-icon>
+                  <span v-if="comment.hearts > 0">{{comment.hearts}}</span>
+                </v-btn>
+              </div>
+              <v-btn small text @click="showReply(comment.comment_id)">Reply</v-btn>
+            </div>
           </div>
-          <CommentReply :comment="comment" />
+          <div class="comment-control">
+            <v-menu transition="fade-transition" offset-y right>
+              <template v-slot:activator="{ on }">
+                <v-btn class="edit" v-on="on" small icon text>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-btn text block tile @click="editMode(comment, true)">
+                  <v-icon left>mdi-pencil</v-icon>Edit
+                </v-btn>
+                <v-btn text block tile @click="deleteAction(comment)">
+                  <v-icon left>mdi-delete</v-icon>Delete
+                </v-btn>
+              </v-list>
+            </v-menu>
+          </div>
         </div>
-        <div class="comment-control">
-          <v-menu transition="fade-transition" offset-y right>
-            <template v-slot:activator="{ on }">
-              <v-btn class="edit" v-on="on" small icon text>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-btn text block tile @click="editMode(comment, true)">
-                <v-icon left>mdi-pencil</v-icon>Edit
-              </v-btn>
-              <v-btn text block tile @click="deleteAction(comment)">
-                <v-icon left>mdi-delete</v-icon>Delete
-              </v-btn>
-            </v-list>
-          </v-menu>
-        </div>
+        <CommentReply :comment="comment" />
       </v-layout>
     </v-flex>
   </div>
@@ -88,8 +103,6 @@ export default {
     return {
       show: false,
       disabled: true,
-      snackbar: false,
-      messages: [],
       loading: false,
       comment: "",
       editContext: ""
@@ -102,11 +115,41 @@ export default {
       });
       return comments;
     },
+    replyId() {
+      return this.$store.state.comment.replyId;
+    },
     total() {
       return this.$store.state.comment.total;
     }
   },
   methods: {
+    attachHeart(item) {
+      if (!this.$store.state.auth.isLogin) {
+        return this.$store.commit("dialog/signIn", true)
+      }
+      var data = {
+        headers: {
+          "X-User-Session": this.$store.state.auth.userToken
+        },
+        form: {
+          comment_id: item.comment_id,
+          user_id: this.$store.state.auth.user_id,
+          isHeart: false
+        },
+        item
+      };
+      if (item.isHeart) {
+        return this.$store.dispatch("comment/unHeart", data);
+      }
+      data.form.isHeart = true;
+      return this.$store.dispatch("comment/attachHeart", data);
+    },
+    showReply(id) {
+      if (!this.$store.state.auth.isLogin) {
+        return this.$store.commit("dialog/signIn", true)
+      }
+      return this.$store.commit("comment/replyId", id);
+    },
     showAction() {
       this.show = true;
     },
@@ -138,7 +181,6 @@ export default {
       return (this.loading = false);
     },
     async editAction(item) {
-      var index = this.comments.indexOf(item);
       var data = {
         headers: {
           "X-User-Session": this.$store.state.auth.userToken
@@ -147,12 +189,11 @@ export default {
           comment_id: item.comment_id,
           comment: this.editContext
         },
-        index
+        item
       };
       return await this.$store.dispatch("comment/edit", data);
     },
     async deleteAction(item) {
-      var index = this.comments.indexOf(item);
       var data = {
         headers: {
           "X-User-Session": this.$store.state.auth.userToken
@@ -161,11 +202,17 @@ export default {
           comment_id: item.comment_id,
           comment: this.editContext
         },
-        index
+        item
       };
       var response = await this.$store.dispatch("comment/removeComment", data);
-      this.snackbar = true;
-      this.messages = response;
+      return this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: response
+      });
+    },
+    signIn() {
+      this.$store.commit("signIn", true);
+      return this.$store.commit("dialog/signIn", false)
     }
   },
   watch: {
@@ -178,5 +225,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-</style>

@@ -36,7 +36,7 @@ module.exports = {
                 httpOnly: true,
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1)
             })
-            res.send({ success: true, access: token, user })
+            res.send({ success: true, access: token, user, message: "You signed in." })
 
         } catch (err) {
             res.send({ success: false, error: err.message })

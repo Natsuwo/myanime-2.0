@@ -7,11 +7,7 @@ const commentSchema = new mongoose.Schema({
     episode_id: String,
     parent_id: Number,
     comment: String,
-    likes: {
-        type: Number,
-        default: 0
-    },
-    dislikes: {
+    hearts: {
         type: Number,
         default: 0
     },

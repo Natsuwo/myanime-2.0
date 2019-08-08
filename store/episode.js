@@ -1,14 +1,17 @@
-import { getEpisodes, getEpisode, likeEpisode } from "../services/Episode"
+import { getEpisodes, getEpisode, getUserMeta, getDataSidebar } from "../services/Episode"
 
 const FETCH = 'fetch'
 const SHOW = 'show'
+const SIDEBAR = 'sidebar'
 const EDIT = 'edit'
 const DELETE = 'delete'
 const ADD = 'add'
+const GETUSERMETA = 'getusermeta'
 
 export const state = () => ({
     episodes: [],
-    episode: {}
+    episode: {},
+    sidebar: []
 })
 
 export const actions = {
@@ -18,8 +21,16 @@ export const actions = {
     },
     async getEpisode({ commit }, data) {
         let response = (await getEpisode(data.headers, data.form)).data
-        return commit(SHOW, { episode: response.data, comments: response.comment })
+        return commit(SHOW, { episode: response.data })
     },
+    async getUserMeta({ commit }, data) {
+        let response = (await getUserMeta(data.headers, data.anime_id, data.episode_id))
+        return commit(GETUSERMETA, { data: response.data })
+    },
+    async getSidebar({ commit }, data) {
+        let response = (await getDataSidebar(data.headers, data.form.episode_id)).data
+        return commit(SIDEBAR, { sidebar: response.data })
+    }
     // async addUser({ commit }, data = {}) {
     //     let response = await callApiAdd(data)
     //     return response;
@@ -44,9 +55,16 @@ export const mutations = {
     [FETCH](state, { episodes }) {
         return state.episodes = episodes;
     },
-    [SHOW](state, { episode, comments }) {
-        state.comments = comments
+    [SHOW](state, { episode }) {
         return state.episode = episode;
+    },
+    [SIDEBAR](state, { sidebar }) {
+        return state.sidebar = sidebar;
+    },
+    [GETUSERMETA](state, { data }) {
+        if (data.success) {
+            return state.episode.usermeta = data.result;
+        }
     },
     // [EDIT](state, payload) {
     //    console.log()

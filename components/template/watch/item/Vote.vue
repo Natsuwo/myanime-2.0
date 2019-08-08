@@ -1,17 +1,5 @@
 <template>
   <div style="display: inline;">
-    <v-dialog transition="slide-x-reverse-transition" v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline red lighten-1" primary-title>Sign in required!</v-card-title>
-        <v-card-text class="pt-3">You must sign in to perform this action.</v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="signIn">Sign In</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <span :class="`player-thumb_up ${isLike === true ? 'active' : ''}`" @click="like">
       <v-btn small icon text>
         <v-icon>mdi-thumb-up</v-icon>
@@ -34,29 +22,33 @@
 </template>
 <script>
 export default {
-    props: ["likes", "dislikes"],
-  data() {
-    return {
-      dialog: false,
-      isLike: null
-    };
-  },
-  created() {
-    if (this.$store.state.auth.isLogin) {
-      return (this.isLike = this.$store.state.episode.episode.user_vote);
-    }
-  },
+  props: ["likes", "dislikes"],
   computed: {
     percent() {
       var likes = this.likes;
       var total = this.likes + this.dislikes;
       return (likes * 100) / total || 0;
+    },
+    usermeta() {
+      return this.$store.state.episode.episode.usermeta;
+    },
+    isLike() {
+      if (this.$store.state.auth.isLogin) {
+        return (
+          this.usermeta
+            .filter(x => {
+              return x.meta_key === "vote";
+            })
+            .map(x => x.meta_value)[0]
+        );
+      }
+      return null;
     }
   },
   methods: {
     async like() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true)
       }
       var data = {
         headers: {
@@ -68,21 +60,17 @@ export default {
           isLike: true
         }
       };
-
-      if (this.isLike === null) {
-        this.isLike = true;
+      if (this.isLike === undefined) {
         return this.$store.dispatch("vote/add", data);
       }
       if (this.isLike === false) {
-        this.isLike = true;
         return this.$store.dispatch("vote/like", data);
       }
-      this.isLike = null;
       return this.$store.dispatch("vote/unlike", data);
     },
     async dislike() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true)
       }
       var data = {
         headers: {
@@ -94,21 +82,17 @@ export default {
           isLike: false
         }
       };
-
-      if (this.isLike === null) {
-        this.isLike = false;
+      if (this.isLike === undefined) {
         return this.$store.dispatch("vote/add", data);
       }
       if (this.isLike) {
-        this.isLike = false;
         return this.$store.dispatch("vote/dislike", data);
       }
-      this.isLike = null;
       return this.$store.dispatch("vote/unlike", data);
     },
     signIn() {
       this.$store.commit("signIn", true);
-      this.dialog = false;
+      return this.$store.commit("dialog/signIn", false)
     }
   }
 };

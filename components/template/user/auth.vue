@@ -1,9 +1,5 @@
 <template>
   <v-dialog transition="slide-x-transition" v-model="dialog" width="500">
-    <v-snackbar v-model="snackbar" :timeout="4000" top :color="messages.success ? 'green' : 'red'">
-      <span>{{messages.success ? messages.message : messages.error}}</span>
-      <v-btn text @click="snackbar = false" color="white">Close</v-btn>
-    </v-snackbar>
     <template v-slot:activator="{ on }">
       <v-btn text v-on="on">
         <v-icon class="pr-2">mdi-account-plus</v-icon>Sign up
@@ -67,31 +63,37 @@ export default {
       dataSI: {},
       is_signIn: true,
       dialog: false,
-      show: true,
-      snackbar: false,
-      messages: []
+      show: true
     };
   },
   methods: {
     async signUpAction() {
-      this.messages = (await signUp(this.dataSU)).data;
-      this.snackbar = true;
-      if (this.messages.success) {
+      var messages = (await signUp(this.dataSU)).data;
+      this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: messages
+      });
+      if (messages.success) {
         this.is_signIn = true;
       }
+      return;
     },
     async signInAction() {
-      this.messages = (await signIn(this.dataSI)).data;
-      this.snackbar = true;
-      if (this.messages.success) {
+      var messages = (await signIn(this.dataSI)).data;
+      this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: messages
+      });
+      if (messages.success) {
         this.dialog = false;
         var data = {
           isLogin: true,
-          token: this.messages.access,
-          user_id: this.messages.user.user_id
+          token: messages.access,
+          user_id: messages.user.user_id
         };
         this.$store.commit("setAuth", data);
       }
+      return;
     }
   },
   watch: {

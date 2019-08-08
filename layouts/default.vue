@@ -5,6 +5,7 @@
     </no-ssr>
     <v-content>
       <v-container fuild grid-list-md>
+        <SnackBar />
         <nuxt />
       </v-container>
     </v-content>
@@ -13,9 +14,11 @@
 
 <script>
 import AppBar from "@/components/main/AppBar";
+import SnackBar from "@/components/template/SnackBar";
 export default {
   components: {
-    AppBar
+    AppBar,
+    SnackBar
   }
 };
 </script>

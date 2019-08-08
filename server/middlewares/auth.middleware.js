@@ -5,7 +5,7 @@ module.exports = {
     async checkValidToken(req, res, next) {
         try {
             if (!req.headers["x-user-session"]) {
-                return res.send({ success: false, error: 'Sign in is required.' })
+                return next()
             }
             var token = req.headers["x-user-session"]
             var verify = jwt.verify(token, process.env.JWTSECRET)

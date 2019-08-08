@@ -1,6 +1,8 @@
-import { getComment, add, reply, edit, remove } from "../services/Comment"
+import { getComment, add, reply, edit, remove, attachHeart, unHeart } from "../services/Comment"
 
 const GET = 'get'
+const HEART = 'heart'
+const UNHEART = 'unheart'
 const ADD = 'add'
 const SHOW = 'show'
 const SHOWEDIT = 'showedit'
@@ -9,7 +11,8 @@ const DELETE = 'delete'
 
 export const state = () => ({
     comments: [],
-    total: 0
+    total: 0,
+    replyId: null
 })
 
 export const actions = {
@@ -34,17 +37,30 @@ export const actions = {
     },
     async edit({ commit }, data) {
         var response = await edit(data.headers, data.form)
-        commit(EDIT, { index: data.index, comment: data.form.comment })
+        commit(EDIT, { item: data.item, comment: data.form.comment })
         return response.data
     },
     async removeComment({ commit }, data) {
         var response = await remove(data.headers, data.form)
-        commit(DELETE, { index: data.index, id: data.form.comment_id })
+        commit(DELETE, { item: data.item })
+        return response.data
+    },
+    async attachHeart({ commit }, data) {
+        var response = await attachHeart(data.headers, data.form)
+        commit(HEART, { item: data.item })
+        return response.data
+    },
+    async unHeart({ commit }, data) {
+        var response = await unHeart(data.headers, data.form)
+        commit(UNHEART, { item: data.item })
         return response.data
     }
 }
 
 export const mutations = {
+    replyId(state, payload) {
+        state.replyId = payload
+    },
     [GET](state, { data }) {
         state.comments = data.comments
         state.total = data.total
@@ -57,7 +73,8 @@ export const mutations = {
         var index = state.comments.indexOf(item)
         state.comments[index].show = !state.comments[index].show
     },
-    [EDIT](state, { index, comment }) {
+    [EDIT](state, { item, comment }) {
+        var index = state.comments.indexOf(item)
         state.comments[index].comment = comment
         state.comments[index].edit = false
     },
@@ -65,17 +82,19 @@ export const mutations = {
         var index = state.comments.indexOf(data.item)
         state.comments[index].edit = data.active
     },
-    [DELETE](state, { index, id }) {
-        var count = 0
-        if (index >= 0) { 
-            for (var i = state.comments.length - 1; i--;) { 
-                if (state.comments[i].parent_id === id) {
-                    state.comments.splice(i, 1)
-                    count += 1
-                }
-            }
-            state.comments.splice(index, 1);
-            return state.total -= 1 + count
-        }
+    [DELETE](state, { item }) {
+        var index = state.comments.indexOf(item)
+        state.comments.splice(index, 1);
+        return state.total -= 1
+    },
+    [HEART](state, { item }) {
+        var index = state.comments.indexOf(item)
+        state.comments[index].hearts += 1
+        state.comments[index].isHeart = true
+    },
+    [UNHEART](state, { item }) {
+        var index = state.comments.indexOf(item)
+        state.comments[index].hearts -= 1
+        state.comments[index].isHeart = false
     }
 }

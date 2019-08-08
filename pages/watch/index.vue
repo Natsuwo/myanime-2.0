@@ -31,6 +31,7 @@ export default {
       "X-User-Session": data.headers["X-User-Session"],
       "X-Episode-Id": data.form.episode_id
     };
+    await store.dispatch("episode/getSidebar", data);
     await store.dispatch("comment/get", headers);
   },
   layout: "watch",
@@ -50,8 +51,6 @@ export default {
     Main,
     Sidebar
   },
-  data() {
-    return {};
-  }
+  watchQuery: ['a']
 };
 </script>

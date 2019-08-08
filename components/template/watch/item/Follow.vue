@@ -1,37 +1,15 @@
 <template>
   <v-flex text-right>
-    <v-snackbar
-      left
-      bottom
-      v-model="snackbar"
-      :timeout="4000"
-      :color="messages.success ? 'green' : 'red'"
-    >
-      <span>{{messages.success ? messages.message : messages.error}}</span>
-      <v-btn text @click="snackbar = false" color="white">Close</v-btn>
-    </v-snackbar>
-    <v-dialog transition="slide-x-reverse-transition" v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline red lighten-1" primary-title>Sign in required!</v-card-title>
-        <v-card-text class="pt-3">You must sign in to perform this action.</v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="signIn">Sign In</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-btn color="red" @click="followAction" v-if="!follow.follow">
+    <v-btn color="red" @click="followAction" v-if="follow === null">
       Follow
       <span class="count-followers">{{anime.followers}}</span>
     </v-btn>
     <div v-else>
-      <v-btn color="#AAA" @click="unFollowAction">
+      <v-btn color="purple" @click="unFollowAction">
         Unfollow
         <span class="count-followers">{{anime.followers}}</span>
       </v-btn>
-      <v-btn small text icon @click="notiAction" v-if="!follow.noti">
+      <v-btn small text icon @click="notiAction" v-if="!follow">
         <v-icon>mdi-bell-outline</v-icon>
       </v-btn>
       <v-btn small text icon @click="unNotiAction" v-else>
@@ -42,18 +20,11 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      dialog: false,
-      snackbar: false,
-      messages: ""
-    };
-  },
   props: ["follow", "anime"],
   methods: {
     async followAction() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true);
       }
       var data = {
         headers: {
@@ -65,12 +36,14 @@ export default {
         }
       };
       var response = await this.$store.dispatch("follow/follow", data);
-      this.snackbar = true;
-      this.messages = response.data;
+      return this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: response.data
+      });
     },
     async unFollowAction() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true);
       }
       var data = {
         headers: {
@@ -82,12 +55,14 @@ export default {
         }
       };
       var response = await this.$store.dispatch("follow/unFollow", data);
-      this.snackbar = true;
-      this.messages = response.data;
+      return this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: response.data
+      });
     },
     async notiAction() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true);
       }
       var data = {
         headers: {
@@ -100,12 +75,14 @@ export default {
         }
       };
       var response = await this.$store.dispatch("follow/getNoti", data);
-      this.snackbar = true;
-      this.messages = response.data;
+      return this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: response.data
+      });
     },
     async unNotiAction() {
       if (!this.$store.state.auth.isLogin) {
-        return (this.dialog = true);
+        return this.$store.commit("dialog/signIn", true);
       }
       var data = {
         headers: {
@@ -118,12 +95,10 @@ export default {
         }
       };
       var response = await this.$store.dispatch("follow/unNoti", data);
-      this.snackbar = true;
-      this.messages = response.data;
-    },
-    signIn() {
-      this.$store.commit("signIn", true);
-      this.dialog = false;
+      return this.$store.commit("snackbar/snackBar", {
+        active: true,
+        message: response.data
+      });
     }
   }
 };

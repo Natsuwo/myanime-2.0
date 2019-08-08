@@ -19,3 +19,11 @@ export function edit(headers, form) {
 export function remove(headers, form) {
     return Api(headers).delete('/comment', { data: form });
 }
+
+export function attachHeart(headers, form) {
+    return Api(headers).post('/comment-heart', form);
+}
+
+export function unHeart(headers, form) {
+    return Api(headers).delete('/comment-heart', { data: form });
+}

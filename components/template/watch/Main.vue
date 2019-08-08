@@ -32,7 +32,7 @@
         </span>
         <div class="player-update-at">{{episode.updated_at | moment("from", "now")}}</div>
       </div>
-      <Follow :follow="this.episode.user_follow" :anime="this.episode.anime" />
+      <Follow :follow="follow" :anime="this.episode.anime" />
     </v-layout>
     <div class="player-description pt-3">{{episode.description}}</div>
     <v-layout class="player-anime-card" row wrap my-3>
@@ -72,10 +72,33 @@ export default {
   computed: {
     episode() {
       return this.$store.state.episode.episode;
+    },
+    follow() {
+      if (this.$store.state.auth.isLogin) {
+        var follow = this.episode.usermeta
+          .filter(x => x.meta_key === "follow")
+          .map(x => x.meta_value)[0];
+        if (follow === undefined) {
+          return null;
+        }
+        return follow;
+      }
+      return null;
     }
   },
-  data() {
-    return {};
+  watch: {
+    "$store.state.auth.isLogin"(val) {
+      if (val) {
+        var data = {
+          headers: {
+            "X-User-Session": this.$store.state.auth.userToken
+          },
+          episode_id: this.episode.episode_id,
+          anime_id: this.episode.anime_id
+        };
+        this.$store.dispatch("episode/getUserMeta", data);
+      }
+    }
   }
 };
 </script>

@@ -7,9 +7,9 @@ module.exports = {
         var meta_key = 'follow'
         var meta_value = false
         var parent_id = anime_id
-        await UserMeta.create({ user_id, meta_key, meta_value, parent_id })
+        var result = await UserMeta.create({ user_id, meta_key, meta_value, parent_id })
         await Anime.updateOne({ anime_id }, { $inc: { followers: 1 } }, { new: true })
-        return res.send({ success: true, status: 0, message: "You followed this anime." })
+        return res.send({ success: true, status: 0, result, message: "You followed this anime." })
 
     },
     async getNoti(req, res) {

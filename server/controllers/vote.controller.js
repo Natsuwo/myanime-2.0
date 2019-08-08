@@ -7,14 +7,13 @@ module.exports = {
         var meta_key = 'vote'
         var meta_value = isLike
         var parent_id = episode_id
-        await UserMeta.create({ user_id, meta_key, meta_value, parent_id })
+        var response = await UserMeta.create({ user_id, meta_key, meta_value, parent_id })
         if (isLike) {
             await Episode.updateOne({ episode_id }, { $inc: { likes: 1 } }, { new: true })
-            return res.send({ success: true, status: 0 })
+            return res.send({ success: true, result: response })
         }
         await Episode.updateOne({ episode_id }, { $inc: { dislikes: 1 } }, { new: true })
-        return res.send({ success: true, status: 0 })
-
+        return res.send({ success: true, result: response })
     },
     async votePut(req, res) {
         try {

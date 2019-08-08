@@ -8,7 +8,7 @@ export const actions = {
     async follow({ commit }, data) {
         var response = await follow(data.headers, data.form)
         if (response.data.success) {
-            commit(FOLLOW)
+            commit(FOLLOW, { data: response.data.result })
         }
         return response
     },
@@ -36,18 +36,21 @@ export const actions = {
 }
 
 export const mutations = {
-    [FOLLOW]() {
+    [FOLLOW](state, { data }) {
         this.state.episode.episode.anime.followers += 1
-        this.state.episode.episode.user_follow.follow = true
+        this.state.episode.episode.usermeta.push(data)
     },
     [UNFOLLOW]() {
         this.state.episode.episode.anime.followers -= 1
-        this.state.episode.episode.user_follow.follow = false
+        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.episode.episode.usermeta.splice(index, 1);
     },
     [GETNOTI]() {
-        this.state.episode.episode.user_follow.noti = true
+        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.episode.episode.usermeta[index].meta_value = true
     },
     [UNNOTI]() {
-        this.state.episode.episode.user_follow.noti = false
+        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.episode.episode.usermeta[index].meta_value = false
     }
 }
