@@ -22,25 +22,34 @@
 </template>
 <script>
 export default {
-  props: ["likes", "dislikes"],
+  data() {
+    return {
+      form: {
+        headers: {
+          "X-User-Session": this.$store.state.auth.userToken
+        },
+        form: {
+          episode_id: this.$route.query.a,
+          user_id: this.$store.state.auth.user_id,
+          isLike: null
+        }
+      }
+    };
+  },
+  props: ["likes", "dislikes", "usermeta"],
   computed: {
     percent() {
       var likes = this.likes;
       var total = this.likes + this.dislikes;
       return (likes * 100) / total || 0;
     },
-    usermeta() {
-      return this.$store.state.episode.episode.usermeta;
-    },
     isLike() {
       if (this.$store.state.auth.isLogin) {
-        return (
-          this.usermeta
-            .filter(x => {
-              return x.meta_key === "vote";
-            })
-            .map(x => x.meta_value)[0]
-        );
+        return this.usermeta
+          .filter(x => {
+            return x.meta_key === "vote";
+          })
+          .map(x => x.meta_value)[0];
       }
       return null;
     }
@@ -48,51 +57,33 @@ export default {
   methods: {
     async like() {
       if (!this.$store.state.auth.isLogin) {
-        return this.$store.commit("dialog/signIn", true)
+        return this.$store.commit("dialog/signIn", true);
       }
-      var data = {
-        headers: {
-          "X-User-Session": this.$store.state.auth.userToken
-        },
-        form: {
-          episode_id: this.$route.query.a,
-          user_id: this.$store.state.auth.user_id,
-          isLike: true
-        }
-      };
+      this.form.form.isLike = true;
       if (this.isLike === undefined) {
-        return this.$store.dispatch("vote/add", data);
+        return this.$store.dispatch("vote/add", this.form);
       }
       if (this.isLike === false) {
-        return this.$store.dispatch("vote/like", data);
+        return this.$store.dispatch("vote/like", this.form);
       }
-      return this.$store.dispatch("vote/unlike", data);
+      return this.$store.dispatch("vote/unlike", this.form);
     },
     async dislike() {
       if (!this.$store.state.auth.isLogin) {
-        return this.$store.commit("dialog/signIn", true)
+        return this.$store.commit("dialog/signIn", true);
       }
-      var data = {
-        headers: {
-          "X-User-Session": this.$store.state.auth.userToken
-        },
-        form: {
-          episode_id: this.$route.query.a,
-          user_id: this.$store.state.auth.user_id,
-          isLike: false
-        }
-      };
+      this.form.form.isLike = false;
       if (this.isLike === undefined) {
-        return this.$store.dispatch("vote/add", data);
+        return this.$store.dispatch("vote/add", this.form);
       }
       if (this.isLike) {
-        return this.$store.dispatch("vote/dislike", data);
+        return this.$store.dispatch("vote/dislike", this.form);
       }
-      return this.$store.dispatch("vote/unlike", data);
+      return this.$store.dispatch("vote/unlike", this.form);
     },
     signIn() {
       this.$store.commit("signIn", true);
-      return this.$store.commit("dialog/signIn", false)
+      return this.$store.commit("dialog/signIn", false);
     }
   }
 };

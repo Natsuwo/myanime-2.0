@@ -1,7 +1,8 @@
 import Api from './Api'
 
-export function getComment(headers) {
-    return Api(headers).get('/comment');
+export function getComment(headers, episode_id) {
+    var episodeQuery = episode_id ? `?episode_id=${episode_id}` : ''
+    return Api(headers).get(`/comment${episodeQuery}`);
 }
 
 export function add(headers, form) {

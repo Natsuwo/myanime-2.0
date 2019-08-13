@@ -37,20 +37,20 @@ export const actions = {
 
 export const mutations = {
     [FOLLOW](state, { data }) {
-        this.state.episode.episode.anime.followers += 1
-        this.state.episode.episode.usermeta.push(data)
+        this.state.anime.anime.followers += 1
+        this.state.auth.usermeta.push(data)
     },
     [UNFOLLOW]() {
-        this.state.episode.episode.anime.followers -= 1
-        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
-        this.state.episode.episode.usermeta.splice(index, 1);
+        this.state.anime.anime.followers -= 1
+        var index = this.state.auth.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.auth.usermeta.splice(index, 1);
     },
     [GETNOTI]() {
-        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
-        this.state.episode.episode.usermeta[index].meta_value = true
+        var index = this.state.auth.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.auth.usermeta[index].meta_value = true
     },
     [UNNOTI]() {
-        var index = this.state.episode.episode.usermeta.findIndex(x => x.meta_key === 'follow')
-        this.state.episode.episode.usermeta[index].meta_value = false
+        var index = this.state.auth.usermeta.findIndex(x => x.meta_key === 'follow')
+        this.state.auth.usermeta[index].meta_value = false
     }
 }

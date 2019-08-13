@@ -13,7 +13,7 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <nuxt-link to="/">
-          <v-img width="150" src="./summer.svg"></v-img>
+          <v-img width="150" src="/summer.svg"></v-img>
         </nuxt-link>
       </v-list-item>
 

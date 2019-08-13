@@ -7,6 +7,11 @@ const episodeSchema = new mongoose.Schema({
     number: Number,
     description: String,
     source: String,
+    type: String,
+    audio: String,
+    subtitle: String,
+    fansub: String,
+    thumbnail: String,
     likes: {
         type: Number,
         default: 0

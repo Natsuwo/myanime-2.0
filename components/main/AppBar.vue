@@ -36,7 +36,7 @@
       </v-btn>
       <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">
         <nuxt-link to="/">
-          <v-img width="150" src="./summer.svg"></v-img>
+          <v-img width="150" src="/summer.svg"></v-img>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />

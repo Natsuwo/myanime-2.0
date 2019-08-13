@@ -1,23 +1,26 @@
 const colors = require('vuetify/es5/util/colors').default
-
 module.exports = {
   mode: 'universal',
   /*
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    titleTemplate: '%s - ' + process.env.SITE_TITLE,
+    title: process.env.SITE_TITLE || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: process.env.SITE_DESCRIPTION || '' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', type: 'text/css', href: '/css/custom.css' }
     ],
     script: [{ src: "/js/DPlayer.min.js" }, { src: "/js/hls.min.js" }]
+  },
+
+  env: {
+    secureKey: process.env.SECUREKEY
   },
   /*
   ** Customize the progress-bar color

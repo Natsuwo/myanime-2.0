@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-layout class="player-before-comments pt-3" align-center>
+    <v-layout class="player-before-comments pt-3" align-center v-scroll="onScroll">
       <div class="comments-count pr-3">{{total}} Comments</div>
       <div class="comments-sort pr-3">
         <v-btn text small>
@@ -15,7 +15,7 @@
       </v-flex>
     </v-layout>
     <div class="signed-in" v-else>
-      <v-layout v-if="loading" justify-center align-center row wrap>
+      <v-layout v-if="loading || firstLoad" justify-center align-center row wrap>
         <v-progress-circular indeterminate></v-progress-circular>
       </v-layout>
       <v-layout v-else class="comment-input" row wrap pt-3>
@@ -46,7 +46,7 @@
           <div class="comment-user px-2">
             <div class="comment-user name px-1">{{comment.user.username}}</div>
             <div class="comment-user time px-1">{{comment.created_at | moment("from", "now")}}</div>
-            <div v-if="!comment.edit" class="comment-content px-1">{{comment.comment}}</div>
+            <div v-if="!comment.edit" class="comment-content px-1" v-text="comment.comment"></div>
             <div v-else class="comment-user editmode">
               <v-textarea v-model="editContext" rows="1" auto-grow></v-textarea>
               <v-flex class="text-right">
@@ -57,8 +57,8 @@
             <div class="comment-user comment-actions pt-2">
               <div class="heart">
                 <v-btn
-                  :class="comment.isHeart ? 'heart-count': ''"
-                  @click="attachHeart(comment)"
+                  :class="isHeart(comment.comment_id) ? 'heart-count': ''"
+                  @click="attachHeart(comment, isHeart(comment.comment_id) ? true : false)"
                   x-small
                   icon
                   text
@@ -70,7 +70,7 @@
               <v-btn small text @click="showReply(comment.comment_id)">Reply</v-btn>
             </div>
           </div>
-          <div class="comment-control">
+          <div class="comment-control" v-if="validControl(comment.user_id)">
             <v-menu transition="fade-transition" offset-y right>
               <template v-slot:activator="{ on }">
                 <v-btn class="edit" v-on="on" small icon text>
@@ -103,17 +103,30 @@ export default {
     return {
       show: false,
       disabled: true,
-      loading: false,
       comment: "",
-      editContext: ""
+      editContext: "",
+      scrolled: false,
+      loading: false
     };
   },
   computed: {
+    firstLoad() {
+      return this.$store.state.comment.loading;
+    },
     comments() {
       var comments = this.$store.state.comment.comments.filter(el => {
         return !el.parent_id;
       });
       return comments;
+    },
+    usermeta() {
+      return this.$store.state.auth.usermeta;
+    },
+    heart() {
+      var index = this.usermeta.findIndex(x => x.meta_key === "heart");
+      if (index >= 0) {
+        return this.usermeta[index].meta_value;
+      }
     },
     replyId() {
       return this.$store.state.comment.replyId;
@@ -123,30 +136,49 @@ export default {
     }
   },
   methods: {
-    attachHeart(item) {
+    isHeart(id) {
+      if (!this.heart) return false;
+      if (this.heart.find(x => x === id)) {
+        return true;
+      }
+      return false;
+    },
+    attachHeart(item, val) {
       if (!this.$store.state.auth.isLogin) {
-        return this.$store.commit("dialog/signIn", true)
+        return this.$store.commit("dialog/signIn", true);
       }
       var data = {
         headers: {
           "X-User-Session": this.$store.state.auth.userToken
         },
         form: {
+          episode_id: item.episode_id,
           comment_id: item.comment_id,
           user_id: this.$store.state.auth.user_id,
           isHeart: false
         },
         item
       };
-      if (item.isHeart) {
+      if (val) {
         return this.$store.dispatch("comment/unHeart", data);
       }
       data.form.isHeart = true;
       return this.$store.dispatch("comment/attachHeart", data);
     },
+    onScroll(e) {
+      if (window.scrollY > 200) {
+        return (this.scrolled = true);
+      }
+    },
+    validControl(user_id) {
+      return (
+        this.$store.state.auth.isLogin &&
+        user_id === this.$store.state.auth.user_id
+      );
+    },
     showReply(id) {
       if (!this.$store.state.auth.isLogin) {
-        return this.$store.commit("dialog/signIn", true)
+        return this.$store.commit("dialog/signIn", true);
       }
       return this.$store.commit("comment/replyId", id);
     },
@@ -187,6 +219,7 @@ export default {
         },
         form: {
           comment_id: item.comment_id,
+          episode_id: this.$route.query.a,
           comment: this.editContext
         },
         item
@@ -200,19 +233,16 @@ export default {
         },
         form: {
           comment_id: item.comment_id,
+          episode_id: this.$route.query.a,
           comment: this.editContext
         },
         item
       };
-      var response = await this.$store.dispatch("comment/removeComment", data);
-      return this.$store.commit("snackbar/snackBar", {
-        active: true,
-        message: response
-      });
+      return await this.$store.dispatch("comment/removeComment", data);
     },
     signIn() {
       this.$store.commit("signIn", true);
-      return this.$store.commit("dialog/signIn", false)
+      return this.$store.commit("dialog/signIn", false);
     }
   },
   watch: {
@@ -221,6 +251,21 @@ export default {
         return (this.disabled = false);
       }
       this.disabled = true;
+    },
+    async firstLoad(val) {
+      if (!val) {
+        var headers = {
+          "X-User-Session": this.$store.state.auth.userToken
+        };
+        var episode_id = this.$route.query.a;
+        return await this.$store.dispatch("comment/get", { headers, episode_id });
+      }
+      return this.scrolled = false
+    },
+    scrolled(val) {
+      if (val) {
+        return this.$store.commit("comment/loading", false);
+      }
     }
   }
 };

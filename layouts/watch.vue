@@ -7,7 +7,7 @@
       <v-container fuild grid-list-md>
         <DialogSignIn />
         <SnackBar />
-        <nuxt />
+        <nuxt/>
       </v-container>
     </v-content>
   </v-app>
@@ -15,7 +15,7 @@
 
 <script>
 import DialogSignIn from "@/components/template/dialog/requireSignIn";
-import SnackBar from "@/components/template/SnackBar"
+import SnackBar from "@/components/template/SnackBar";
 import AppBar from "@/components/main/AppBarWatch";
 export default {
   components: {

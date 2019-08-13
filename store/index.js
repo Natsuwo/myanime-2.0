@@ -1,9 +1,11 @@
 const cookieparser = process.server ? require('cookieparser') : undefined
 import { checkUserToken } from "../services/Auth"
+import { getFlags } from "../services/Language"
 
 export const state = () => {
     return {
-        signIn: false
+        signIn: false,
+        flags: []
     }
 }
 
@@ -15,6 +17,9 @@ export const mutations = {
     },
     signIn(state, payload) {
         state.signIn = payload
+    },
+    getFlags(state, payload) {
+        state.flags = payload
     }
 }
 export const actions = {
@@ -28,6 +33,9 @@ export const actions = {
             if (checkAuth.success) {
                 commit('setAuth', { user_id: checkAuth.user_id, token: checkAuth.token, isLogin: true })
             }
+            // Get Flags
+            var flags = (await getFlags(headers)).data
+            commit("getFlags", flags.result)
         }
     }
 }

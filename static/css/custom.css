@@ -107,16 +107,35 @@ div.siema {
     width: 100%;
 }
 
-.player-fansub {
-    width: 100%;
+.anime-cover {
+    float: left;
+    width: 140px;
 }
 
-.player-fansub-title {
-    font-weight: 500;
-    font-size: 16px;
+.anime-info-content {
+    padding-left: 14px;
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    display: -webkit-flex;
 }
 
-.player-fansub-title a {
+.anime-info {
+    max-width: 612px;
+}
+
+.anime-info .title-name {
+    margin: 0 16px 0 0;
+    width: 110px;
+    -ms-flex: none;
+    -webkit-flex: none;
+    flex: none;
+    width: 200px;
+    text-transform: uppercase;
+    color: #aaa;
+}
+
+.anime-title a {
     color: #fff!important;
     text-decoration: none;
 }
@@ -127,7 +146,13 @@ div.siema {
 }
 
 .player-description, .player-show-more, .player-anime-card {
-    margin-left: 64px;
+    margin-left: 60px;
+}
+
+.player-show-more {
+    color: #aaa;
+    display: inline-flex;
+    cursor: pointer;
 }
 
 .player-anime-card-container-title {
@@ -178,6 +203,7 @@ div.siema {
 }
 
 .comment-content {
+    white-space: pre-line;
     display: block;
 }
 
@@ -330,6 +356,141 @@ div.siema {
     font-size: 13px;
 }
 
+.anime-channel-container {
+    margin: 0 190px;
+}
+
+.anime-channel-menus {
+    width: 100%;
+}
+
+.anime-channel-menu {
+    margin-left: 195px;
+}
+
+.anime-channel-follow {
+    margin-top: 12px;
+}
+
+.anime-channel-genre {
+    max-width: 640px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.anime-channel-season {
+    text-transform: uppercase;
+    max-width: 320px;
+    margin-top: 8px;
+    color: #aaa;
+    display: -webkit-box;
+    max-height: 6rem;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5rem;
+}
+
+.anime-channel-description {
+    text-transform: uppercase;
+    max-width: 650px;
+    margin-top: 8px;
+    color: #aaa;
+    display: -webkit-box;
+    max-height: 6rem;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5rem;
+}
+
+.anime-channel-studio {
+    line-height: 1.5rem;
+    color: #aaa;
+}
+
+.anime-channel-title {
+    max-width: 320px;
+    color: #fff;
+    display: -webkit-box;
+    white-space: normal;
+    max-height: 4rem;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 2rem;
+}
+
+.anime-channel {
+    width: 100%;
+    position: relative;
+}
+
+.anime-channel-cover {
+    width: 184px;
+    height: 256px;
+    border-radius: 2px;
+}
+
+.anime-channel-details {
+    position: relative;
+    margin-left: 40px;
+}
+
+.anime-channel-header {
+    height: 350px;
+    position: relative;
+}
+
+.anime-channel-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 48px 0;
+    margin: 0 195px!important;
+}
+
+.anime-channel-banner {
+    position: absolute!important;
+    height: 100%;
+    width: 100%;
+}
+
+.anime-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.fansub-title a {
+    text-decoration: none;
+    color: #fff!important;
+}
+
+.title-anime a, .fansub-title a {
+    display: inline-flex;
+    align-items: center;
+}
+
+.anime-flag {
+    margin-left: 10px;
+}
+
 @media (max-width: 575.98px) {
     .anime-container {
         margin: 0 10px!important;
@@ -357,4 +518,10 @@ div.siema {
     .anime-container {
         margin: 0 24px;
     }
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
 }

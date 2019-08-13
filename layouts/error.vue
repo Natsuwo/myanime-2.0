@@ -1,44 +1,48 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
-  </v-app>
+  <v-layout class="error-wrapper">
+    <div class="xs12 mb-3">
+      <img :src="imgSrc" />
+    </div>
+    <div class="text-center">
+      <template>
+        <p class="headline letter-spacing ma-0">The page you are looking for is not found</p>
+        <p class="headline letter-spacing">
+          Go back
+          <router-link to="/" class="blue--text text--lighten-2 decoration-none">Home</router-link>
+        </p>
+      </template>
+    </div>
+  </v-layout>
 </template>
 
 <script>
 export default {
-  layout: 'empty',
   props: {
-    error: {
-      type: Object,
-      default: null
+    status: {
+      type: [String, Number],
+      default: 404
     }
   },
-  head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+  data() {
     return {
-      title
-    }
+      imgSrc: this.status === 403 ? "/404.png" : "/404.png"
+    };
   },
-  data () {
+  head() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
+      title: "404 not found"
+    };
   }
-}
+};
 </script>
 
 <style scoped>
-h1 {
-  font-size: 20px;
+.error-wrapper {
+  height: 80vh !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -4,10 +4,9 @@
       <AppBar />
     </no-ssr>
     <v-content>
-      <v-container fuild grid-list-md>
-        <SnackBar />
-        <nuxt />
-      </v-container>
+      <SnackBar />
+      <DialogSignIn />
+      <nuxt />
     </v-content>
   </v-app>
 </template>
@@ -15,10 +14,12 @@
 <script>
 import AppBar from "@/components/main/AppBar";
 import SnackBar from "@/components/template/SnackBar";
+import DialogSignIn from "@/components/template/dialog/requireSignIn";
 export default {
   components: {
     AppBar,
-    SnackBar
+    SnackBar,
+    DialogSignIn
   }
 };
 </script>

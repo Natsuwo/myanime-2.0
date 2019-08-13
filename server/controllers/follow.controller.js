@@ -3,7 +3,8 @@ const Anime = require('../models/Anime')
 
 module.exports = {
     async follow(req, res) {
-        var { user_id, anime_id } = req.body
+        var { anime_id } = req.body
+        var { user_id } = res.locals
         var meta_key = 'follow'
         var meta_value = false
         var parent_id = anime_id
@@ -13,7 +14,8 @@ module.exports = {
 
     },
     async getNoti(req, res) {
-        var { user_id, isNoti, anime_id } = req.body
+        var { isNoti, anime_id } = req.body
+        var { user_id } = res.locals
         var meta_key = 'follow'
         var meta_value = isNoti
         var parent_id = anime_id
@@ -22,7 +24,8 @@ module.exports = {
 
     },
     async unNoti(req, res) {
-        var { user_id, isNoti, anime_id } = req.body
+        var { isNoti, anime_id } = req.body
+        var { user_id } = res.locals
         var meta_key = 'follow'
         var meta_value = isNoti
         var parent_id = anime_id
@@ -32,7 +35,8 @@ module.exports = {
     },
     async unfollow(req, res) {
         try {
-            var { user_id, anime_id } = req.body
+            var { anime_id } = req.body
+            var { user_id } = res.locals
             var meta_key = 'follow'
             var parent_id = anime_id
             await UserMeta.deleteOne({ user_id, parent_id, meta_key })

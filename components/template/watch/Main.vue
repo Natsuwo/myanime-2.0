@@ -7,21 +7,22 @@
     </v-layout>
     <div
       class="pt-3 player-episode-title"
-    >{{`${episode.anime.title} ${episode.number} ${!episode.title ? '' : '- ' + episode.title}`}}</div>
+    >{{`${anime.title} - Ep.${episode.number} ${!episode.title ? '' : '- ' + episode.title}`}}</div>
     <v-layout row wrap>
       <div class="views flex" style="display: inline;">{{episode.views}} views</div>
       <v-spacer></v-spacer>
-      <Vote :likes="episode.likes" :dislikes="episode.dislikes" />
+      <Vote :likes="episode.likes" :dislikes="episode.dislikes" :usermeta="usermeta" />
     </v-layout>
     <v-divider />
     <v-layout row wrap pt-3>
       <v-avatar class="player-fansub mr-3">
-        <img :src="episode.anime.thumbnail" alt="avatar-fansub" />
+        <img :src="anime.thumbnail" alt="avatar-fansub" />
       </v-avatar>
       <div class="flex column">
-        <span class="player-fansub-title">
-          <nuxt-link :to="`/anime/${episode.anime.anime_id}`">
-            {{episode.anime.title}}
+        <span class="title fansub-title">
+          <nuxt-link :to="`/anime/${anime.anime_id}`">
+            {{episode.fansub}}
+            <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
             <!-- <v-tooltip right v-if="episode.fansub.trusted">
               <template v-slot:activator="{ on }">
                 <v-icon dark v-on="on" class="fansub-verify" size="14px">mdi-check-circle</v-icon>
@@ -32,26 +33,9 @@
         </span>
         <div class="player-update-at">{{episode.updated_at | moment("from", "now")}}</div>
       </div>
-      <Follow :follow="follow" :anime="this.episode.anime" />
+      <Follow class="text-right" :follow="follow" :anime="anime" />
     </v-layout>
-    <div class="player-description pt-3">{{episode.description}}</div>
-    <v-layout class="player-anime-card" row wrap my-3>
-      <v-flex>
-        <v-card>
-          <div class="layout row wrap">
-            <div class="player-anime-thumbnail mr-3">
-              <v-img :src="episode.anime.thumbnail" alt="anime-thumbnail" width="70px"></v-img>
-            </div>
-            <div class="flex player-anime-card-container mt-3">
-              <div class="player-anime-card-container-title">{{episode.anime.title}}</div>
-              <div class="player-anime-card-container-year">{{episode.anime.premiered}}</div>
-              <div class="player-anime-card-container-show-more">Show all</div>
-            </div>
-          </div>
-        </v-card>
-      </v-flex>
-      <v-spacer></v-spacer>
-    </v-layout>
+    <Description :anime="anime" :episode="episode" />
     <v-divider />
     <Comment />
   </div>
@@ -61,29 +45,34 @@ import Player from "./item/Player";
 import Vote from "./item/Vote";
 import Follow from "./item/Follow";
 import Comment from "./item/Comment";
-import { likeEpisode } from "@/services/Episode";
+import Description from "./item/Description";
 export default {
+  props: ["episode", "usermeta", "flags", "anime"],
   components: {
     Player,
     Vote,
     Follow,
-    Comment
+    Comment,
+    Description
   },
   computed: {
-    episode() {
-      return this.$store.state.episode.episode;
-    },
     follow() {
-      if (this.$store.state.auth.isLogin) {
-        var follow = this.episode.usermeta
-          .filter(x => x.meta_key === "follow")
-          .map(x => x.meta_value)[0];
-        if (follow === undefined) {
-          return null;
-        }
-        return follow;
+      if (this.usermeta.length === 0) {
+        return null;
+      }
+      var index = this.usermeta.findIndex(x => x.meta_key === "follow");
+      if (index >= 0) {
+        return this.usermeta[index].meta_value;
       }
       return null;
+    }
+  },
+  methods: {
+    getFlag(lang) {
+      return this.flags
+        .filter(x => x.key === lang)
+        .map(x => x.value)
+        .toString();
     }
   },
   watch: {
@@ -102,5 +91,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-</style>

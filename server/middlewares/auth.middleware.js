@@ -1,26 +1,19 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
-
+const cookieParser = require('cookie-parser')
 module.exports = {
-    async checkValidToken(req, res, next) {
+    async isUserLogin(req, res, next) {
         try {
-            if (!req.headers["x-user-session"]) {
+            var token = req.headers["x-user-session"]
+            if (!token) {
                 return next()
             }
-            var token = req.headers["x-user-session"]
-            var verify = jwt.verify(token, process.env.JWTSECRET)
-            var user_id = verify.ID
-            var username = verify.NAME
-            var user = await User.findOne({ user_id, username })
-            if (!user) {
-                return res.send({ success: false, error: 'Not found.' })
-            }
-            if (Date.now() >= verify.exp * 1000) {
-                return res.send({ success: false, error: 'Session is expired.' })
-            }
+            var decodeToken = cookieParser.signedCookie(token, process.env.COOKIE_SECRET)
+            var validate = jwt.verify(decodeToken, process.env.JWTSECRET)
+            res.locals.user_id = validate.ID
             next()
         } catch (err) {
-            res.send({ success: false, error: err.message })
+            return res.send({ success: false, error: err.message })
         }
     }
 }

@@ -1,30 +1,29 @@
 <template>
   <div placeholder="loading...">
     <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
-      <template v-for="(episode, index) in 12">
+      <template v-for="(episode, index) in data">
         <div class="slide" :key="index">
           <div class="flex">
-            <v-img src="https://i.imgur.com/z6RwDqN.jpg">
+            <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
+            <v-img :src="episode.thumbnail">
               <div class="play-icon">
                 <v-icon>mdi-play</v-icon>
               </div>
             </v-img>
-            <div class="subheading">Palaaasd</div>
+            <div
+              :title="`${animeTitle(episode.anime_id)} episode ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`"
+              class="subheading episode-title"
+            >{{`${animeTitle(episode.anime_id)} Ep. ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`}}</div>
+            </nuxt-link>
             <div class="metadata-line">
               <div class="title-anime">
-                <nuxt-link :to="`/anime/`">
-                  Horriblesubs
-                  <v-tooltip right>
-                    <template v-slot:activator="{ on }">
-                      <v-icon dark v-on="on" class="fansub-verify" size="14px">mdi-check-circle</v-icon>
-                    </template>
-                    <span>Trusted fansub</span>
-                  </v-tooltip>
+                <nuxt-link :to="`/anime/${episode.anime_id}`">
+                  {{episode.fansub}}
+                  <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
                 </nuxt-link>
               </div>
-              <span>10 views</span>
-              <span>ยท</span>
-              <span>10</span>
+              <span class="episode-view">{{episode.views}} views</span>
+              <span>{{episode.updated_at | moment("from", "now")}}</span>
             </div>
           </div>
         </div>
@@ -43,9 +42,8 @@
   </div>
 </template>
 <script>
-// import animeService from "@/services/anime.service";
-// import episodeService from "@/services/episode.service";
 export default {
+  props: ["data", "flags", "animes"],
   data() {
     return {
       options: {
@@ -60,14 +58,8 @@ export default {
         },
         startIndex: 0
       },
-      currentSlide: 0,
-      episodes: null,
-      animes: null
+      currentSlide: 0
     };
-  },
-  async mounted() {
-    // this.animes = await animeService.index();
-    // this.episodes = await episodeService.index();
   },
   methods: {
     next() {
@@ -75,9 +67,17 @@ export default {
     },
     prev() {
       return this.$refs.siema.prev();
+    },
+    getFlag(lang) {
+      return this.flags
+        .filter(x => x.key === lang)
+        .map(x => x.value)
+        .toString();
+    },
+    animeTitle(id) {
+      return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];
     }
-  },
-  props: ["show"]
+  }
 };
 </script>
 

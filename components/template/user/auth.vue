@@ -30,14 +30,25 @@
         <v-flex xs12 text-center>
           <v-card-title class="justify-center">Sign up</v-card-title>
           <v-card-text>
-            <v-text-field v-model="dataSU.username" filled label="Username"></v-text-field>
-            <v-text-field v-model="dataSU.email" filled label="Email"></v-text-field>
-            <v-text-field v-model="dataSU.password" filled label="Password" type="password"></v-text-field>
+            <v-text-field :rules="nameRules" v-model="dataSU.username" filled label="Username"></v-text-field>
+            <v-text-field :rules="emailRules" v-model="dataSU.email" filled label="Email"></v-text-field>
             <v-text-field
+              :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPass ? 'text' : 'password'"
+              :rules="passwordRules"
+              @click:append="showPass = !showPass"
+              v-model="dataSU.password"
+              filled
+              label="Password"
+            ></v-text-field>
+            <v-text-field
+              :append-icon="showPassCf ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassCf ? 'text' : 'password'"
+              :rules="cf_passwordRules"
               v-model="dataSU.password_confirm"
+              @click:append="showPassCf = !showPassCf"
               filled
               label="Password comfirmation"
-              type="password"
             ></v-text-field>
             <v-btn block outlined color="#8cc33c" @click="signUpAction">
               <v-icon left>mdi-account-plus</v-icon>Sign up now
@@ -63,7 +74,34 @@ export default {
       dataSI: {},
       is_signIn: true,
       dialog: false,
-      show: true
+      show: true,
+      showPass: false,
+      showPassCf: false,
+      nameRules: [
+        v => !!v || "Username is required",
+        v =>
+          !v || v.length >= 5 || "Username must be greater than 5 characters",
+        v => !v || v.length <= 25 || "Name must be less than 25 characters",
+        v => /^[a-zA-Z0-9]+$/.test(v) || "Specical character is not allowed"
+      ],
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
+      passwordRules: [
+        v => !!v || "Password is required",
+        v =>
+          !v ||
+          v.length >= 8 ||
+          "Password must be greater than 8 character or more.",
+        v => /.+[a-z]/.test(v) || "Password must be have a lowercase.",
+        v => /.+\d/.test(v) || "Password must be have a number.",
+        v => /.+[A-Z]/.test(v) || "Password must be have a uppercase."
+      ],
+      cf_passwordRules: [
+        v => !!v || "Password is required",
+        v => v === this.dataSU.password || "Password not match."
+      ]
     };
   },
   methods: {

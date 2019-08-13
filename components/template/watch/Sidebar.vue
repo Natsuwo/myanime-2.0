@@ -1,31 +1,32 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar-playlist">
+    <div class="sidebar-playlist" v-if="sidebar.total > 1">
       <v-card flat>
         <div class="player-playlist-header pa-4">
           <div style="float: right;">
-            <v-img width="40" :src="getFlag(subtitle)"></v-img>
+            <v-img width="40" :src="getFlag(episode.subtitle)"></v-img>
           </div>
           <div class="player-playlist-title">{{anime.title}}</div>
           <div
             class="player-playlist-fansub-title"
-          >{{fansub}} - {{currentEp($route.query.a)}}/{{recent.length}}</div>
+          >{{episode.fansub}} - {{currentEp($route.query.a)}}/{{playList.length}}</div>
         </div>
         <div class="player-playlist-video">
           <div
             class="layout align-center player-playlist py-2 px-3"
-            v-for="item in recent"
+            v-for="item in playList"
             :key="item.episode_id"
           >
             <div class="player-sidebar">
               <nuxt-link :to="`/watch?a=${item.episode_id}`">
                 <div class="player-sidebar-thumbnail">
-                  <v-img width="168px" src="https://www.myanime.co/file/cache/Ksu4I29-320x180.png"></v-img>
+                  <v-img width="168px" :src="item.thumbnail"></v-img>
+                  <div class="now-playing" v-if="$route.query.a === item.episode_id">Now Playing</div>
                 </div>
                 <div class="player-sidebar-right-content column">
                   <div class="player-sidebar-title">{{anime.title}} {{item.number}}</div>
-                  <div class="now-playing" v-if="$route.query.a === item.episode_id">Now Playing</div>
-                  <div class="player-sidebar-fansub-name">{{fansub}}</div>
+
+                  <div class="player-sidebar-fansub-name">{{item.fansub}}</div>
                   <div class="player-sidebar-views">{{item.views}} views</div>
                 </div>
               </nuxt-link>
@@ -38,11 +39,11 @@
     <div class="player-sidebar py-1" v-for="item in random" :key="item.data.episode_id">
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
         <div class="player-sidebar-thumbnail">
-          <v-img width="168px" src="https://www.myanime.co/file/cache/Ksu4I29-320x180.png"></v-img>
+          <v-img width="168px" :src="item.data.thumbnail"></v-img>
         </div>
         <div class="player-sidebar-right-content column">
           <div class="player-sidebar-title">{{item.anime.title}} {{item.data.number}}</div>
-          <div class="player-sidebar-fansub-name">{{getFansub(item.meta)}}</div>
+          <div class="player-sidebar-fansub-name">{{item.data.fansub}}</div>
           <div class="player-sidebar-views">{{item.data.views}} views</div>
         </div>
       </nuxt-link>
@@ -51,46 +52,20 @@
 </template>
 <script>
 export default {
+  props: ["flags", "episode", "sidebar", "anime"],
   computed: {
-    sidebar() {
-      return this.$store.state.episode.sidebar;
-    },
-    recent() {
-      return this.sidebar.rencent;
-    },
-    fansub() {
-      return this.sidebar.meta
-        .filter(x => x.meta_key === "fansub")
-        .map(x => x.meta_value)
-        .toString();
-    },
-    subtitle() {
-      return this.sidebar.meta
-        .filter(x => x.meta_key === "subtitle")
-        .map(x => x.meta_value)
-        .toString();
-    },
-    flags() {
-      return this.sidebar.flags;
+    playList() {
+      return this.sidebar.playList;
     },
     random() {
-      return this.sidebar.randomEp;
-    },
-    anime() {
-      return this.$store.state.episode.episode.anime;
+      return this.sidebar.animeRandom;
     }
   },
   methods: {
     currentEp(id) {
-      return this.recent
+      return this.playList
         .filter(x => x.episode_id === id)
         .map(x => x.number)
-        .toString();
-    },
-    getFansub(item) {
-      return item
-        .filter(x => x.meta_key === "fansub")
-        .map(x => x.meta_value)
         .toString();
     },
     getFlag(lang) {
@@ -104,6 +79,9 @@ export default {
 </script>
 
 <style scoped>
+.player-sidebar-thumbnail {
+  position: relative;
+}
 .now-playing {
   position: absolute;
   top: 0;
@@ -111,7 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
-  line-height: 100px;
+  line-height: 90px;
   text-align: center;
   font-size: 18px;
 }

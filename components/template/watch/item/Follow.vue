@@ -1,5 +1,5 @@
 <template>
-  <v-flex text-right>
+  <v-flex>
     <v-btn color="red" @click="followAction" v-if="follow === null">
       Follow
       <span class="count-followers">{{anime.followers}}</span>
