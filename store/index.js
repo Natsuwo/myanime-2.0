@@ -1,7 +1,7 @@
 const cookieparser = process.server ? require('cookieparser') : undefined
 import { checkUserToken } from "../services/Auth"
 import { getFlags } from "../services/Language"
-
+import { getTerms } from "../services/Anime"
 export const state = () => {
     return {
         signIn: false,
@@ -33,9 +33,11 @@ export const actions = {
             if (checkAuth.success) {
                 commit('setAuth', { user_id: checkAuth.user_id, token: checkAuth.token, isLogin: true })
             }
-            // Get Flags
-            var flags = (await getFlags(headers)).data
-            commit("getFlags", flags.result)
         }
+        // Get Flags
+        var flags = (await getFlags()).data
+        commit("getFlags", flags.result)
+        var terms = (await getTerms()).data
+        commit("anime/getTerms", terms.data)
     }
 }

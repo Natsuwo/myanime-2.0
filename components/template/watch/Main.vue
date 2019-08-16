@@ -7,7 +7,7 @@
     </v-layout>
     <div
       class="pt-3 player-episode-title"
-    >{{`${anime.title} - Ep.${episode.number} ${!episode.title ? '' : '- ' + episode.title}`}}</div>
+    >{{`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`}}</div>
     <v-layout row wrap>
       <div class="views flex" style="display: inline;">{{episode.views}} views</div>
       <v-spacer></v-spacer>
@@ -20,22 +20,13 @@
       </v-avatar>
       <div class="flex column">
         <span class="title fansub-title">
-          <nuxt-link :to="`/anime/${anime.anime_id}`">
-            {{episode.fansub}}
-            <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
-            <!-- <v-tooltip right v-if="episode.fansub.trusted">
-              <template v-slot:activator="{ on }">
-                <v-icon dark v-on="on" class="fansub-verify" size="14px">mdi-check-circle</v-icon>
-              </template>
-              <span>Trusted fansub</span>
-            </v-tooltip>-->
-          </nuxt-link>
+          <nuxt-link :to="`/anime/${anime.anime_id}`">{{anime.title}}</nuxt-link>
         </span>
         <div class="player-update-at">{{episode.updated_at | moment("from", "now")}}</div>
       </div>
       <Follow class="text-right" :follow="follow" :anime="anime" />
     </v-layout>
-    <Description :anime="anime" :episode="episode" />
+    <Description :anime="anime" :episode="episode" :flags="flags"/>
     <v-divider />
     <Comment />
   </div>
@@ -65,14 +56,6 @@ export default {
         return this.usermeta[index].meta_value;
       }
       return null;
-    }
-  },
-  methods: {
-    getFlag(lang) {
-      return this.flags
-        .filter(x => x.key === lang)
-        .map(x => x.value)
-        .toString();
     }
   },
   watch: {

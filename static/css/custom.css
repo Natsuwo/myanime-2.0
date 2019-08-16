@@ -102,6 +102,13 @@ div.siema {
     width: 100%;
 }
 
+.anime-info-content .title-content {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .anime-player {
     position: relative;
     width: 100%;
@@ -121,7 +128,7 @@ div.siema {
 }
 
 .anime-info {
-    max-width: 612px;
+    max-width: 812px;
 }
 
 .anime-info .title-name {
@@ -357,7 +364,7 @@ div.siema {
 }
 
 .anime-channel-container {
-    margin: 0 190px;
+    margin: auto;
 }
 
 .anime-channel-menus {
@@ -397,8 +404,7 @@ div.siema {
 }
 
 .anime-channel-description {
-    text-transform: uppercase;
-    max-width: 650px;
+    max-width: 100%;
     margin-top: 8px;
     color: #aaa;
     display: -webkit-box;
@@ -427,8 +433,8 @@ div.siema {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     text-overflow: ellipsis;
-    font-size: 24px;
-    font-weight: 400;
+    font-size: 28px;
+    font-weight: 700;
     line-height: 2rem;
 }
 
@@ -441,11 +447,16 @@ div.siema {
     width: 184px;
     height: 256px;
     border-radius: 2px;
+    float: left;
 }
 
 .anime-channel-details {
+    padding-left: 40px;
     position: relative;
-    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    display: -webkit-flex;
 }
 
 .anime-channel-header {
@@ -454,11 +465,15 @@ div.siema {
 }
 
 .anime-channel-content {
+    width: 1284px;
+    margin: 0 auto;
     position: relative;
+    height: 100%;
+    /* position: relative;
     width: 100%;
     height: 100%;
     padding: 48px 0;
-    margin: 0 195px!important;
+    margin: 0 195px!important; */
 }
 
 .anime-channel-banner {
@@ -498,6 +513,13 @@ div.siema {
     .dplayer-setting {
         display: none!important;
     }
+    .anime-channel-content {
+        width: 428px!important;
+        margin: 0 8px!important;
+    }
+    .anime-channel-container {
+        margin: 0 8px!important;
+    }
 }
 
 @media (min-width: 1264px) {
@@ -506,6 +528,9 @@ div.siema {
     }
     .anime-container {
         margin: 0 54px;
+    }
+    .anime-channel-content {
+        width: 1284px;
     }
 }
 
@@ -517,6 +542,15 @@ div.siema {
     }
     .anime-container {
         margin: 0 24px;
+    }
+    .anime-channel-content {
+        width: 856px;
+    }
+    .anime-channel-container {
+        margin: 0 14px!important;
+    }
+    .anime-info .title-name {
+        width: 80px !important;
     }
 }
 

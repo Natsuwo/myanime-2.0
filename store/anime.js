@@ -1,7 +1,6 @@
 const ANIMES = 'animes'
 const ANIME = 'anime'
 const ANIMEMETA = 'animemta'
-const TERM = 'term'
 
 export const state = () => ({
     animes: [],
@@ -20,9 +19,6 @@ export const actions = {
     async animemetaData({ commit }, data) {
         return commit(ANIMEMETA, { data })
     },
-    async animeTermData({ commit }, data) {
-        return commit(TERM, { data })
-    }
 }
 
 export const mutations = {
@@ -35,8 +31,8 @@ export const mutations = {
     [ANIMEMETA](state, { data }) {
         return state.animemeta = data;
     },
-    [TERM](state, { data }) {
+    getTerms(state, data) {
         return state.terms = data;
-    },
+    }
 
 }

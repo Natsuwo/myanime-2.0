@@ -13,6 +13,6 @@ export function getUserMeta(headers, anime_id, episode_id) {
     return Api(headers).get(`/episode/get-usermeta?anime_id=${anime_id}&episode_id=${episode_id}`);
 }
 
-export function getDataSidebar(headers, episode_id) {
-    return Api(headers).get(`/episode/get-sidebar?episode_id=${episode_id}`);
+export function sidebarLoadmore(headers, episode_id, skip) {
+    return Api(headers).get(`/episode/sidebar-loadmore?episode_id=${episode_id}&skip=${skip}`);
 }

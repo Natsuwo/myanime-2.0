@@ -10,6 +10,7 @@
           <AnimeDataSlider :data="newUploads" :anime="anime" :flags="flags" class="py-2" />
           <h2>All</h2>
           <AnimeData :data="AllEpisodes" :anime="anime" :flags="flags" class="pa-2" />
+          <v-btn @click="loadmore" :loading="loading">Loadmore</v-btn>
         </div>
       </div>
     </v-layout>
@@ -19,7 +20,7 @@
 import AnimeDataSlider from "@/components/template/channel/item/AnimeDataSlider";
 import AnimeData from "@/components/template/channel/item/AnimeData";
 import Header from "@/components/template/anime/channel/header";
-import { getChannel } from "@/services/Anime";
+import { getChannel, loadMoreChannel } from "@/services/Anime";
 export default {
   head() {
     return {
@@ -41,27 +42,32 @@ export default {
     var response = (await getChannel(headers, anime_id)).data;
     await store.dispatch("anime/animeData", response.anime);
     await store.dispatch("anime/animemetaData", response.animemeta);
-    await store.dispatch("anime/animeTermData", response.terms);
     await store.dispatch("episode/episodesData", response.episodes);
     if (store.state.auth.isLogin) {
       await store.dispatch("auth/userMetaData", response.usermeta);
     }
+  },
+  data() {
+    return {
+      skip: 12,
+      loading: false
+    };
   },
   computed: {
     episodes() {
       return this.$store.state.episode.episodes;
     },
     AllEpisodes() {
-      return this.episodes.all
+      return this.episodes.all;
     },
     mostViews() {
       return this.episodes.most;
     },
     newUploads() {
-      return this.episodes.new
+      return this.episodes.new;
     },
     anime() {
-      return this.$store.state.anime.anime;
+      return this.$store.state.anime.anime || "";
     },
     animemetas() {
       return this.$store.state.anime.animemeta;
@@ -74,6 +80,24 @@ export default {
     },
     flags() {
       return this.$store.state.flags;
+    }
+  },
+  mounted() {
+    if (!this.anime) {
+      return this.$router.push({ path: "/" });
+    }
+  },
+  methods: {
+    async loadmore() {
+      this.loading = true;
+      var headers = { "x-user-session": this.$store.state.auth.userToken };
+      var anime_id = this.$route.params.id;
+      var response = await loadMoreChannel(headers, anime_id, this.skip);
+      if (response.data.success) {
+        this.$store.dispatch("episode/loadMoreChannel", response.data);
+        this.skip += 12;
+        this.loading = false;
+      }
     }
   },
   components: {

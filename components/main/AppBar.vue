@@ -13,7 +13,7 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <nuxt-link to="/">
-          <v-img width="150" src="./summer.svg"></v-img>
+          <v-img width="150" src="/summer.svg"></v-img>
         </nuxt-link>
       </v-list-item>
 
@@ -40,14 +40,7 @@
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />
-      <v-text-field
-        class="mx-4"
-        flat
-        hide-details
-        label="Search"
-        prepend-inner-icon="mdi-magnify"
-        solo-inverted
-      ></v-text-field>
+      <SearchBar />
       <v-spacer />
       <LoginMenu v-if="$store.state.auth.isLogin" />
       <Auth v-else />
@@ -57,9 +50,11 @@
 <script>
 import Auth from "../template/user/auth";
 import LoginMenu from "./item/LoginMenu";
+import SearchBar from "./item/SearchBar"
 import Items from "@/items/items";
 export default {
   components: {
+    SearchBar,
     LoginMenu,
     Auth
   },

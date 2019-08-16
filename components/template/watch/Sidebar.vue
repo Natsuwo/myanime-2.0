@@ -9,7 +9,7 @@
           <div class="player-playlist-title">{{anime.title}}</div>
           <div
             class="player-playlist-fansub-title"
-          >{{episode.fansub}} - {{currentEp($route.query.a)}}/{{playList.length}}</div>
+          >{{episode.fansub}} - {{episode.number}}/{{total}}</div>
         </div>
         <div class="player-playlist-video">
           <div
@@ -32,6 +32,7 @@
               </nuxt-link>
             </div>
           </div>
+          <v-btn block @click="loadmore" :loading="loading">Load more</v-btn>
         </div>
       </v-card>
     </div>
@@ -51,28 +52,43 @@
   </div>
 </template>
 <script>
+import { sidebarLoadmore } from "@/services/Episode";
 export default {
   props: ["flags", "episode", "sidebar", "anime"],
+  data() {
+    return {
+      skip: 24,
+      loading: false
+    };
+  },
   computed: {
     playList() {
       return this.sidebar.playList;
     },
     random() {
       return this.sidebar.animeRandom;
+    },
+    total() {
+      return this.sidebar.total;
     }
   },
   methods: {
-    currentEp(id) {
-      return this.playList
-        .filter(x => x.episode_id === id)
-        .map(x => x.number)
-        .toString();
-    },
     getFlag(lang) {
       return this.flags
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    async loadmore() {
+      this.loading = true;
+      var headers = { "x-user-session": this.$store.state.auth.userToken };
+      var episode_id = this.$route.query.a;
+      var response = await sidebarLoadmore(headers, episode_id, this.skip);
+      if (response.data.success) {
+        this.$store.dispatch("episode/sidebarLoadmore", response.data);
+        this.skip += 24;
+        this.loading = false;
+      }
     }
   }
 };

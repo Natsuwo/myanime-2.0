@@ -1,19 +1,19 @@
 <template>
   <div placeholder="loading...">
     <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
-      <template v-for="(episode, index) in data">
+      <template v-for="(episode, index) in animes">
         <div class="slide" :key="index">
           <div class="flex">
             <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-            <v-img :src="episode.thumbnail">
-              <div class="play-icon">
-                <v-icon>mdi-play</v-icon>
-              </div>
-            </v-img>
-            <div
-              :title="`${anime.title} episode ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`"
-              class="subheading episode-title"
-            >{{`${anime.title} Ep. ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`}}</div>
+              <v-img :src="episode.thumbnail" @error="onImgError(index)">
+                <div class="play-icon">
+                  <v-icon>mdi-play</v-icon>
+                </div>
+              </v-img>
+              <div
+                :title="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+                class="subheading episode-title"
+              >{{`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`}}</div>
             </nuxt-link>
             <div class="metadata-line">
               <div class="title-anime">
@@ -58,10 +58,19 @@ export default {
         },
         startIndex: 0
       },
-      currentSlide: 0
+      currentSlide: 0,
+      animes: []
     };
   },
+  created() {
+    if (this.data) {
+      this.animes = JSON.parse(JSON.stringify(this.data));
+    }
+  },
   methods: {
+    onImgError: function(index) {
+      this.animes[index].thumbnail = "/thumb-error.jpg";
+    },
     next() {
       return this.$refs.siema.next();
     },
@@ -73,7 +82,7 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
-    },
+    }
   }
 };
 </script>

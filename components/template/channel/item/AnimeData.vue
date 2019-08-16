@@ -8,9 +8,9 @@
           </div>
         </v-img>
         <div
-          :title="`${anime.title} episode ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`"
+          :title="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
           class="subheading episode-title"
-        >{{`${anime.title} Ep. ${episode.number} ${episode.title ? '-' : ''} ${episode.title}`}}</div>
+        >{{`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`} `}}</div>
       </nuxt-link>
       <div class="metadata-line">
         <div class="title-anime">

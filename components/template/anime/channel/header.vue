@@ -1,24 +1,30 @@
 <template>
   <v-layout class="anime-channel-header" row wrap align-center>
-    <v-img class="anime-channel-banner" src="https://i.ytimg.com/vi/2rPxChaPC2E/maxresdefault.jpg"></v-img>
+    <v-img class="anime-channel-banner" src="/library/upload/anime/cover/default.jpg"></v-img>
     <div class="anime-overlay"></div>
-    <div class="anime-channel-content row">
-      <div class="anime-channel-cover">
-        <v-img width="184px" :src="data.thumbnail"></v-img>
-      </div>
-      <div class="anime-channel-details">
-        <div class="anime-channel-title">{{data.title}}</div>
-        <div class="anime-channel-studio">{{getTerm('studio')}}</div>
-        <div class="anime-channel-description" :title="data.description">{{data.description}}</div>
-        <div class="anime-channel-season">{{getTerm('season')}}</div>
-        <div class="anime-channel-genre">
-          <v-chip v-for="item in getGenre('genre')" :key="item" class="ma-2" small label>{{item}}</v-chip>
+    <v-layout row wrap justify-center align-center>
+      <div class="anime-channel-content">
+        <div class="anime-channel-cover">
+          <v-img width="184px" :src="data.thumbnail"></v-img>
         </div>
-        <div class="anime-channel-follow">
-          <abc :follow="follow" :anime="data" />
+        <div class="anime-channel-details">
+          <div class="anime-channel-title">{{data.title}}</div>
+          <div class="anime-channel-studio">{{data.studio}}</div>
+          <div
+            class="anime-channel-description"
+            :title="data.description"
+            v-html="data.description"
+          ></div>
+          <div class="anime-channel-season">{{data.season}}</div>
+          <div class="anime-channel-genre">
+            <v-chip v-for="item in getTerm()" :key="item" class="ma-2" small label>{{item}}</v-chip>
+          </div>
+          <div class="anime-channel-follow">
+            <abc :follow="follow" :anime="data" />
+          </div>
         </div>
       </div>
-    </div>
+    </v-layout>
   </v-layout>
 </template>
 <script>
@@ -38,15 +44,16 @@ export default {
   },
   methods: {
     getTerm(key) {
-      return (
-        this.terms
-          .filter(x => x.type === key)
+      var genres = this.meta.find(x => x.meta_key === "genre").meta_value;
+      var terms = [];
+      for (var item of genres) {
+        var term = this.terms
+          .filter(x => x.term_id === parseInt(item))
           .map(x => x.key)
-          .toString() || ""
-      );
-    },
-    getGenre(key) {
-      return this.terms.filter(x => x.type === key).map(x => x.key) || "";
+          .join();
+        terms.push(term);
+      }
+      return terms;
     }
   }
 };

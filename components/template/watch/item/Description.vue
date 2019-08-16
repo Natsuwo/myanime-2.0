@@ -3,16 +3,17 @@
     <div
       v-if="!isShow"
       class="player-description pt-3"
-    >{{anime.description | truncate(300, '...')}}</div>
+      v-html="$options.filters.truncate(anime.description, 300, '...')"
+    ></div>
     <div v-else class="player-description py-2 clearfix">
-      {{anime.description}}
+      <div class="description" v-html="anime.description"></div>
       <div class="anime-info pt-10">
         <div class="anime-cover">
           <v-img :src="anime.thumbnail"></v-img>
         </div>
         <div class="anime-info-content" v-for="item in animeInfo" :key="item.key">
-          <div class="title-name">{{item.key}}</div>
-          <div class="title-content">{{item.value}}</div>
+          <div v-if="hideKeyDes" class="title-name">{{item.key}}</div>
+          <div class="title-content" v-html="item.value"></div>
         </div>
       </div>
     </div>
@@ -22,7 +23,7 @@
 </template>
 <script>
 export default {
-  props: ["episode", "anime"],
+  props: ["episode", "anime", "flags"],
   data() {
     return {
       isShow: false
@@ -39,9 +40,24 @@ export default {
         { key: "title", value: this.anime.title },
         { key: "premiered", value: this.anime.premiered },
         { key: "rating", value: this.anime.rating },
-        { key: "status", value: this.anime.status }
+        { key: "status", value: this.anime.status },
+        { key: "fansub", value: this.episode.fansub},
+        { key: "audio", value: `<img width="18px" src="${this.getFlag(this.episode.audio)}" />`},
+        { key: "subtitle", value: `<img width="18px" src="${this.getFlag(this.episode.subtitle)}" />`}
       ];
+    },
+    hideKeyDes() {
+      return this.$vuetify.breakpoint.smAndUp
+    }
+  },
+  methods: {
+    getFlag(lang) {
+      return this.flags
+        .filter(x => x.key === lang)
+        .map(x => x.value)
+        .toString();
     }
   }
+  
 };
 </script>
