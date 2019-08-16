@@ -1,3 +1,7 @@
+html {
+    font-size: 16px!important;
+}
+
 .inline-block {
     display: inline-block;
 }
@@ -77,6 +81,10 @@ div.siema {
 .anime-head-title {
     padding: 15px 0;
     font-weight: 350;
+}
+
+.episode-view, .episode-moment, .title-anime {
+    font-size: 14px;
 }
 
 .episode-view::after {
@@ -185,11 +193,12 @@ div.siema {
     font-size: 16px;
 }
 
-.player-thumb_up {
-    cursor: pointer;
+.player-thumb_up .v-btn, .player-thumb_down .v-btn {
+    width: 40px!important;
+    height: 40px!important;
 }
 
-.player-thumb_down {
+.player-thumb_up, .player-thumb_down {
     cursor: pointer;
 }
 
@@ -231,6 +240,11 @@ div.siema {
 
 .comment-user.avatar, .reply-user.avatar {
     vertical-align: top !important;
+}
+
+.heart .v-btn {
+    height: 32px!important;
+    width: 32px!important;
 }
 
 .heart {
@@ -504,6 +518,112 @@ div.siema {
 
 .anime-flag {
     margin-left: 10px;
+}
+
+.search-content {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+}
+
+.search-thumbnail {
+    width: 246px;
+    margin-right: 16px;
+    display: inline-block;
+    position: relative;
+    -ms-flex: none;
+    -webkit-flex: none;
+    flex: none;
+}
+
+.search-thumbnail-link {
+    text-decoration: none;
+}
+
+.search-thumbnail-link .search-title {
+    color: #fff;
+}
+
+.search-right-content {
+    max-width: 600px;
+    min-width: 0;
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    -ms-flex: 1 1 0.000000001px;
+    -webkit-flex: 1;
+    flex: 1;
+    -webkit-flex-basis: 0.000000001px;
+    flex-basis: 0.000000001px;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.search-title {
+    font-size: 20px;
+    display: flex;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.search-views {
+    color: #aaa;
+    font-weight: 400;
+}
+
+.search-description {
+    color: #aaa;
+    font-weight: 400;
+    display: block;
+    line-height: 1.8rem;
+    max-height: 5.6rem;
+    overflow: hidden;
+    text-transform: none;
+}
+
+.search-description>a {
+    text-decoration: none;
+}
+
+.search-overlay {
+    display: block;
+}
+
+.search-anime-thumbnail {
+    position: absolute!important;
+    left: 0;
+    bottom: 0;
+    display: flex!important;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+}
+
+.search-anime {
+    width: 108px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: hsla(0, 0%, 6.7%, 0.8);
+    color: hsla(0, 0%, 100%, 0.8);
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2rem;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
 }
 
 @media (max-width: 575.98px) {

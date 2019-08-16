@@ -129,6 +129,10 @@ export default {
           token: messages.access,
           user_id: messages.user.user_id
         };
+        this.$cookies.set('USER_ACCESS_TOKEN', messages.access, {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 1
+        })
         this.$store.commit("setAuth", data);
       }
       return;

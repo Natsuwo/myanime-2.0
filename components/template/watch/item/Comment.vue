@@ -57,6 +57,7 @@
             <div class="comment-user comment-actions pt-2">
               <div class="heart">
                 <v-btn
+                  fab
                   :class="isHeart(comment.comment_id) ? 'heart-count': ''"
                   @click="attachHeart(comment, isHeart(comment.comment_id) ? true : false)"
                   x-small

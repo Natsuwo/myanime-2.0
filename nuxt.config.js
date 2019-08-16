@@ -5,12 +5,12 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + process.env.SITE_TITLE,
-    title: process.env.SITE_TITLE || '',
+    titleTemplate: '%s - ' + 'Myanime Anime Streaming',
+    title: process.env.siteTitle || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.SITE_DESCRIPTION || '' }
+      { hid: 'description', name: 'description', content: process.env.SITE_DESCRIPTION || 'Anime HD Streaming, Watch Anime HD Online Free with no ads at Animeml, Watch Anime for Free, Multi Language Subtitles, Anime Multi Subs, Anime Engsubed, Anime ThaiSubed, 動畫中文字幕, Anime Raw' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -19,9 +19,6 @@ module.exports = {
     script: [{ src: "/js/DPlayer.min.js" }, { src: "/js/hls.min.js" }]
   },
 
-  env: {
-    secureKey: process.env.SECUREKEY
-  },
   /*
   ** Customize the progress-bar color
   */

@@ -10,7 +10,8 @@
         <div
           :title="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
           class="subheading episode-title"
-        >{{`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`} `}}</div>
+          v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`} `"
+        ></div>
       </nuxt-link>
       <div class="metadata-line">
         <div class="title-anime">
@@ -26,7 +27,7 @@
           </nuxt-link>
         </div>
         <span class="episode-view">{{episode.views}} views</span>
-        <span>{{episode.updated_at | moment("from", "now")}}</span>
+        <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
       </div>
     </v-flex>
   </v-layout>

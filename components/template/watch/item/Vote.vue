@@ -1,13 +1,13 @@
 <template>
   <div style="display: inline;">
     <span :class="`player-thumb_up ${isLike === true ? 'active' : ''}`" @click="like">
-      <v-btn small icon text>
+      <v-btn fab small icon text>
         <v-icon>mdi-thumb-up</v-icon>
       </v-btn>
       <span class="player-thumb_up number">{{likes}}</span>
     </span>
     <span :class="`player-thumb_down ${isLike === false ? 'active' : ''}`" @click="dislike">
-      <v-btn small icon text>
+      <v-btn fab small icon text>
         <v-icon>mdi-thumb-down</v-icon>
       </v-btn>
       <span class="player-thumb_down number">{{dislikes}}</span>
