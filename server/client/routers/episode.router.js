@@ -10,7 +10,7 @@ const countView = rateLimit({
     windowMs: 24 * 60 * 1000,
     max: 1, // start blocking after 5 requests
     keyGenerator: (req) => {
-        var rate = req.query.episode_id + ip.address()
+        var rate = req.query.episode_id + req.headers['x-forwarded-for'] || req.connection.remoteAddress
         return rate
     },
     handler: async (req, res, next) => {
@@ -18,8 +18,10 @@ const countView = rateLimit({
     }
 });
 
+var apicache = require('apicache')
+var cache = apicache.middleware
 
-route.get('/episode/get', checkSecure, getEpisodes)
+route.get('/episode/get', cache('5 minutes'), checkSecure, getEpisodes)
 route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
 route.get('/episode/get-episode', checkSecure, countView, isUserLogin, getSingleEp)
 

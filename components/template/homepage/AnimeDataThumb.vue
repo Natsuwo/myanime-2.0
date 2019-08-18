@@ -7,11 +7,20 @@
           <div class="slide" :key="index">
             <div class="flex">
               <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-                <v-img class="episode-thumbnail" :src="episode.thumbnail">
-                  <div class="play-icon">
-                    <v-icon>mdi-play</v-icon>
+                <div class="season-thumbnail">
+                  <v-img class="episode-thumbnail" :src="episode.thumbnail">
+                    <div class="play-icon">
+                      <v-icon>mdi-play</v-icon>
+                    </div>
+                  </v-img>
+                  <div class="search-overlay">
+                    <v-img class="season-anime-thumbnail" :src="animeThumb(episode.anime_id)"></v-img>
+                    <div class="season-anime">
+                      <div class="count">{{episode.count}}</div>
+                      <v-icon>mdi-animation-play</v-icon>
+                    </div>
                   </div>
-                </v-img>
+                </div>
                 <div
                   :title="`${animeTitle(episode.anime_id)} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
                   class="subheading episode-title"
@@ -37,7 +46,7 @@
           <v-btn text @click="prev" :disabled="currentSlide < 1 ? true : false ">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
-          <v-btn text @click="next" :disabled="currentSlide >= 6 ? true : false ">
+          <v-btn text @click="next" :disabled="currentSlide >= 7 ? true : false ">
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-flex>
@@ -62,8 +71,7 @@ export default {
         },
         startIndex: 0
       },
-      currentSlide: 0,
-      anime: []
+      currentSlide: 0
     };
   },
   methods: {
@@ -81,6 +89,11 @@ export default {
     },
     animeTitle(id) {
       return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];
+    },
+    animeThumb(id) {
+      return this.animes
+        .filter(x => x.anime_id === id)
+        .map(x => x.thumbnail)[0];
     }
   }
 };

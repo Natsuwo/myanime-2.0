@@ -1,8 +1,7 @@
 const EPISODE = 'fetch'
-const EPISODES = 'getusermeta'
+const EPISODES = 'episodes'
 const SIDEBAR = 'sidebar'
 const LOADMORE = 'loadmore'
-const LOADMORECHANNEL = 'loadmorechannel'
 
 export const state = () => ({
     episodes: [],
@@ -22,10 +21,8 @@ export const actions = {
     },
     async sidebarLoadmore({ commit }, res) {
         return commit(LOADMORE, { res })
-    },
-    async loadMoreChannel({ commit }, res) {
-        return commit(LOADMORECHANNEL, { res })
     }
+    
 }
 
 export const mutations = {
@@ -42,10 +39,5 @@ export const mutations = {
         var current = state.sidebar.playList
         var newData = res.data
         return state.sidebar.playList = current.concat(newData)
-    },
-    [LOADMORECHANNEL](state, { res }) {
-        var current = state.episodes.all
-        var newData = res.data
-        return state.episodes.all = current.concat(newData)
     }
 }

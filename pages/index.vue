@@ -5,18 +5,34 @@
       <AnimeDataSlider :title="'Recommended'" :data="recoment" :flags="flags" :animes="animes" />
       <AnimeDataSlider :title="'Random'" :data="random" :flags="flags" :animes="animes" />
       <AnimeDataSlider :title="'Trending'" :data="trending" :flags="flags" :animes="animes" />
-      <AnimeDataSlider :title="'Current Season'" :data="current" :flags="flags" :animes="animes" />
+      <AnimeDataThumb
+        :title="'Current Season'"
+        :data="current"
+        :flags="flags"
+        :animes="animes"
+      />
+      <!-- <AnimeDataSlider :title="'Current Season'" :data="current" :flags="flags" :animes="animes" /> -->
     </div>
   </v-container>
 </template>
 <script>
 import AnimeData from "@/components/template/homepage/AnimeData";
 import AnimeDataSlider from "@/components/template/homepage/AnimeDataSlider";
+import AnimeDataThumb from "@/components/template/homepage/AnimeDataThumb";
 import { getEpisodes } from "../services/Episode";
+import setting from "@/items/settings.json";
 export default {
   head() {
     return {
-      title: "Home"
+      titleTemplate: "%s - " + setting.site_title,
+      title: "Home",
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: setting.descriptions
+        }
+      ]
     };
   },
   async fetch({ store, query }) {
@@ -44,10 +60,10 @@ export default {
       return this.episodes.random;
     },
     trending() {
-      return this.episodes.trending
+      return this.episodes.trending;
     },
     current() {
-      return this.episodes.current
+      return this.episodes.current;
     },
     flags() {
       return this.$store.state.flags;
@@ -55,7 +71,8 @@ export default {
   },
   components: {
     AnimeDataSlider,
-    AnimeData
+    AnimeData,
+    AnimeDataThumb
   }
 };
 </script>

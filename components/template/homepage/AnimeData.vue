@@ -4,7 +4,7 @@
     <v-layout row wrap>
       <v-flex xs6 sm4 md2 v-for="episode in data" :key="episode.id">
         <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-          <v-img :src="episode.thumbnail">
+          <v-img class="episode-thumbnail" :src="episode.thumbnail">
             <div class="play-icon">
               <v-icon>mdi-play</v-icon>
             </div>

@@ -15,20 +15,20 @@ module.exports = {
             }
             var anime = await Anime.findOne({ anime_id }, { __v: 0, _id: 0 })
             var animemeta = await AnimeMeta.find({ anime_id }, { __v: 0, _id: 0 })
-            var allEpisodes = await Episode.find({ anime_id }, { __v: 0, _id: 0 }).limit(12)
-            var mostViews = await allEpisodes.sort((a, b) => {
-                return b.views - a.views
-            }).slice(0, 13)
-            var newUploads = await allEpisodes.sort((a, b) => {
-                return b.updated_at - a.updated_at
-            }).slice(0, 13)
-
+            var query = Episode.find({ anime_id }, { __v: 0, _id: 0 })
+            var mostViews = await query.sort({ views: -1 }).limit(12)
+            var newUploads = await query.sort({ updated_at: -1 }).limit(12)
+            var allEpisodes = await query.limit(12)
+            var EngEpisodes = await query.find({ subtitle: 'English' }).limit(12)
+            var CnEpisodes = await query.find({ subtitle: 'Chinese' }).limit(12)
             return res.send({
                 success: true,
                 episodes: {
                     all: allEpisodes,
                     most: mostViews,
-                    new: newUploads
+                    new: newUploads,
+                    eng: EngEpisodes,
+                    cn: CnEpisodes
                 },
                 anime,
                 animemeta,

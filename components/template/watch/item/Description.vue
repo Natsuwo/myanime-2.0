@@ -31,7 +31,7 @@ export default {
   },
   filters: {
     truncate: function(text, length, suffix) {
-      return text.substring(0, length) + suffix;
+      if (text && text.length > 0) return text.substring(0, length) + suffix || "";
     }
   },
   computed: {
@@ -41,13 +41,23 @@ export default {
         { key: "premiered", value: this.anime.premiered },
         { key: "rating", value: this.anime.rating },
         { key: "status", value: this.anime.status },
-        { key: "fansub", value: this.episode.fansub},
-        { key: "audio", value: `<img width="18px" src="${this.getFlag(this.episode.audio)}" />`},
-        { key: "subtitle", value: `<img width="18px" src="${this.getFlag(this.episode.subtitle)}" />`}
+        { key: "fansub", value: this.episode.fansub },
+        {
+          key: "audio",
+          value: `<img width="18px" src="${this.getFlag(
+            this.episode.audio
+          )}" />`
+        },
+        {
+          key: "subtitle",
+          value: `<img width="18px" src="${this.getFlag(
+            this.episode.subtitle
+          )}" />`
+        }
       ];
     },
     hideKeyDes() {
-      return this.$vuetify.breakpoint.smAndUp
+      return this.$vuetify.breakpoint.smAndUp;
     }
   },
   methods: {
@@ -58,6 +68,5 @@ export default {
         .toString();
     }
   }
-  
 };
 </script>

@@ -44,16 +44,18 @@ export default {
   },
   methods: {
     getTerm(key) {
-      var genres = this.meta.find(x => x.meta_key === "genre").meta_value;
-      var terms = [];
-      for (var item of genres) {
-        var term = this.terms
-          .filter(x => x.term_id === parseInt(item))
-          .map(x => x.key)
-          .join();
-        terms.push(term);
+      if (this.meata) {
+        var genres = this.meta.find(x => x.meta_key === "genre").meta_value;
+        var terms = [];
+        for (var item of genres) {
+          var term = this.terms
+            .filter(x => x.term_id === parseInt(item))
+            .map(x => x.key)
+            .join();
+          terms.push(term);
+        }
+        return terms;
       }
-      return terms;
     }
   }
 };

@@ -57,20 +57,6 @@ export default {
       }
       return null;
     }
-  },
-  watch: {
-    "$store.state.auth.isLogin"(val) {
-      if (val) {
-        var data = {
-          headers: {
-            "X-User-Session": this.$store.state.auth.userToken
-          },
-          episode_id: this.episode.episode_id,
-          anime_id: this.episode.anime_id
-        };
-        this.$store.dispatch("episode/getUserMeta", data);
-      }
-    }
   }
 };
 </script>

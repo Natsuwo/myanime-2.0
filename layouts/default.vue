@@ -20,6 +20,14 @@ export default {
     AppBar,
     SnackBar,
     DialogSignIn
+  },
+  watch: {
+    "$store.state.auth.isLogin"(val) {
+      this.$router.go({
+        path: "/a/1",
+        force: true
+      });
+    }
   }
 };
 </script>

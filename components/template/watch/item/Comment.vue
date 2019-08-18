@@ -15,10 +15,7 @@
       </v-flex>
     </v-layout>
     <div class="signed-in" v-else>
-      <v-layout v-if="loading || firstLoad" justify-center align-center row wrap>
-        <v-progress-circular indeterminate></v-progress-circular>
-      </v-layout>
-      <v-layout v-else class="comment-input" row wrap pt-3>
+      <v-layout class="comment-input" row wrap pt-3>
         <v-avatar class="mr-4 pt-4 avatar-comment">
           <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
         </v-avatar>
@@ -37,6 +34,9 @@
         </v-flex>
       </v-layout>
     </div>
+    <v-layout v-if="loading || firstLoad" justify-center align-center row wrap>
+      <v-progress-circular indeterminate></v-progress-circular>
+    </v-layout>
     <v-flex v-for="comment in comments" :key="comment.comment_id" my-4>
       <v-layout column>
         <div class="main-comment">
@@ -167,7 +167,7 @@ export default {
       return this.$store.dispatch("comment/attachHeart", data);
     },
     onScroll(e) {
-      if (window.scrollY > 200) {
+      if (window.scrollY > 300) {
         return (this.scrolled = true);
       }
     },
@@ -259,9 +259,12 @@ export default {
           "X-User-Session": this.$store.state.auth.userToken
         };
         var episode_id = this.$route.query.a;
-        return await this.$store.dispatch("comment/get", { headers, episode_id });
+        return await this.$store.dispatch("comment/get", {
+          headers,
+          episode_id
+        });
       }
-      return this.scrolled = false
+      return (this.scrolled = false);
     },
     scrolled(val) {
       if (val) {

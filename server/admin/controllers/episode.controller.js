@@ -18,18 +18,23 @@ module.exports = {
 
             if (search) {
                 var regex = new RegExp(escapeRegex(search), 'gi')
-                var animes = await Anime.findOne({ $or: [{ title: regex }, { status: regex }, { season: regex }] }, { _id: 0 }).select('title anime_id')
-                if (animes) {
-                    var episodes = await Episode.find({ anime_id: animes.anime_id }, { __v: 0, _id: 0 }).skip((page - 1) * perPage).limit(perPage)
-                    return res.send({ success: true, count, data: episodes, animes: [animes], meta: { page, perPage, totalPage } })
+                var animes = await Anime.find({ $or: [{ title: regex }, { status: regex }, { season: regex }] }, { _id: 0 }).select('title anime_id')
+                var episodes = []
+                for (var item of animes) {
+                    var items = await Episode.find({ anime_id: item.anime_id }, { __v: 0, _id: 0 }).skip((page - 1) * perPage).limit(perPage)
+                    for (var episode of items) {
+                        episodes.push(episode)
+                    }
+
                 }
+                return res.send({ success: true, count, data: episodes, animes, meta: { page, perPage, totalPage } })
             }
 
             var animes = []
             for (let episode of episodes) {
                 var anime_id = episode.anime_id
                 var anime = await Anime.findOne({ anime_id }, { _id: 0 }).select('title anime_id')
-                animes.push(anime)
+                if (anime) animes.push(anime)
             }
             res.send({ success: true, count, data: episodes, animes, meta: { page, perPage, totalPage } })
         } catch (err) {
@@ -47,6 +52,7 @@ module.exports = {
     async post(req, res) {
         try {
             var { anime_id, title, number, description, type, audio, subtitle, fansub } = req.body
+            if (!anime_id) throw Error('Missing Anime')
             var { source, thumbnail } = res.locals
             if (!thumbnail) thumbnail = ''
             var episodeCreate = await Episode.create({ anime_id, title, source, number, description, type, audio, subtitle, fansub, thumbnail })
@@ -56,15 +62,22 @@ module.exports = {
             res.send({ success: false, error: err.message })
         }
     },
-    async update(req, res) {
+    async getUpdate(req, res) {
         try {
             var { episode_id } = req.query
             if (episode_id) {
                 var episode = await Episode.findOne({ episode_id }, { __v: 0, _id: 0 })
                 return res.send({ success: true, data: episode })
             }
-            var { episode_id, anime_id, title, source, number, description, type, audio, subtitle, fansub } = req.body
-            await Episode.updateOne({ episode_id, anime_id }, { title, source, number, description, type, audio, subtitle, fansub })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async update(req, res) {
+        try {
+            var { episode_id, anime_id, title, number, type, audio, subtitle, fansub } = req.body
+            var { thumbnail } = res.locals
+            await Episode.updateOne({ episode_id }, { anime_id, title, number, thumbnail, type, audio, subtitle, fansub })
             return res.send({ success: true, message: 'Edited.' })
 
         } catch (err) {
@@ -73,9 +86,9 @@ module.exports = {
     },
     async removeEpisode(req, res) {
         try {
-            var { episode_id, anime_id } = req.body
-            await Episode.deleteOne({ episode_id, anime_id })
-            return res.send({ success: true, message: 'Edited.' })
+            var { episode_id } = req.body
+            await Episode.deleteOne({ episode_id })
+            return res.send({ success: true, message: 'Removed.' })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

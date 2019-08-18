@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatar: String,
     rank: Number,
     created_at: Number
 })
@@ -46,6 +47,8 @@ userSchema.pre('save', function (next) {
 userSchema.methods.comparePassword = function (password) {
     return bcrypt.compare(password, this.password)
 }
+
+userSchema.index({ username: 'text', email: 'text' })
 
 const User = mongoose.model('User', userSchema, 'user')
 module.exports = User

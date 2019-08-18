@@ -1,30 +1,19 @@
 const User = require('../../models/User')
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-}
 
 module.exports = {
     async validateSignIn(req, res, next) {
         try {
             var { email, password } = req.body
-
-            var regex = new RegExp(escapeRegex(email), 'gi')
-            var user = await User.findOne({ $or: [{ email }, { username: regex }] })
-
-            if (!user) {
-                return res.send({
-                    success: false,
-                    error: 'Username or email doesn\'t exist.'
-                })
+            if (!email || !password) {
+                throw Error('Do not empty fields.')
             }
+            var username = email
+            var user = await User.findOne({ $or: [{ email }, { username }] })
+
+            if (!user) throw Error('Something wrong, please check again.')
 
             var isPasswordValid = await user.comparePassword(password)
-            if (!isPasswordValid) {
-                return res.send({
-                    success: false,
-                    error: 'Wrong password!'
-                })
-            }
+            if (!isPasswordValid) throw Error('Wrong password.')
             res.locals.user = {
                 username: user.username,
                 user_id: user.user_id
@@ -39,9 +28,10 @@ module.exports = {
     async validateSignup(req, res, next) {
         try {
             var { email, username, password, password_confirm } = req.body
-
-            var regex = new RegExp(escapeRegex(username), 'gi')
-            var checkUser = await User.findOne({ $or: [{ email }, { username: regex }] })
+            if (!email || !username || !password || !password_confirm) {
+                throw Error('Do not empty fields.')
+            }
+            var checkUser = await User.findOne({ $or: [{ email }, { username }] })
             // Check user has exist
             if (checkUser) {
                 return res.send({ success: false, error: 'Username or Email already exist.' })

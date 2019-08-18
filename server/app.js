@@ -10,7 +10,7 @@ module.exports = () => {
     const client = require('./client')
     const server = require('./server')
 
-    var whitelist = ['http://localhost:3000', 'http://localhost:8080']
+    var whitelist = ['http://localhost:8080', 'http://shigure.myanime.co:8080']
     var corsOptions = function (req, callback) {
         var options;
         if (whitelist.indexOf(req.header('Origin')) !== -1) {

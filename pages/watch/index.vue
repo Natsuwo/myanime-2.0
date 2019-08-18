@@ -26,7 +26,9 @@ import { getEpisode } from "@/services/Episode";
 export default {
   head() {
     return {
-      title: `${this.anime.title} Ep.${this.episode.number} ${this.episode.title}`,
+      title: `${this.anime.title} ${
+        this.episode.title ? this.episode.title : `Ep.${this.episode.number}`
+      }`,
       meta: [
         {
           hid: "description",
@@ -36,12 +38,18 @@ export default {
       ]
     };
   },
-  async fetch({ store, query }) {
+  async fetch({ store, query, redirect }) {
     var episode_id = query.a;
+    if (!episode_id) {
+      return redirect("/");
+    }
     var headers = {
       "X-User-Session": store.state.auth.userToken
     };
     var response = (await getEpisode(headers, episode_id)).data;
+    if (!response.success) {
+      return redirect("/");
+    }
     var result = response.result;
     store.commit("comment/loading", true);
     store.dispatch("anime/animeData", result.anime);

@@ -31,11 +31,6 @@ module.exports = {
             }
 
             token = jwtSignUser(userToken)
-            res.cookie('USER_ACCESS_TOKEN', token, {
-                signed: true,
-                httpOnly: true,
-                expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1)
-            })
             res.send({ success: true, access: token, user, message: "You signed in." })
 
         } catch (err) {
@@ -64,13 +59,5 @@ module.exports = {
         } catch (err) {
             res.send({ success: false, error: err.message })
         }
-    },
-    async signOut(req, res) {
-        try {
-            res.clearCookie('USER_ACCESS_TOKEN')
-            res.send({ success: true, message: 'You are signOut.' })
-        } catch (err) {
-            res.send({ success: false, error: err.message })
-        }
-    },
+    }
 }

@@ -28,13 +28,33 @@ module.exports = {
             var { source } = res.locals
             var name = md5(source)
             request
-                .get(`https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`)
+                .get(`https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`, (err, head) => {
+                    if (!head.headers['content-length']) return next()
+                })
                 .on('error', function (err) {
                     return next()
                 })
                 .pipe(fs.createWriteStream(`../library/upload/thumbnail/${name}.jpg`))
-                res.locals.thumbnail = `/library/upload/thumbnail/${name}.jpg`
-                return next()
+            res.locals.thumbnail = `/library/upload/thumbnail/${name}.jpg`
+            return next()
+        } catch (err) {
+            return next()
+        }
+    },
+    async checkThumb(req, res, next) {
+        try {
+            var { source } = req.body
+            var name = md5(source)
+            request
+                .get(`https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`, (err, head) => {
+                    if (!head.headers['content-length']) return next()
+                })
+                .on('error', function (err) {
+                    return next()
+                })
+                .pipe(fs.createWriteStream(`../library/upload/thumbnail/${name}.jpg`))
+            res.locals.thumbnail = `/library/upload/thumbnail/${name}.jpg`
+            return next()
         } catch (err) {
             return next()
         }

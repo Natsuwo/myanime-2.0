@@ -1,11 +1,11 @@
 <template>
   <div placeholder="loading...">
     <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
-      <template v-for="(episode, index) in animes">
+      <template v-for="(episode, index) in data">
         <div class="slide" :key="index">
           <div class="flex">
             <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-              <v-img :src="episode.thumbnail" @error="onImgError(index)">
+              <v-img class="episode-thumbnail" :src="episode.thumbnail">
                 <div class="play-icon">
                   <v-icon>mdi-play</v-icon>
                 </div>
@@ -59,14 +59,8 @@ export default {
         },
         startIndex: 0
       },
-      currentSlide: 0,
-      animes: []
+      currentSlide: 0
     };
-  },
-  created() {
-    if (this.data) {
-      this.animes = JSON.parse(JSON.stringify(this.data));
-    }
   },
   methods: {
     onImgError: function(index) {

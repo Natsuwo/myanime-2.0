@@ -5,7 +5,10 @@ const mongoose = require('mongoose'),
 
 
 const userAdminSchema = new mongoose.Schema({
-    user_id: Number,
+    user_id: {
+        type: Number,
+        index: { unique: true }
+    },
     email: {
         type: String,
         required: true,
@@ -29,6 +32,7 @@ const userAdminSchema = new mongoose.Schema({
         default: 0,
         required: true
     },
+    avatar: String,
     created_at: Number
 })
 

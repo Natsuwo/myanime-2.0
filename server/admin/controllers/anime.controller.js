@@ -1,6 +1,7 @@
 const Term = require('../../models/Term')
 const Anime = require('../../models/Anime')
 const AnimeR = require('../../models/AnimeR')
+const Episode = require('../../models/Episode')
 const AnimeMeta = require('../../models/AnimeMeta')
 
 function escapeRegex(text) {
@@ -124,6 +125,7 @@ module.exports = {
             var { anime_id } = req.body
             await Anime.deleteOne({ anime_id })
             await AnimeMeta.deleteMany({ anime_id })
+            await Episode.deleteMany({ anime_id })
             return res.send({ success: true, message: 'Removed.' })
 
         } catch (err) {

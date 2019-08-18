@@ -5,12 +5,12 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ' + 'Myanime Anime Streaming',
+    titleTemplate: '%s - ',
     title: process.env.siteTitle || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.SITE_DESCRIPTION || 'Anime HD Streaming, Watch Anime HD Online Free with no ads at Animeml, Watch Anime for Free, Multi Language Subtitles, Anime Multi Subs, Anime Engsubed, Anime ThaiSubed, 動畫中文字幕, Anime Raw' }
+      { hid: 'description', name: 'description', content: '' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

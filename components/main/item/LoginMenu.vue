@@ -33,8 +33,8 @@ import { signOut } from "@/services/Auth";
 export default {
   methods: {
     async signOut() {
-      this.$cookies.remove("USER_ACCESS_TOKEN");
       this.$store.commit("setAuth", false);
+      return this.$cookies.remove("USER_ACCESS_TOKEN");
     }
   }
 };

@@ -5,11 +5,19 @@
       <div class="container fuild">
         <div class="myanime-home anime-channel-container">
           <h2>Most viewed</h2>
-          <AnimeDataSlider :data="mostViews" :anime="anime" :flags="flags" class="py-2" />
+          <AnimeDataSlider :data="episodes.most" :anime="anime" :flags="flags" class="py-2" />
           <h2>New uploaded</h2>
-          <AnimeDataSlider :data="newUploads" :anime="anime" :flags="flags" class="py-2" />
+          <AnimeDataSlider :data="episodes.new" :anime="anime" :flags="flags" class="py-2" />
+          <div v-if="episodes.eng.length > 0">
+            <h2>English Subtiltes</h2>
+            <AnimeDataSlider :data="episodes.eng" :anime="anime" :flags="flags" class="py-2" />
+          </div>
+          <div v-if="episodes.cn.length > 0">
+            <h2>Chinese Subtiltes</h2>
+            <AnimeDataSlider :data="episodes.cn" :anime="anime" :flags="flags" class="py-2" />
+          </div>
           <h2>All</h2>
-          <AnimeData :data="AllEpisodes" :anime="anime" :flags="flags" class="pa-2" />
+          <AnimeData :data="episodes.all" :anime="anime" :flags="flags" class="pa-2" />
           <v-btn @click="loadmore" :loading="loading">Loadmore</v-btn>
         </div>
       </div>
@@ -42,7 +50,7 @@ export default {
     var response = (await getChannel(headers, anime_id)).data;
     await store.dispatch("anime/animeData", response.anime);
     await store.dispatch("anime/animemetaData", response.animemeta);
-    await store.dispatch("episode/episodesData", response.episodes);
+    await store.dispatch("anime/episodesData", response.episodes);
     if (store.state.auth.isLogin) {
       await store.dispatch("auth/userMetaData", response.usermeta);
     }
@@ -55,16 +63,7 @@ export default {
   },
   computed: {
     episodes() {
-      return this.$store.state.episode.episodes;
-    },
-    AllEpisodes() {
-      return this.episodes.all;
-    },
-    mostViews() {
-      return this.episodes.most;
-    },
-    newUploads() {
-      return this.episodes.new;
+      return this.$store.state.anime.episodes;
     },
     anime() {
       return this.$store.state.anime.anime || "";
@@ -94,7 +93,7 @@ export default {
       var anime_id = this.$route.params.id;
       var response = await loadMoreChannel(headers, anime_id, this.skip);
       if (response.data.success) {
-        this.$store.dispatch("episode/loadMoreChannel", response.data);
+        this.$store.dispatch("anime/loadMore", response.data);
         this.skip += 12;
         this.loading = false;
       }

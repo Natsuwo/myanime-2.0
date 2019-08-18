@@ -2,7 +2,7 @@
   <v-dialog transition="slide-x-transition" v-model="dialog" width="500">
     <template v-slot:activator="{ on }">
       <v-btn text v-on="on">
-        <v-icon class="pr-2">mdi-account-plus</v-icon>Sign up
+        <v-icon class="pr-2">mdi-account-plus</v-icon>Sign in
       </v-btn>
     </template>
     <v-form v-if="is_signIn" @keyup.native.enter="signInAction">
@@ -25,7 +25,7 @@
         </v-flex>
       </v-card>
     </v-form>
-    <v-form v-else @keyup.native.enter="signUpAction">
+    <v-form v-else ref="form" v-model="valid" @keyup.native.enter="signUpAction">
       <v-card width="800">
         <v-flex xs12 text-center>
           <v-card-title class="justify-center">Sign up</v-card-title>
@@ -72,6 +72,7 @@ export default {
     return {
       dataSU: {},
       dataSI: {},
+      valid: true,
       is_signIn: true,
       dialog: false,
       show: true,
@@ -106,6 +107,9 @@ export default {
   },
   methods: {
     async signUpAction() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       var messages = (await signUp(this.dataSU)).data;
       this.$store.commit("snackbar/snackBar", {
         active: true,
@@ -129,10 +133,10 @@ export default {
           token: messages.access,
           user_id: messages.user.user_id
         };
-        this.$cookies.set('USER_ACCESS_TOKEN', messages.access, {
-          path: '/',
+        this.$cookies.set("USER_ACCESS_TOKEN", messages.access, {
+          path: "/",
           maxAge: 60 * 60 * 24 * 1
-        })
+        });
         this.$store.commit("setAuth", data);
       }
       return;

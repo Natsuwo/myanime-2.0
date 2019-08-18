@@ -50,16 +50,24 @@ module.exports = {
             }
             // Current Season
             var currentSeason = []
-            var currentAnime = await Anime.find({ season: 'Summer 2019' }, { _id: 0 }).limit(12).select('title anime_id')
+            var currentAnime = await Anime.find({ season: 'Summer 2019' }, { _id: 0 }).select('title anime_id thumbnail')
             for (var item of currentAnime) {
                 var anime_id = item.anime_id
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    continue;
-                }
-                var episode = await Episode.findOne({ anime_id }, { _id: 0 }).sort({ updated_at: -1 }).limit(12)
+                var count = await Episode.countDocuments({ anime_id })
+                var episode = await Episode.findOne({ anime_id }, { _id: 0 }).sort({ updated_at: -1 })
+                if (!episode) continue;
+
                 currentSeason.push(episode)
+                episode.set('count', count, { strict: false })
+                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
+                    var index = animes.findIndex(x => x.anime_id === anime_id)
+                    animes.splice(index, 1)
+                }
                 animes.push(item)
             }
+            var currentSeason = currentSeason.sort((a, b) => {
+                return b.updated_at - a.updated_at
+            }).slice(0, 13)
             return res.send({
                 success: true,
                 episodes: {

@@ -7,7 +7,7 @@
       <v-container fuild grid-list-md>
         <DialogSignIn />
         <SnackBar />
-        <nuxt/>
+        <nuxt />
       </v-container>
     </v-content>
   </v-app>
@@ -23,5 +23,13 @@ export default {
     DialogSignIn,
     SnackBar
   },
+  watch: {
+    "$store.state.auth.isLogin"(val) {
+      this.$router.go({
+        path: "/a/1",
+        force: true
+      });
+    }
+  }
 };
 </script>
