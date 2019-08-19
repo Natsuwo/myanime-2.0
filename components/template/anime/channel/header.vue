@@ -1,6 +1,6 @@
 <template>
   <v-layout class="anime-channel-header" row wrap align-center>
-    <v-img class="anime-channel-banner" src="/library/upload/anime/cover/default.jpg"></v-img>
+    <v-img class="anime-channel-banner" :src="data.cover || '/default-cover.jpg'"></v-img>
     <div class="anime-overlay"></div>
     <v-layout row wrap justify-center align-center>
       <div class="anime-channel-content">
@@ -20,7 +20,7 @@
             <v-chip v-for="item in getTerm()" :key="item" class="ma-2" small label>{{item}}</v-chip>
           </div>
           <div class="anime-channel-follow">
-            <abc :follow="follow" :anime="data" />
+            <Follow :follow="follow" :anime="data" />
           </div>
         </div>
       </div>
@@ -28,10 +28,10 @@
   </v-layout>
 </template>
 <script>
-import abc from "../../watch/item/Follow";
+import Follow from "../../watch/item/Follow";
 export default {
   components: {
-    abc
+    Follow
   },
   props: ["data", "meta", "terms", "usermeta"],
   computed: {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getTerm(key) {
-      if (this.meata) {
+      if (this.meta) {
         var genres = this.meta.find(x => x.meta_key === "genre").meta_value;
         var terms = [];
         for (var item of genres) {

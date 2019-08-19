@@ -1,0 +1,18 @@
+[
+    {
+        "title": "Watching",
+        "color": "#3c558a"
+    },
+    {
+        "title": "Considering",
+        "color": "#20bf4a"
+    },
+    {
+        "title": "Completed",
+        "color": "#eeb211"
+    },
+    {
+        "title": "Skipping",
+        "color": "#ff482b"
+    }
+]

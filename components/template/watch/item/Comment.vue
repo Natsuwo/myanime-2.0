@@ -155,7 +155,7 @@ export default {
         form: {
           episode_id: item.episode_id,
           comment_id: item.comment_id,
-          user_id: this.$store.state.auth.user_id,
+          user_id: this.$store.state.auth.profile.user_id,
           isHeart: false
         },
         item
@@ -174,7 +174,7 @@ export default {
     validControl(user_id) {
       return (
         this.$store.state.auth.isLogin &&
-        user_id === this.$store.state.auth.user_id
+        user_id === this.$store.state.auth.profile.user_id
       );
     },
     showReply(id) {
@@ -204,7 +204,7 @@ export default {
         },
         form: {
           episode_id: this.$route.query.a,
-          user_id: this.$store.state.auth.user_id,
+          user_id: this.$store.state.auth.profile.user_id,
           comment: this.comment
         }
       };

@@ -121,23 +121,23 @@ export default {
       return;
     },
     async signInAction() {
-      var messages = (await signIn(this.dataSI)).data;
+      var response = (await signIn(this.dataSI)).data;
       this.$store.commit("snackbar/snackBar", {
         active: true,
-        message: messages
+        message: response
       });
-      if (messages.success) {
+      if (response.success) {
         this.dialog = false;
         var data = {
           isLogin: true,
-          token: messages.access,
-          user_id: messages.user.user_id
+          token: response.access,
+          profile: response.user
         };
-        this.$cookies.set("USER_ACCESS_TOKEN", messages.access, {
+        this.$cookies.set("USER_ACCESS_TOKEN", response.access, {
           path: "/",
           maxAge: 60 * 60 * 24 * 1
         });
-        this.$store.commit("setAuth", data);
+        this.$store.commit("auth/setAuth", data);
       }
       return;
     }

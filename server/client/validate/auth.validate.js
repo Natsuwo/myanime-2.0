@@ -8,16 +8,13 @@ module.exports = {
                 throw Error('Do not empty fields.')
             }
             var username = email
-            var user = await User.findOne({ $or: [{ email }, { username }] })
+            var user = await User.findOne({ $or: [{ email }, { username }] }, { _id: 0, __v: 0 })
 
             if (!user) throw Error('Something wrong, please check again.')
-
             var isPasswordValid = await user.comparePassword(password)
             if (!isPasswordValid) throw Error('Wrong password.')
-            res.locals.user = {
-                username: user.username,
-                user_id: user.user_id
-            }
+            user.password = undefined
+            res.locals.user = user
             next()
 
         } catch (err) {

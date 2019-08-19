@@ -28,13 +28,15 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <!-- Follow -->
+      <FollowAnime v-if="$store.state.auth.isLogin" />
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">
         <nuxt-link to="/">
-          <v-img width="150" src="./summer.svg"></v-img>
+          <v-img width="150" src="/summer.svg"></v-img>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />
@@ -48,12 +50,14 @@
 <script>
 import Auth from "../template/user/auth";
 import LoginMenu from "./item/LoginMenu";
+import FollowAnime from "./item/FollowAnime";
 import SearchBar from "./item/SearchBar";
 import Items from "@/items/items";
 export default {
   components: {
     LoginMenu,
     Auth,
+    FollowAnime,
     SearchBar
   },
   data() {

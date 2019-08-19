@@ -13,5 +13,5 @@ export function signOut() {
 }
 
 export function checkUserToken(headers) {
-    return Api().post('/auth/check-user-token', {}, headers);
+    return Api(headers).post('/auth/check-user-token');
 }

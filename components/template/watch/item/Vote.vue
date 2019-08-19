@@ -30,7 +30,7 @@ export default {
         },
         form: {
           episode_id: this.$route.query.a,
-          user_id: this.$store.state.auth.user_id,
+          user_id: this.$store.state.auth.profile.user_id,
           isLike: null
         }
       }

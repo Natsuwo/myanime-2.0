@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-btn dark icon v-on="on">
         <v-avatar>
-          <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
+          <v-img :src="avatar"></v-img>
         </v-avatar>
       </v-btn>
     </template>
@@ -31,9 +31,14 @@
 <script>
 import { signOut } from "@/services/Auth";
 export default {
+  computed: {
+    avatar() {
+      return this.$store.state.auth.profile.avatar || "/default-avatar.png";
+    }
+  },
   methods: {
     async signOut() {
-      this.$store.commit("setAuth", false);
+      this.$store.commit("auth/setAuth", false);
       return this.$cookies.remove("USER_ACCESS_TOKEN");
     }
   }

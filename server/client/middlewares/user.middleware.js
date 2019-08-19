@@ -1,6 +1,23 @@
 const UserMeta = require('../../models/UserMeta')
-
+const User = require('../../models/User')
+const bcrypt = require('bcrypt')
+const SALT_FACTOR = 12;
 module.exports = {
+    async updatePassword(req, res, next) {
+        try {
+            var { user_id, cur_pass, new_pass } = req.body
+            if (!cur_pass || !new_pass) return next()
+            var user = await User.findOne({ user_id })
+            var validPass = await user.comparePassword(cur_pass)
+            if (!validPass) throw Error('Wrong current password.')
+            var salt = await bcrypt.genSalt(SALT_FACTOR)
+            var hashPassword = await bcrypt.hash(new_pass, salt)
+            await User.updateOne({ user_id }, { password: hashPassword })
+            return next()
+        } catch (err) {
+            return res.send({ success: false, error: err.message })
+        }
+    },
     async getUserMeta(req, res, next) {
         try {
             var { episode_id, anime_id } = req.query

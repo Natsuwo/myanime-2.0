@@ -28,6 +28,8 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <!-- Follow -->
+      <FollowAnime v-if="$store.state.auth.isLogin" />
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon v-if="$vuetify.breakpoint.mdAndDown" @click="drawer = !drawer"></v-app-bar-nav-icon>
@@ -50,12 +52,14 @@
 <script>
 import Auth from "../template/user/auth";
 import LoginMenu from "./item/LoginMenu";
-import SearchBar from "./item/SearchBar"
+import SearchBar from "./item/SearchBar";
+import FollowAnime from "./item/FollowAnime";
 import Items from "@/items/items";
 export default {
   components: {
     SearchBar,
     LoginMenu,
+    FollowAnime,
     Auth
   },
   data() {

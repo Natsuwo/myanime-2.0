@@ -9,6 +9,7 @@ export const actions = {
         var response = await follow(data.headers, data.form)
         if (response.data.success) {
             commit(FOLLOW, { data: response.data.result })
+            this.commit("auth/follow", response.data.anime)
         }
         return response
     },
@@ -16,6 +17,7 @@ export const actions = {
         var response = await unFollow(data.headers, data.form)
         if (response.data.success) {
             commit(UNFOLLOW)
+            this.commit("auth/unfollow", data.form)
         }
         return response
     },

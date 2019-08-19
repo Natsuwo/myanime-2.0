@@ -1,5 +1,6 @@
 const cookieparser = process.server ? require('cookieparser') : undefined
 import { checkUserToken } from "../services/Auth"
+import { getFollowing } from "../services/User"
 import { getFlags } from "../services/Language"
 import { getTerms } from "../services/Anime"
 export const state = () => {
@@ -10,11 +11,6 @@ export const state = () => {
 }
 
 export const mutations = {
-    setAuth(state, auth) {
-        this.state.auth.isLogin = auth.isLogin
-        this.state.auth.userToken = auth.token
-        this.state.auth.user_id = auth.user_id
-    },
     signIn(state, payload) {
         state.signIn = payload
     },
@@ -29,9 +25,12 @@ export const actions = {
             var headers = {
                 "x-user-session": cookie.USER_ACCESS_TOKEN || ""
             }
-            var checkAuth = (await checkUserToken({ headers })).data
+            var checkAuth = (await checkUserToken(headers)).data
             if (checkAuth.success) {
-                commit('setAuth', { user_id: checkAuth.user_id, token: checkAuth.token, isLogin: true })
+                commit('auth/setAuth', { profile: checkAuth.user, token: checkAuth.token, isLogin: true })
+                // // following
+                var follow = await getFollowing(headers)
+                commit('auth/getFollowing', follow.data.data)
             }
         }
         // Get Flags

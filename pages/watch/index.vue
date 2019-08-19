@@ -23,12 +23,13 @@ import Main from "@/components/template/watch/Main";
 import Sidebar from "@/components/template/watch/Sidebar";
 import "@/static/css/DPlayer.min.css";
 import { getEpisode } from "@/services/Episode";
+import setting from "@/items/settings.json";
 export default {
   head() {
     return {
       title: `${this.anime.title} ${
         this.episode.title ? this.episode.title : `Ep.${this.episode.number}`
-      }`,
+      } - ${setting.site_title}`,
       meta: [
         {
           hid: "description",

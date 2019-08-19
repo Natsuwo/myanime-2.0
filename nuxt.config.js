@@ -5,7 +5,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s - ',
+    titleTemplate: '%s',
     title: process.env.siteTitle || '',
     meta: [
       { charset: 'utf-8' },

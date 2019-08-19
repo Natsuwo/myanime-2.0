@@ -2,15 +2,6 @@ const fs = require('fs');
 const UserAdmin = require('../../models/UserAdmin')
 
 module.exports = {
-    async profile(req, res) {
-        try {
-            var { user_id } = res.locals
-            var user = await UserAdmin.findOne({ user_id }, { __v: 0, _id: 0, password: 0, pin: 0 })
-            res.send({ success: true, data: user })
-        } catch (err) {
-            res.send({ success: false, error: err.message })
-        }
-    },
     async updateProfile(req, res) {
         try {
             var { avatar } = req.body

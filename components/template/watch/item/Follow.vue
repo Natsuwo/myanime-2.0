@@ -32,7 +32,7 @@ export default {
         },
         form: {
           anime_id: this.anime.anime_id,
-          user_id: this.$store.state.auth.user_id
+          user_id: this.$store.state.auth.profile.user_id
         }
       };
       var response = await this.$store.dispatch("follow/follow", data);
@@ -50,8 +50,7 @@ export default {
           "X-User-Session": this.$store.state.auth.userToken
         },
         form: {
-          anime_id: this.anime.anime_id,
-          user_id: this.$store.state.auth.user_id
+          anime_id: this.anime.anime_id
         }
       };
       var response = await this.$store.dispatch("follow/unFollow", data);
@@ -70,7 +69,7 @@ export default {
         },
         form: {
           anime_id: this.anime.anime_id,
-          user_id: this.$store.state.auth.user_id,
+          user_id: this.$store.state.auth.profile.user_id,
           isNoti: true
         }
       };
@@ -90,7 +89,7 @@ export default {
         },
         form: {
           anime_id: this.anime.anime_id,
-          user_id: this.$store.state.auth.user_id,
+          user_id: this.$store.state.auth.profile.user_id,
           isNoti: false
         }
       };

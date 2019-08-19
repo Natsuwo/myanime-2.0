@@ -79,7 +79,6 @@ module.exports = {
             var { thumbnail } = res.locals
             await Episode.updateOne({ episode_id }, { anime_id, title, number, thumbnail, type, audio, subtitle, fansub })
             return res.send({ success: true, message: 'Edited.' })
-
         } catch (err) {
             res.send({ success: false, error: err.message })
         }
