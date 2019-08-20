@@ -15,6 +15,6 @@ export function getFollowing(headers) {
     return Api(headers).get('/user/following');
 }
 
-export function getFollowProfile(headers) {
+export function getLists(headers) {
     return Api(headers).get('/user/profile/follow');
 }

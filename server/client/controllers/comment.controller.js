@@ -10,7 +10,7 @@ module.exports = {
             var comments = []
             for (var item of comment) {
                 var user_id = item.user_id
-                var user = await User.findOne({ user_id }, { _id: 0 }).select('username')
+                var user = await User.findOne({ user_id }, { _id: 0 }).select('username avatar')
                 item.set('user', user, { strict: false })
                 item.set('edit', false, { strict: false })
                 item.set('show', false, { strict: false })

@@ -17,7 +17,7 @@
     <div class="signed-in" v-else>
       <v-layout class="comment-input" row wrap pt-3>
         <v-avatar class="mr-4 pt-4 avatar-comment">
-          <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
+          <v-img :src="$store.state.auth.profile.avatar"></v-img>
         </v-avatar>
         <v-textarea
           v-model="comment"
@@ -41,7 +41,7 @@
       <v-layout column>
         <div class="main-comment">
           <v-avatar class="comment-user avatar">
-            <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
+            <v-img :src="comment.user.avatar"></v-img>
           </v-avatar>
           <div class="comment-user px-2">
             <div class="comment-user name px-1">{{comment.user.username}}</div>

@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const route = Router()
-const { beforeFollow, beforeUnFollow, beforeNoti, beforeUnNoti } = require('../middlewares/follow.middleware')
-const { follow, unfollow, getNoti, unNoti } = require('../controllers/follow.controller')
+const { beforeFollow, beforeUnFollow, beforeChangeType } = require('../middlewares/follow.middleware')
+const { follow, unfollow, changeType } = require('../controllers/follow.controller')
 const { isUserLogin } = require('../middlewares/auth.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 
@@ -19,8 +19,7 @@ const limitAction = rateLimit({
 });
 
 route.post('/follow', checkSecure, isUserLogin, limitAction, beforeFollow, follow)
+route.put('/follow', checkSecure, isUserLogin, beforeChangeType, changeType)
 route.delete('/follow', checkSecure, isUserLogin, limitAction, beforeUnFollow, unfollow)
-route.put('/get-noti', checkSecure, isUserLogin, limitAction, beforeUnFollow, beforeNoti, getNoti)
-route.put('/un-noti', checkSecure, isUserLogin, limitAction, beforeUnFollow, beforeUnNoti, unNoti)
 
 module.exports = route

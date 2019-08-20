@@ -45,7 +45,7 @@ export default {
     return {
       items: [
         { title: "Profile", icon: "mdi-account", to: "/user/profile" },
-        { title: "Follow", icon: "mdi-library-movie", to: "/user/profile/follow" }
+        { title: "My lists", icon: "mdi-library-movie", to: "/user/profile/lists" }
       ]
     };
   },

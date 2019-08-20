@@ -26,9 +26,13 @@
       </div>
     </div>
     <template v-if="comment.show">
-      <div class="reply-comment py-1" v-for="item in reply(comment.comment_id)" :key="item.comment_id">
+      <div
+        class="reply-comment py-1"
+        v-for="item in reply(comment.comment_id)"
+        :key="item.comment_id"
+      >
         <v-avatar size="35px" class="reply-user avatar">
-          <v-img src="https://i.imgur.com/N5SvkzK.jpg"></v-img>
+          <v-img :src="item.user.avatar"></v-img>
         </v-avatar>
         <div class="reply-user px-2">
           <div class="reply-user name px-1">{{item.user.username}}</div>

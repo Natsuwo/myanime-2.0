@@ -1,18 +1,21 @@
 [
     {
-        "title": "Watching",
+        "title": "all"
+    },
+    {
+        "title": "watching",
         "color": "#3c558a"
     },
     {
-        "title": "Considering",
+        "title": "considering",
         "color": "#20bf4a"
     },
     {
-        "title": "Completed",
+        "title": "completed",
         "color": "#eeb211"
     },
     {
-        "title": "Skipping",
+        "title": "skipping",
         "color": "#ff482b"
     }
 ]

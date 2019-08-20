@@ -44,8 +44,10 @@ export default {
   },
   methods: {
     getTerm(key) {
-      if (this.meta) {
-        var genres = this.meta.find(x => x.meta_key === "genre").meta_value;
+      var meta = this.meta.find(x => x.meta_key === "genre");
+      if (meta) {
+        var genres =
+          this.meta.find(x => x.meta_key === "genre").meta_value || [];
         var terms = [];
         for (var item of genres) {
           var term = this.terms
