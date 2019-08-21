@@ -6,7 +6,8 @@ import { getTerms } from "../services/Anime"
 export const state = () => {
     return {
         signIn: false,
-        flags: []
+        flags: [],
+        isLoading: false
     }
 }
 
@@ -16,6 +17,9 @@ export const mutations = {
     },
     getFlags(state, payload) {
         state.flags = payload
+    },
+    SET_LOADING(state, isLoading) {
+        state.isLoading = isLoading
     }
 }
 export const actions = {

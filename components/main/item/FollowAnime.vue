@@ -21,6 +21,7 @@
           <v-list-item-title v-text="item.title" />
         </v-list-item-content>
       </v-list-item>
+      <v-btn v-if="following.length === 7" text block to="/user/profile/lists">More</v-btn>
     </v-list>
   </div>
 </template>

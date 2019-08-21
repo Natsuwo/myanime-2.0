@@ -3,5 +3,20 @@
         "icon": "mdi-apps",
         "title": "Home",
         "to": "/"
+    },
+    {
+        "icon": "mdi-folder-clock",
+        "title": "Old Season",
+        "to": "/old-season"
+    },
+    {
+        "icon": "mdi-folder",
+        "title": "Current Season",
+        "to": "/current-season"
+    },
+    {
+        "icon": "mdi-folder-plus",
+        "title": "New Season",
+        "to": "/new-season"
     }
 ]

@@ -32,6 +32,14 @@ export const mutations = {
     getLists(state, follows) {
         state.lists = follows
     },
+    loadLists(state, { type, response }) {
+        var newAnimes = state.lists.animes.concat(response.data.animes)
+        var newMetas = state.lists.metas.concat(response.data.metas)
+        var newFollow = state.lists.follow[type].concat(response.data.result)
+        state.lists.animes = newAnimes
+        state.lists.metas = newMetas
+        state.lists.follow[type] = newFollow
+    },
     updateLists(state, { item, option, type }) {
         var oldValue = item.meta_value
         var index = state.lists.follow[type.title].findIndex(x => x.parent_id === item.parent_id)

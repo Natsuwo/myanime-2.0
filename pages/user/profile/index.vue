@@ -1,5 +1,4 @@
 <template>
-  <v-flex xs9>
     <v-container>
       <v-layout wrap>
         <v-card width="100%" class="mx-auto">
@@ -13,7 +12,7 @@
                 </v-card-actions>
               </v-list-item-content>
               <v-row align="center" justify="center">
-                <v-avatar size="250" fill-height>
+                <v-avatar size="220" fill-height>
                   <v-img :src="avatarUrl"></v-img>
                   <div v-if="isEdit" class="user-avatar-edit" @click="pickFile">
                     <v-icon large>mdi-image-plus</v-icon>
@@ -64,7 +63,6 @@
         </v-card>
       </v-layout>
     </v-container>
-  </v-flex>
 </template>
 <script>
 import Rank from "@/items/rank.json";

@@ -3,6 +3,7 @@ const Anime = require('../../models/Anime')
 const AnimeMeta = require('../../models/AnimeMeta')
 const Episode = require('../../models/Episode')
 const UserMeta = require('../../models/UserMeta')
+const Settings = require('../../../items/settings.json')
 
 module.exports = {
     async getAnimeChannel(req, res) {
@@ -51,6 +52,32 @@ module.exports = {
             var { anime_id, skip } = req.query
             var allEpisodes = await Episode.find({ anime_id }, { __v: 0, _id: 0 }).limit(12).skip(parseInt(skip))
             res.send({ success: true, data: allEpisodes })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async getSeason(req, res) {
+        try {
+            var { season, skip } = req.query
+            var season = Settings[season]
+            var total = await Anime.countDocuments({ season })
+            var animes = await Anime.find({ season }, { _id: 0 }).select('thumbnail title anime_id').skip(parseInt(skip)).limit(30)
+            var views = []
+            var totalEps = []
+            for (var anime of animes) {
+                var anime_id = anime.anime_id
+                var view = {}
+                var eps = {}
+                view[anime_id] = 0
+                eps[anime_id] = await Episode.countDocuments({ anime_id })
+                var episodes = await Episode.find({ anime_id }).select('views')
+                for (var episode of episodes) {
+                    view[anime_id] += episode.views
+                }
+                views.push(view)
+                totalEps.push(eps)
+            }
+            res.send({ success: true, data: { animes, views, totalEps, season, total } })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

@@ -18,3 +18,9 @@ export function getFollowing(headers) {
 export function getLists(headers) {
     return Api(headers).get('/user/profile/follow');
 }
+
+export function loadmoreLists(headers, type, skip) {
+    var typeQuery = type ? `?type=${type}` : ''
+    var skipQuery = skip ? `&skip=${skip}` : ''
+    return Api(headers).get(`/user/profile/follow-loadmore${typeQuery}${skipQuery}`);
+}

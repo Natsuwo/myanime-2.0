@@ -6,7 +6,7 @@
     </v-btn>
     <div v-else>
       <v-btn color="purple" @click="unFollowAction">
-        Remove to list
+        Remove from list
         <span class="count-followers">{{anime.followers}}</span>
       </v-btn>
     </div>

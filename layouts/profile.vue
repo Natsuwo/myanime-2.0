@@ -9,7 +9,7 @@
         <SnackBar />
         <v-container fluid row grid-list-xl fill-height>
           <v-layout row warp justify-center v-if="$store.state.auth.isLogin">
-            <v-flex xs3>
+            <v-flex xs12 md3>
               <v-navigation-drawer width="100%" permanent>
                 <v-list-item>
                   <v-list-item-content>
@@ -29,7 +29,9 @@
                 </v-list>
               </v-navigation-drawer>
             </v-flex>
+            <v-flex xs12 md9>
             <nuxt />
+            </v-flex>
           </v-layout>
         </v-container>
       </v-container>

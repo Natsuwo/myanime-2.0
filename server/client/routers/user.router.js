@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const route = Router()
-const { updateProfile, getFollowAnime, getLists } = require('../controllers/user.controller')
+const { updateProfile, getFollowAnime, getLists, loadmoreLists } = require('../controllers/user.controller')
 const { updatePassword } = require('../middlewares/user.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 const { isUserLogin } = require('../middlewares/auth.middleware')
@@ -34,4 +34,5 @@ var upload = multer({
 route.put('/user/profile', checkSecure, isUserLogin, upload.single('avatar'), updatePassword, updateProfile)
 route.get('/user/following', checkSecure, isUserLogin, getFollowAnime)
 route.get('/user/profile/follow', checkSecure, isUserLogin, getLists)
+route.get('/user/profile/follow-loadmore', checkSecure, isUserLogin, loadmoreLists)
 module.exports = route

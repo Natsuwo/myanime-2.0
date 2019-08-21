@@ -671,6 +671,46 @@ div.siema {
     height: 114.89px;
 }
 
+.season-anime-title {
+    color: #fff!important;
+    margin-top: 8px;
+    display: -webkit-box;
+    max-height: 2.5rem;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 1.3rem;
+}
+
+.season-anime-link {
+    text-decoration: none;
+}
+
+
+.season-anime-total-views, .season-anime-total-eps {
+    color: #606060;
+    display: inline-flex;
+    max-height: 1.2rem;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: none;
+}
+
+.season-anime-total-views::before {
+    content: '•';
+    margin: 0 4px;
+}
+
+.season-anime-cover .v-image {
+    width: 210px!important;
+    height: 290px!important;
+}
+
 @media (max-width: 575.98px) {
     .anime-container {
         margin: 0 10px!important;
@@ -683,7 +723,11 @@ div.siema {
         margin: 0 8px!important;
     }
     .anime-channel-container {
-        margin: 0 8px!important;
+        margin: 0 2px!important;
+    }
+    .user-lists-title {
+        max-width: 150px;
+        overflow: hidden;
     }
 }
 
@@ -716,6 +760,16 @@ div.siema {
     }
     .anime-info .title-name {
         width: 80px !important;
+    }
+    .user-lists-description {
+        display: -webkit-box;
+        max-height: 2.2rem;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        -webkit-line-clamp: 2;
+        line-height: 20px;
     }
 }
 
