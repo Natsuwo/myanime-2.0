@@ -1,7 +1,8 @@
 const { Router } = require('express')
 const multer = require('multer')
 const route = Router()
-const { get, post, getUpdate, postUpdate, removeTerm, removeAnime } = require('../controllers/anime.controller')
+const { get, post, getUpdate, postUpdate, removeTerm, removeAnime, crawlAnime } = require('../controllers/anime.controller')
+const { checkSecure, isUserLogin } = require('../validate/secure.validate')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,11 +16,12 @@ const storage = multer.diskStorage({
 var upload = multer({ storage })
 var fields = upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'cover', maxCount: 1 }])
 
-route.get('/anime/get', get)
-route.get('/anime/update', getUpdate)
-route.put('/anime/update', fields, postUpdate)
-route.post('/anime/post', fields, post)
-route.post('/anime/remove-term', removeTerm)
-route.post('/anime/remove-anime', removeAnime)
+route.get('/anime/get', checkSecure, isUserLogin, get)
+route.get('/anime/update', checkSecure, isUserLogin, getUpdate)
+route.put('/anime/update', checkSecure, isUserLogin, fields, postUpdate)
+route.post('/anime/post', checkSecure, isUserLogin, fields, post)
+route.post('/anime/crawl', checkSecure, isUserLogin, crawlAnime)
+route.post('/anime/remove-term', checkSecure, isUserLogin, removeTerm)
+route.post('/anime/remove-anime', checkSecure, isUserLogin, removeAnime)
 
 module.exports = route

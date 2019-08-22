@@ -3,6 +3,7 @@ const route = Router()
 const multer = require('multer')
 const { get, post, update, deleteTerm } = require('../controllers/term.controller')
 const { checkMiddleware } = require('../middlewares/term.middleware')
+const { checkSecure, isUserLogin } = require('../validate/secure.validate')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,9 +16,9 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage })
 
-route.get('/term/get', get)
-route.post('/term/post', upload.single('value'), checkMiddleware, post)
-route.put('/term/update', upload.single('value'), update)
-route.delete('/term/delete', deleteTerm)
+route.get('/term/get', checkSecure, isUserLogin, get)
+route.post('/term/post', checkSecure, isUserLogin, upload.single('value'), checkMiddleware, post)
+route.put('/term/update', checkSecure, isUserLogin, upload.single('value'), update)
+route.delete('/term/delete', checkSecure, isUserLogin, deleteTerm)
 
 module.exports = route

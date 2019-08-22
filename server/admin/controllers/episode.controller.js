@@ -1,5 +1,7 @@
 const Anime = require('../../models/Anime')
 const Episode = require('../../models/Episode')
+const Comment = require('../../models/Comment')
+const UserMeta = require('../../models/UserMeta')
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
@@ -75,9 +77,9 @@ module.exports = {
     },
     async update(req, res) {
         try {
-            var { episode_id, anime_id, title, number, type, audio, subtitle, fansub } = req.body
+            var { episode_id, anime_id, title, number, type, audio, subtitle, fansub, source } = req.body
             var { thumbnail } = res.locals
-            await Episode.updateOne({ episode_id }, { anime_id, title, number, thumbnail, type, audio, subtitle, fansub })
+            await Episode.updateOne({ episode_id }, { anime_id, title, number, thumbnail, type, audio, subtitle, fansub, source })
             return res.send({ success: true, message: 'Edited.' })
         } catch (err) {
             res.send({ success: false, error: err.message })
@@ -87,7 +89,46 @@ module.exports = {
         try {
             var { episode_id } = req.body
             await Episode.deleteOne({ episode_id })
+            await Comment.deleteMany({ episode_id })
+            await UserMeta.deleteMany({ parent_id: episode_id })
             return res.send({ success: true, message: 'Removed.' })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async addMulti(req, res) {
+        try {
+            var { form, lists } = req.body
+            var { anime_id, type, audio, subtitle, fansub } = form
+            for (var item of lists) {
+                var source = item.id
+                var title = item.title
+                var number = item.ep
+                await Episode.create({ anime_id, type, audio, subtitle, fansub, source, title, number })
+            }
+            res.send({ success: true, message: "You added." })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async getEditMulti(req, res) {
+        try {
+            var { anime_id, type, audio, subtitle, fansub } = req.query
+            var episodes = await Episode.find({ anime_id, type, audio, subtitle, fansub })
+            if (episodes.length === 0) throw Error('Not found')
+            res.send({ success: true, results: episodes, message: "Found." })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async editMulti(req, res) {
+        try {
+            var { lists } = req.body
+            for (var item of lists) {
+                var { episode_id, anime_id, type, audio, subtitle, fansub, source, title, number } = item
+                await Episode.updateOne({ episode_id }, { source, title, anime_id, number, type, audio, subtitle, fansub })
+            }
+            res.send({ success: true, message: "You edited." })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

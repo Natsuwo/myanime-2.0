@@ -23,6 +23,15 @@ module.exports = {
             res.send({ success: false, error: err.message })
         }
     },
+    async beforeAddMulti(req, res, next) {
+        try {
+            var { anime_id, audio, fansub, subtitle, type } = req.body.form
+            if (!anime_id || !audio || !fansub || !subtitle || !type) throw Error('Missing field(s), please check again.')
+            next()
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
     async getThumbnail(req, res, next) {
         try {
             var { source } = res.locals
@@ -56,7 +65,7 @@ module.exports = {
                     return next()
                 })
                 .pipe(fs.createWriteStream(`../library/upload/thumbnail/${name}.jpg`))
-                
+
             res.locals.thumbnail = `/library/upload/thumbnail/${name}.jpg`
             return next()
         } catch (err) {

@@ -2,7 +2,7 @@ const { Router } = require('express')
 const route = Router()
 const { getSetting, updateSetting, updateProfile } = require('../controllers/setting.controller')
 const { changePassword, changePin } = require('../middlewares/setting.middleware')
-const { isUserLogin } = require('../validate/auth.validate')
+const { checkSecure, isUserLogin } = require('../validate/secure.validate')
 const multer = require('multer')
 
 const storage = multer.diskStorage({
@@ -16,8 +16,8 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage })
 
-route.put('/setting/profile', isUserLogin, upload.single('avatar'), changePassword, changePin, isUserLogin, updateProfile)
-route.get('/setting/get', getSetting)
-route.put('/setting/update', updateSetting)
+route.put('/setting/profile', checkSecure, isUserLogin, upload.single('avatar'), changePassword, changePin, updateProfile)
+route.get('/setting/get', checkSecure, isUserLogin, getSetting)
+route.put('/setting/update', checkSecure, isUserLogin, updateSetting)
 
 module.exports = route

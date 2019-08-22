@@ -15,5 +15,18 @@ module.exports = {
         } catch (err) {
             res.send({ success: false, error: err.message })
         }
+    },
+    async removeComment(req, res) {
+        try {
+            var { comment_id, episode_id } = req.body
+            if (!comment_id || !episode_id) throw Error('Comment not found.')
+            var comment = await Comment.findOne({ comment_id, episode_id })
+            if (!comment) throw Error('Comment not found.')
+            await Comment.deleteOne({ comment_id, episode_id })
+            await Comment.deleteMany({ parent_id: comment_id, episode_id })
+            return res.send({ success: true, message: "Removed." })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
     }
 }

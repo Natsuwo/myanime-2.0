@@ -1,8 +1,9 @@
-const Term = require('../../models/Term')
+const axios = require('axios')
 const Anime = require('../../models/Anime')
 const AnimeR = require('../../models/AnimeR')
 const Episode = require('../../models/Episode')
 const AnimeMeta = require('../../models/AnimeMeta')
+const UserMeta = require('../../models/UserMeta')
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
@@ -39,8 +40,7 @@ module.exports = {
     async post(req, res) {
         try {
             var { data } = req.body
-            var { title, en, jp, type, rating, status, premiered, genres, season, studios, description } = JSON.parse(data)
-            var thumbnail = cover = ''
+            var { title, en, jp, type, rating, status, premiered, genres, season, studios, description, thumbnail, cover } = JSON.parse(data)
             if (req.files['thumbnail']) {
                 var fileName = req.files['thumbnail'][0].originalname
                 thumbnail = `/library/upload/anime/thumbnail/${fileName}`
@@ -126,8 +126,18 @@ module.exports = {
             await Anime.deleteOne({ anime_id })
             await AnimeMeta.deleteMany({ anime_id })
             await Episode.deleteMany({ anime_id })
+            await UserMeta.deleteMany({ parent_id: anime_id })
             return res.send({ success: true, message: 'Removed.' })
 
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async crawlAnime(req, res) {
+        try {
+            var { id } = req.body
+            var response = await axios.get(`https://api.jikan.moe/v3/anime/${id}`)
+            res.send({ success: true, results: response.data })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }
