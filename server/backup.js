@@ -1,3 +1,9 @@
+
+const axios = require('axios')
+const Anime = require('../../models/Anime')
+const Term = require('../../models/Term')
+const AnimeMeta = require('../../models/AnimeMeta')
+const data = require('../../post.json')
 async function abc() {
 
     function loopData(value) {
@@ -47,9 +53,11 @@ async function abc() {
             console.log(i)
         async function LoopEpisode() {
             var promises = []
-            var episodesEnglish = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=english`)).data
-            var episodesChinese = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=chinese`)).data
-            var episodesRaw = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=xx`)).data
+            var episodesEnglish = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=english&au=japanese`)).data
+            var episodesChinese = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=chinese&au=japanese`)).data
+            var episodesChineseEng = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=english&au=chinese`)).data
+            var episodesChineseAu = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=chinese&au=chinese`)).data
+            var episodesRaw = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=xx&au=japanese`)).data
 
             if (episodesEnglish.success && episodesEnglish.source) {
                 for (var episode of episodesEnglish.source) {
@@ -58,13 +66,14 @@ async function abc() {
                         source = episode.backup
                     }
                     var title = episode.title
+                    var thumbnail = episode.thumbnail
                     var number = episode.number
                     var type = episode.source
                     var audio = episode.audio
                     var subtitle = episode.subtitle
                     var fansub = episode.group
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
+                    var episodeCreate = await axios.post('http://localhost:3000/api/server/episode/postEx', {
+                        anime_id, title, number, type, audio, subtitle, fansub, source, thumbnail
                     })
                     promises.push(loopData(episodeCreate))
                 }
@@ -77,13 +86,14 @@ async function abc() {
                         source = episode.backup
                     }
                     var title = episode.title
+                    var thumbnail = episode.thumbnail
                     var number = episode.number
                     var type = episode.source
                     var audio = episode.audio
                     var subtitle = episode.subtitle
                     var fansub = 'Unknown'
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
+                    var episodeCreate = await axios.post('http://localhost:3000/api/server/episode/postEx', {
+                        anime_id, title, number, type, audio, subtitle, fansub, source, thumbnail
                     })
                     promises.push(loopData(episodeCreate))
                 }
@@ -97,12 +107,53 @@ async function abc() {
                     }
                     var title = episode.title
                     var number = episode.number
+                    var thumbnail = episode.thumbnail
                     var type = episode.source
                     var audio = episode.audio
                     var subtitle = episode.subtitle
                     var fansub = 'Unknown'
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
+                    var episodeCreate = await axios.post('http://localhost:3000/api/server/episode/postEx', {
+                        anime_id, title, number, type, audio, subtitle, fansub, source, thumbnail
+                    })
+                    promises.push(loopData(episodeCreate))
+                }
+            }
+
+            if (episodesChineseEng.success && episodesChineseEng.source) {
+                for (var episode of episodesChineseEng.source) {
+                    var source = episode.url
+                    if (!isValid(source)) {
+                        source = episode.backup
+                    }
+                    var title = episode.title
+                    var number = episode.number
+                    var thumbnail = episode.thumbnail
+                    var type = episode.source
+                    var audio = episode.audio
+                    var subtitle = episode.subtitle
+                    var fansub = 'Unknown'
+                    var episodeCreate = await axios.post('http://localhost:3000/api/server/episode/postEx', {
+                        anime_id, title, number, type, audio, subtitle, fansub, source, thumbnail
+                    })
+                    promises.push(loopData(episodeCreate))
+                }
+            }
+
+            if (episodesChineseAu.success && episodesChineseAu.source) {
+                for (var episode of episodesChineseAu.source) {
+                    var source = episode.url
+                    if (!isValid(source)) {
+                        source = episode.backup
+                    }
+                    var title = episode.title
+                    var number = episode.number
+                    var thumbnail = episode.thumbnail
+                    var type = episode.source
+                    var audio = episode.audio
+                    var subtitle = episode.subtitle
+                    var fansub = 'Unknown'
+                    var episodeCreate = await axios.post('http://localhost:3000/api/server/episode/postEx', {
+                        anime_id, title, number, type, audio, subtitle, fansub, source, thumbnail
                     })
                     promises.push(loopData(episodeCreate))
                 }
@@ -119,7 +170,7 @@ async function abc() {
                     var valid = await Term.findOne({ type: 'genre', key: genre })
                     if (!valid) {
                         var term = await Term.create({ type: 'genre', key: genre })
-                        term_id.push(term.term_id)
+                        term_id.push(loopData(term.term_id))
                     } else {
                         term_id.push(loopData(valid.term_id))
                     }
@@ -135,80 +186,14 @@ async function abc() {
                 })
         }
 
-        async function LoopEpisode() {
-            var i = 34187
-            var anime_id = '165b6cfede7a424f24b2605da1fdb31c'
-            var promises = []
-            var episodesEnglish = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=english&au=japanese`)).data
-            // var episodesChinese = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=chinese&au=japanese`)).data
-            // var episodesRaw = (await axios.get(`https://www.myanime.co/panel/admin-ajax.php?action=my_load_ajax_content&postid=${i}&sub=xx&au=japanese`)).data
-
-            if (episodesEnglish.success && episodesEnglish.source) {
-                for (var episode of episodesEnglish.source) {
-                    var source = episode.url
-                    if (!isValid(source)) {
-                        source = episode.backup
-                    }
-                    var title = episode.title
-                    var number = episode.number
-                    var type = episode.source
-                    var audio = episode.audio
-                    var subtitle = episode.subtitle
-                    var fansub = episode.group
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
-                    })
-                    promises.push(loopData(episodeCreate))
-                }
-            }
-
-            if (episodesChinese.success && episodesChinese.source) {
-                for (var episode of episodesChinese.source) {
-                    var source = episode.url
-                    if (!isValid(source)) {
-                        source = episode.backup
-                    }
-                    var title = episode.title
-                    var number = episode.number
-                    var type = episode.source
-                    var audio = episode.audio
-                    var subtitle = episode.subtitle
-                    var fansub = 'Unknown'
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
-                    })
-                    promises.push(loopData(episodeCreate))
-                }
-            }
-
-            if (episodesRaw.success && episodesRaw.source) {
-                for (var episode of episodesRaw.source) {
-                    var source = episode.url
-                    if (!isValid(source)) {
-                        source = episode.backup
-                    }
-                    var title = episode.title
-                    var number = episode.number
-                    var type = episode.source
-                    var audio = episode.audio
-                    var subtitle = episode.subtitle
-                    var fansub = 'Unknown'
-                    var episodeCreate = await axios.post('http://localhost:8880/api/server/episode/post', {
-                        anime_id, title, number, type, audio, subtitle, fansub, source
-                    })
-                    promises.push(loopData(episodeCreate))
-                }
-            }
-
-
-            return Promise.all(promises)
-        }
-        await LoopEpisode().then((data) => {
-            // console.log(data)
-        })
-
     }
     processs()
 
 
 }
+
+
+route.get('/import-data', (req, res, next) => {
+    abc()
+    res.send({success: true})
+})

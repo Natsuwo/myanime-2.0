@@ -11,6 +11,7 @@ route.get('/episode/edit-multi', checkSecure, isUserLogin, getEditMulti)
 route.put('/episode/edit-multi', checkSecure, isUserLogin, editMulti)
 route.put('/episode/update', checkSecure, isUserLogin, checkThumb, update)
 route.post('/episode/post', checkSecure, isUserLogin, validateDrive, getThumbnail, post)
+route.post('/episode/postEx', validateDrive, getThumbnail, post)
 route.post('/episode/add-multi', checkSecure, isUserLogin, beforeAddMulti, addMulti)
 route.delete('/episode/remove-episode', checkSecure, isUserLogin, removeEpisode)
 

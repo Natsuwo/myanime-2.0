@@ -59,9 +59,10 @@ module.exports = {
             if (!thumbnail) thumbnail = ''
             var episodeCreate = await Episode.create({ anime_id, title, source, number, description, type, audio, subtitle, fansub, thumbnail })
             var episode_id = episodeCreate.episode_id
-            res.send({ success: true, episode_id, message: "Added." })
+            return res.send({ success: true, episode_id, message: "Added." })
         } catch (err) {
-            res.send({ success: false, error: err.message })
+            console.log(err.message)
+            // res.send({ success: false, error: err.message })
         }
     },
     async getUpdate(req, res) {

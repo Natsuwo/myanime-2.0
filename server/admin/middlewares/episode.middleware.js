@@ -34,19 +34,16 @@ module.exports = {
     },
     async getThumbnail(req, res, next) {
         try {
+            var { thumbnail } = req.body
             var { source } = res.locals
-            var name = md5(source)
-            request
-                .get(`https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`, (err, head) => {
-                    if (!head.headers['content-length']) return next()
-                })
-                .on('error', function (err) {
-                    return next()
-                })
-                .pipe(fs.createWriteStream(`../library/upload/thumbnail/${name}.jpg`))
-            res.locals.thumbnail = `/library/upload/thumbnail/${name}.jpg`
+            if (!thumbnail) { 
+                res.locals.thumbnail = `https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`
+                return next()
+            }
+            res.locals.thumbnail = thumbnail
             return next()
         } catch (err) {
+            console.log(err)
             return next()
         }
     },
@@ -54,7 +51,6 @@ module.exports = {
         try {
             var { source } = req.body
             var name = md5(source)
-            console.log(source)
             await request
                 .get(`https://drive.google.com/thumbnail?authuser=0&sz=w348-h196-n-k&id=${source}`, (err, head) => {
                     if (!head.headers['content-length']) {

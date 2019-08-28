@@ -37,10 +37,11 @@ module.exports = {
             res.send({ success: false, error: err.message })
         }
     },
-    async post(req, res) {
+    async post(req, res, next) {
         try {
             var { data } = req.body
             var { title, en, jp, type, rating, status, premiered, genres, season, studios, description, thumbnail, cover } = JSON.parse(data)
+
             if (req.files['thumbnail']) {
                 var fileName = req.files['thumbnail'][0].originalname
                 thumbnail = `/library/upload/anime/thumbnail/${fileName}`
@@ -65,6 +66,8 @@ module.exports = {
                 await AnimeMeta.create({ anime_id, meta_key: 'genre', meta_value: genres })
             }
             res.send({ success: true, anime_id, message: 'Added.' })
+            res.locals.anime_id = anime_id
+            next()
         } catch (err) {
             res.send({ success: false, error: err.message })
         }
@@ -87,12 +90,12 @@ module.exports = {
             var { anime_id, title, type, rating, status, premiered, season, studios, description, en, jp, genres, thumbnail, cover } = JSON.parse(data)
 
             if (req.files['thumbnail']) {
-                var fileName = req.files['cover'][0].originalname
-                thumbnail = `/library/upload/cover/${fileName}`
+                var fileName = req.files['thumbnail'][0].originalname
+                thumbnail = `/library/upload/anime/thumbnail/${fileName}`
             }
             if (req.files['cover']) {
-                var fileName = req.files['banner'][0].originalname
-                cover = `/library/upload/banner/${fileName}`
+                var fileName = req.files['cover'][0].originalname
+                cover = `/library/upload/anime/cover/${fileName}`
             }
 
             await Anime.updateOne({ anime_id }, { thumbnail, title, type, rating, status, premiered, season, studios, description, cover })
