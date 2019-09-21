@@ -22,7 +22,6 @@ export const actions = {
     async sidebarLoadmore({ commit }, res) {
         return commit(LOADMORE, { res })
     }
-    
 }
 
 export const mutations = {
@@ -39,5 +38,12 @@ export const mutations = {
         var current = state.sidebar.playList
         var newData = res.data
         return state.sidebar.playList = current.concat(newData)
+    },
+    errorThumb(state, { target, item }) {
+        console.log('o day')
+        var index = state.sidebar[target].indexOf(item)
+        if (index > -1) {
+            state.sidebar[target][index].thumbnail = '/thumb-error.jpg'
+        }
     }
 }

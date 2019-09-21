@@ -21,15 +21,14 @@
 <script>
 import Main from "@/components/template/watch/Main";
 import Sidebar from "@/components/template/watch/Sidebar";
-import "@/static/css/DPlayer.min.css";
 import { getEpisode } from "@/services/Episode";
-import setting from "@/items/settings.json";
+import { mapState } from "vuex";
 export default {
   head() {
     return {
       title: `${this.anime.title} ${
         this.episode.title ? this.episode.title : `Ep.${this.episode.number}`
-      } - ${setting.site_title}`,
+      } - ${this.settings.site_title}`,
       meta: [
         {
           hid: "description",
@@ -61,21 +60,10 @@ export default {
     }
   },
   computed: {
-    sidebar() {
-      return this.$store.state.episode.sidebar;
-    },
-    anime() {
-      return this.$store.state.anime.anime;
-    },
-    episode() {
-      return this.$store.state.episode.episode;
-    },
-    usermeta() {
-      return this.$store.state.auth.usermeta;
-    },
-    flags() {
-      return this.$store.state.flags;
-    }
+    ...mapState(["settings", "flags"]),
+    ...mapState("anime", ["anime"]),
+    ...mapState("episode", ["episode", "sidebar"]),
+    ...mapState("auth", ["usermeta"])
   },
   layout: "watch",
   components: {

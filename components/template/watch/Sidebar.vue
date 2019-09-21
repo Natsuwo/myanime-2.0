@@ -32,7 +32,12 @@
               </nuxt-link>
             </div>
           </div>
-          <v-btn v-if="total !== playList.length" block @click="loadmore" :loading="loading">Load more</v-btn>
+          <v-btn
+            v-if="total !== playList.length"
+            block
+            @click="loadmore"
+            :loading="loading"
+          >Load more</v-btn>
         </div>
       </v-card>
     </div>

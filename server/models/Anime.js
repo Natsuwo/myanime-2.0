@@ -1,8 +1,8 @@
 const mongoose = require('mongoose'),
-    md5 = require('md5')
+    Counter = require('./Counter')
 
 const animeSchema = new mongoose.Schema({
-    anime_id: String,
+    anime_id: Number,
     title: String,
     description: String,
     rating: String,
@@ -13,6 +13,7 @@ const animeSchema = new mongoose.Schema({
     studios: String,
     thumbnail: String,
     cover: String,
+    views: Number,
     followers: {
         type: Number,
         default: 0
@@ -26,7 +27,8 @@ animeSchema.pre('save', async function (next) {
     var anime = this
     anime.created_at = Date.now()
     anime.updated_at = Date.now()
-    anime.anime_id = md5(Date.now())
+    var counter = await Counter.findOneAndUpdate({ key: "anime" }, { $inc: { value: 1 } }, { new: true })
+    anime.anime_id = counter.value
     next()
 })
 

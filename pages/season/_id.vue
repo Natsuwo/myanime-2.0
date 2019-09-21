@@ -26,11 +26,11 @@ export default {
       ]
     };
   },
-  asyncData({ store }) {
+  asyncData({ store, params }) {
     var headers = {
       "X-User-Session": store.state.auth.userToken
     };
-    var season = "cur_season";
+    var season = params.id;
     return getSeason(headers, season).then(res => {
       var results = res.data;
       return {

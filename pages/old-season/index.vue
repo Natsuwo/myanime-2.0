@@ -1,43 +1,56 @@
 <template>
   <v-container fuild grid-list-md>
-    <SeasonContent :is-loading="isLoading" :anime-seasons="animeSeasons" :season="season"/>
+    <SeasonContent
+      @loadData="data => loadData(data)"
+      :is-loading="isLoading"
+      :anime-seasons="animeSeasons"
+      :season="season"
+    />
   </v-container>
 </template>
 <script>
 import SeasonContent from "@/components/template/season/SeasonContent";
 import { getSeason } from "@/services/Anime";
-import setting from "@/items/settings.json";
 import { mapState } from "vuex";
 export default {
   head() {
     return {
-      titleTemplate: "%s - " + setting.site_title,
+      titleTemplate: "%s - " + this.settings.site_title,
       title: this.animeSeasons.season,
       meta: [
         {
           hid: "description",
           name: "description",
-          content: setting.descriptions
+          content: this.settings.descriptions
         }
       ]
     };
   },
-  async fetch({ store }) {
+  asyncData({ store }) {
     var headers = {
       "X-User-Session": store.state.auth.userToken
     };
     var season = "old_season";
-    var response = await getSeason(headers, season);
-    if (response.data.success) {
-      store.dispatch("anime/animeSeasons", response.data);
+    return getSeason(headers, season).then(res => {
+      var results = res.data;
+      return {
+        animeSeasons: results.data,
+        season
+      };
+    });
+  },
+  methods: {
+    loadData(res) {
+      var newAnimes = this.animeSeasons.animes.concat(res.data.animes);
+      var newEps = this.animeSeasons.totalEps.concat(res.data.totalEps);
+      var newViews = this.animeSeasons.views.concat(res.data.views);
+      this.animeSeasons.animes = newAnimes;
+      this.animeSeasons.totalEps = newEps;
+      this.animeSeasons.views = newViews;
     }
   },
   computed: {
-    ...mapState(["isLoading"]),
-    ...mapState("anime", ["animeSeasons"]),
-    season() {
-        return "old_season"
-    }
+    ...mapState(["isLoading", "settings"])
   },
   components: {
     SeasonContent

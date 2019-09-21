@@ -46,7 +46,7 @@
           <v-btn text @click="prev" :disabled="currentSlide < 1 ? true : false ">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
-          <v-btn text @click="next" :disabled="currentSlide >= 7 ? true : false ">
+          <v-btn text @click="next" :disabled="currentSlide >= totalSlide ? true : false ">
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-flex>
@@ -73,6 +73,11 @@ export default {
       },
       currentSlide: 0
     };
+  },
+  computed: {
+    totalSlide() {
+      return Math.floor(this.data.length / 2) || 0;
+    }
   },
   methods: {
     next() {

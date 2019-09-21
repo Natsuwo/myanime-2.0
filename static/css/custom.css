@@ -175,6 +175,30 @@ div.siema {
     color: #aaa;
 }
 
+.multiple-episode {
+    width: 70px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: hsla(0, 0%, 6.7%, 0.8);
+    color: hsla(0, 0%, 100%, 0.8);
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 2rem;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
 .comments-count {
     font-size: 18px;
     font-weight: 400;
@@ -196,10 +220,6 @@ div.siema {
 
 .player-thumb_up, .player-thumb_down {
     cursor: pointer;
-}
-
-.dplayer-comment, .dplayer-setting-showdan, .dplayer-setting-danunlimit, .dplayer-setting-danmaku {
-    display: none!important;
 }
 
 .anime-container {
@@ -397,11 +417,16 @@ div.siema {
     -webkit-line-clamp: 1;
 }
 
+.anime-channel-season a {
+    color: #fff!important;
+    font-weight: 600;
+}
+
 .anime-channel-season {
     text-transform: uppercase;
     max-width: 320px;
     margin-top: 8px;
-    color: #aaa;
+    color: #fff;
     display: -webkit-box;
     max-height: 6rem;
     overflow: hidden;
@@ -416,7 +441,7 @@ div.siema {
 .anime-channel-description {
     max-width: 100%;
     margin-top: 8px;
-    color: #aaa;
+    color: #fff;
     display: -webkit-box;
     max-height: 6rem;
     overflow: hidden;
@@ -430,7 +455,7 @@ div.siema {
 
 .anime-channel-studio {
     line-height: 1.5rem;
-    color: #aaa;
+    color: #fff;
 }
 
 .anime-channel-title {
@@ -499,7 +524,7 @@ div.siema {
     top: 0;
     left: 0;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .fansub-title a {
@@ -690,7 +715,6 @@ div.siema {
     text-decoration: none;
 }
 
-
 .season-anime-total-views, .season-anime-total-eps {
     color: #606060;
     display: inline-flex;
@@ -711,12 +735,19 @@ div.siema {
     height: 290px!important;
 }
 
+div[button="logo"] .jw-button-image {
+    width: 100%;
+    height: 100%;
+    background-size: 80px;
+}
+
+div[button="logo"] {
+    width: 100px;
+}
+
 @media (max-width: 575.98px) {
     .anime-container {
         margin: 0 10px!important;
-    }
-    .dplayer-setting {
-        display: none!important;
     }
     .anime-channel-content {
         width: 428px!important;

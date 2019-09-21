@@ -112,7 +112,6 @@ export default {
       }
       if (option.title === "watching" || option.title === "considering") {
         if (oldType === "watching" || oldType === "considering") return;
-
         var index = this.animes.findIndex(x => x.anime_id === item.parent_id);
         if (index >= 0) {
           var anime = this.animes[index];
@@ -140,7 +139,6 @@ export default {
       var form = {
         anime_id: item.anime_id
       };
-
       var response = await unFollow(this.headers, form);
       this.$store.commit("snackbar/snackBar", {
         active: true,

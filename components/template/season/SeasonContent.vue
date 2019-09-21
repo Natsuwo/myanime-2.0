@@ -10,7 +10,7 @@
           lg2
           class="season-anime-content"
           v-for="(item, index) in animeSeasons.animes"
-          :key="item.anime_id"
+          :key="index"
         >
           <nuxt-link class="season-anime-link" :to="`/anime/${item.anime_id}`">
             <div class="season-anime-card">
@@ -54,13 +54,12 @@ export default {
       };
       var response = await getSeason(headers, this.season, this.skip);
       if (response.data.success) {
-        this.$store.commit("anime/loadSeasons", response.data);
+        this.$emit('loadData', response.data)
         this.skip += 30;
         if (this.skip >= this.animeSeasons.total) {
           this.hasNext = false;
         }
       }
-
       this.SET_LOADING(false);
     }
   },

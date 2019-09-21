@@ -1,86 +1,85 @@
 <template>
-    <v-container>
-      <v-layout wrap>
-        <v-card width="100%" class="mx-auto">
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-list-item-content>
-                <v-card-actions @click="isEdit = !isEdit" v-if="!isEdit">
-                  <v-row align="center" justify="end">
-                    <v-btn>Edit</v-btn>
-                  </v-row>
-                </v-card-actions>
-              </v-list-item-content>
-              <v-row align="center" justify="center">
-                <v-avatar size="220" fill-height>
-                  <v-img :src="avatarUrl"></v-img>
-                  <div v-if="isEdit" class="user-avatar-edit" @click="pickFile">
-                    <v-icon large>mdi-image-plus</v-icon>
-                    <input
-                      type="file"
-                      style="display: none"
-                      ref="image"
-                      accept="image/*"
-                      @change="onFilePicked"
-                    />
-                  </div>
-                </v-avatar>
-              </v-row>
-              <v-list-item v-if="isEdit">
-                <v-row align="center" justify="center">
-                  <v-col cols="12" xs="12" md="8">
-                    <v-form ref="form" v-model="valid">
-                      <v-text-field
-                        type="password"
-                        v-model="cur_pass"
-                        filled
-                        label="Current Password"
-                      ></v-text-field>
-                      <v-text-field
-                        :rules="passwordRules"
-                        type="password"
-                        v-model="new_pass"
-                        filled
-                        label="New Password"
-                      ></v-text-field>
-                    </v-form>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn @click="isEdit = !isEdit">Cancel</v-btn>
-                      <v-btn @click="updateProfile" color="primary">Save</v-btn>
-                    </v-card-actions>
-                  </v-col>
+  <v-container>
+    <v-layout wrap>
+      <v-card width="100%" class="mx-auto">
+        <v-layout wrap>
+          <v-flex xs12>
+            <v-list-item-content>
+              <v-card-actions @click="isEdit = !isEdit" v-if="!isEdit">
+                <v-row align="center" justify="end">
+                  <v-btn>Edit</v-btn>
                 </v-row>
-              </v-list-item>
-              <v-list-item v-else>
-                <v-list-item-content class="text-center">
-                  <v-list-item-title class="headline">{{profile.username}}</v-list-item-title>
-                  <v-list-item-subtitle>{{rank}}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-layout>
-    </v-container>
+              </v-card-actions>
+            </v-list-item-content>
+            <v-row align="center" justify="center">
+              <v-avatar size="220" fill-height>
+                <v-img :src="avatarUrl"></v-img>
+                <div v-if="isEdit" class="user-avatar-edit" @click="pickFile">
+                  <v-icon large>mdi-image-plus</v-icon>
+                  <input
+                    type="file"
+                    style="display: none"
+                    ref="image"
+                    accept="image/*"
+                    @change="onFilePicked"
+                  />
+                </div>
+              </v-avatar>
+            </v-row>
+            <v-list-item v-if="isEdit">
+              <v-row align="center" justify="center">
+                <v-col cols="12" xs="12" md="8">
+                  <v-form ref="form" v-model="valid">
+                    <v-text-field
+                      type="password"
+                      v-model="cur_pass"
+                      filled
+                      label="Current Password"
+                    ></v-text-field>
+                    <v-text-field
+                      :rules="passwordRules"
+                      type="password"
+                      v-model="new_pass"
+                      filled
+                      label="New Password"
+                    ></v-text-field>
+                  </v-form>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="isEdit = !isEdit">Cancel</v-btn>
+                    <v-btn @click="updateProfile" color="primary">Save</v-btn>
+                  </v-card-actions>
+                </v-col>
+              </v-row>
+            </v-list-item>
+            <v-list-item v-else>
+              <v-list-item-content class="text-center">
+                <v-list-item-title class="headline">{{profile.username}}</v-list-item-title>
+                <v-list-item-subtitle>{{rank}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-layout>
+  </v-container>
 </template>
 <script>
 import Rank from "@/items/rank.json";
-import setting from "@/items/settings.json";
 import { updateProfile } from "@/services/User";
+import { mapState } from "vuex";
 export default {
   middleware: "auth",
   layout: "profile",
   head() {
     return {
-      titleTemplate: "%s - " + setting.site_title,
+      titleTemplate: "%s - " + this.settings.site_title,
       title: "My profile"
     };
   },
   computed: {
-    profile() {
-      return this.$store.state.auth.profile;
-    },
+    ...mapState(["settings"]),
+    ...mapState("auth", ["profile"]),
     rank() {
       return Rank.filter(x => x.id === this.profile.rank)[0].name;
     }

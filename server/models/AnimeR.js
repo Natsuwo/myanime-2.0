@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const animeRelationshipSchema = new mongoose.Schema({
-    anime_id: String,
+    anime_id: Number,
     meta_id: Number
 })
 

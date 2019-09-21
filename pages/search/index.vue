@@ -16,7 +16,7 @@
                 </div>
               </div>
             </nuxt-link>
-            <nuxt-link class="search-thumbnail-link" :to="`/watch?a=${item.episode_id}`">
+            <nuxt-link class="search-thumbnail-link" :to="`/anime/${item.anime_id}`">
               <div class="search-right-content">
                 <div class="search-title">{{getAnime(item.anime_id, 'title')}}</div>
                 <div

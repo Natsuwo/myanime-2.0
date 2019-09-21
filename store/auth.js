@@ -7,7 +7,7 @@ export const state = () => {
         profile: {},
         usermeta: [],
         following: [],
-        lists: []
+        lists: ""
     }
 }
 
@@ -66,20 +66,23 @@ export const mutations = {
         if (indexA >= 0) {
             state.following.splice(indexA, 1)
         }
-        if (!state.lists.length && state.lists.animes.length > 0) {
-            var indexB = state.lists.animes.indexOf(item)
-            if (indexB && indexB >= 0) {
-                state.lists.animes.splice(indexB, 1)
-                state.lists.metas.splice(indexB, 1)
-            }
-            var types = ["all", "watching", "considering", "completed", "skipping"]
-            for (var type of types) {
-                var index = state.lists.follow[type].findIndex(x => x.parent_id === item.anime_id)
-                if (index >= 0) {
-                    state.lists.follow[type].splice(index, 1)
+        if (state.lists) {
+            if (state.lists.animes.length > 0) {
+                var indexB = state.lists.animes.indexOf(item)
+                if (indexB && indexB >= 0) {
+                    state.lists.animes.splice(indexB, 1)
+                    state.lists.metas.splice(indexB, 1)
+                }
+                var types = ["all", "watching", "considering", "completed", "skipping"]
+                for (var type of types) {
+                    var index = state.lists.follow[type].findIndex(x => x.parent_id === item.anime_id)
+                    if (index >= 0) {
+                        state.lists.follow[type].splice(index, 1)
+                    }
                 }
             }
         }
+
 
     },
     [USERMETA](state, { data }) {

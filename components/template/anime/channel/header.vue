@@ -15,7 +15,9 @@
             :title="data.description"
             v-html="data.description"
           ></div>
-          <div class="anime-channel-season">{{data.season}}</div>
+          <div class="anime-channel-season">
+            <nuxt-link :to="`/season/${data.season}`">{{data.season}}</nuxt-link>
+          </div>
           <div class="anime-channel-genre">
             <v-chip v-for="item in getTerm()" :key="item" class="ma-2" small label>{{item}}</v-chip>
           </div>

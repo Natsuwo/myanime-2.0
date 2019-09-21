@@ -6,8 +6,8 @@
         <v-list-item-title class="user-follower-anime">Animes following</v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-for="item in following"
-        :key="item.anime_id"
+        v-for="(item, index) in following"
+        :key="index"
         :to="`/anime/${item.anime_id}`"
         router
         exact

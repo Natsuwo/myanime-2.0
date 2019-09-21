@@ -9,6 +9,10 @@ export function getTerms(headers) {
     return Api(headers).get('/anime/get-term');
 }
 
+export function getSettings(headers) {
+    return Api(headers).get('/anime/get-settings');
+}
+
 export function loadMoreChannel(headers, anime_id, skip) {
     return Api(headers).get(`/anime/loadmore-channel?anime_id=${anime_id}&skip=${skip}`);
 }

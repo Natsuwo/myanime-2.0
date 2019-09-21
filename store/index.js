@@ -2,11 +2,12 @@ const cookieparser = process.server ? require('cookieparser') : undefined
 import { checkUserToken } from "../services/Auth"
 import { getFollowing } from "../services/User"
 import { getFlags } from "../services/Language"
-import { getTerms } from "../services/Anime"
+import { getTerms, getSettings } from "../services/Anime"
 export const state = () => {
     return {
         signIn: false,
         flags: [],
+        settings: [],
         isLoading: false
     }
 }
@@ -17,6 +18,9 @@ export const mutations = {
     },
     getFlags(state, payload) {
         state.flags = payload
+    },
+    setSettings(state, payload) {
+        state.settings = payload
     },
     SET_LOADING(state, isLoading) {
         state.isLoading = isLoading
@@ -42,5 +46,7 @@ export const actions = {
         commit("getFlags", flags.result)
         var terms = (await getTerms()).data
         commit("anime/getTerms", terms.data)
+        var { settings } = (await getSettings()).data
+        commit("setSettings", settings)
     }
 }

@@ -2,7 +2,7 @@ const mongoose = require('mongoose'),
     uniqid = require('uniqid')
 
 const episodeSchema = new mongoose.Schema({
-    anime_id: String,
+    anime_id: Number,
     episode_id: String,
     title: String,
     number: Number,
