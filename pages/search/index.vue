@@ -22,12 +22,12 @@
                 <div
                   class="search-views"
                 >{{item.views}} views - {{getAnime(item.anime_id, 'followers') || 0}} followers</div>
-                <no-ssr>
+                <client-only>
                   <div
                     class="search-description"
                     v-html="$options.filters.truncate(getAnime(item.anime_id, 'description'), 200, '...')"
                   ></div>
-                </no-ssr>
+                </client-only>
               </div>
             </nuxt-link>
           </div>

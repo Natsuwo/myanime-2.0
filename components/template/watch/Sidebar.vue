@@ -46,6 +46,12 @@
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
         <div class="player-sidebar-thumbnail">
           <v-img width="168px" :src="item.data.thumbnail"></v-img>
+           <div class="search-overlay">
+                <div class="multiple-episode">
+                  <div class="count">{{item.data.count}}</div>
+                  <v-icon>mdi-playlist-play</v-icon>
+                </div>
+              </div>
         </div>
         <div class="player-sidebar-right-content column">
           <div class="player-sidebar-title">{{item.anime.title}} {{item.data.number}}</div>

@@ -40,7 +40,6 @@ export const mutations = {
         return state.sidebar.playList = current.concat(newData)
     },
     errorThumb(state, { target, item }) {
-        console.log('o day')
         var index = state.sidebar[target].indexOf(item)
         if (index > -1) {
             state.sidebar[target][index].thumbnail = '/thumb-error.jpg'

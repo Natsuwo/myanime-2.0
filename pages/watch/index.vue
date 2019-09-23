@@ -2,9 +2,9 @@
   <div class="anime-container">
     <v-layout row wrap justify-center>
       <v-flex xs12 sm12 md8 lg9 pt-2 pr-4>
-        <no-ssr>
+        <client-only>
           <Main :episode="episode" :usermeta="usermeta" :flags="flags" :anime="anime" />
-        </no-ssr>
+        </client-only>
       </v-flex>
       <v-flex xs12 sm12 md4 lg3 pt-2 pr-4>
         <Sidebar

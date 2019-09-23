@@ -1,4 +1,3 @@
-const ip = require('ip')
 const { Router } = require('express')
 const route = Router()
 const { getEpisodes, getSingleEp, loadMoreSidebar } = require('../controllers/episode.controller')
@@ -21,7 +20,7 @@ const countView = rateLimit({
 var apicache = require('apicache')
 var cache = apicache.middleware
 
-route.get('/episode/get', cache('5 minutes'), checkSecure, getEpisodes)
+route.get('/episode/get', checkSecure, cache('5 minutes'), getEpisodes)
 route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
 route.get('/episode/get-episode', checkSecure, countView, isUserLogin, getSingleEp)
 

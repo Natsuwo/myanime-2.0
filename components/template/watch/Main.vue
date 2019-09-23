@@ -2,7 +2,7 @@
   <div class="player-left-content">
     <v-layout row wrap class="anime-player">
       <v-responsive :aspect-ratio="18/9">
-        <Player :source="episode.source" />
+        <Player :source="episode.source" :thumbnail="episode.thumbnail" />
       </v-responsive>
     </v-layout>
     <div

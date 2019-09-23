@@ -1,7 +1,7 @@
 <template>
   <v-container fuild grid-list-md>
     <div class="myanime-home">
-      <AnimeData :title="'Recent Uploads'" :data="episodes.recent" :flags="flags" :animes="animes" />
+      <AnimeData :title="'Recent Uploads'" :data="recent" :flags="flags" :animes="animes" />
       <AnimeDataThumb
         :title="'Recommended'"
         :data="episodes.recoment"
@@ -31,6 +31,7 @@ import AnimeDataSlider from "@/components/template/homepage/AnimeDataSlider";
 import AnimeDataThumb from "@/components/template/homepage/AnimeDataThumb";
 import { getEpisodes } from "../services/Episode";
 import { mapState } from "vuex";
+import Recent from "../../newupload.json"
 export default {
   head() {
     return {
@@ -55,6 +56,7 @@ export default {
         var animes = res.data.animes;
         return {
           animes,
+          recent: Recent,
           episodes
         };
       })

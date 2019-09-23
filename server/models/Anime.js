@@ -13,7 +13,10 @@ const animeSchema = new mongoose.Schema({
     studios: String,
     thumbnail: String,
     cover: String,
-    views: Number,
+    views: {
+        type: Number,
+        default: 0
+    },
     followers: {
         type: Number,
         default: 0
@@ -32,12 +35,12 @@ animeSchema.pre('save', async function (next) {
     next()
 })
 
-animeSchema.pre('updateOne', function (next) {
-    var update = this.getUpdate()
-    update.$set = update.$set || {};
-    update.$set.updated_at = Date.now();
-    next()
-})
+// animeSchema.pre('updateOne', function (next) {
+//     var update = this.getUpdate()
+//     update.$set = update.$set || {};
+//     update.$set.updated_at = Date.now();
+//     next()
+// })
 
 const Anime = mongoose.model('Anime', animeSchema, 'anime')
 

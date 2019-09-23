@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  props: ["source"],
+  props: ["source", "thumbnail"],
   data() {
     return {
       p2p: false,
@@ -41,6 +41,7 @@ export default {
         player.setup({
           file: this.source,
           type: "mp4",
+          image: this.thumbnail || '/thumb-error.jpg',
           logo: {
             file: "/logo-season.png",
             link: "https://www.myanime.co",

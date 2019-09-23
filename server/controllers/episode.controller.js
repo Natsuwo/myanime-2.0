@@ -3,24 +3,23 @@ const Anime = require('../models/Anime')
 const Episode = require('../models/Episode')
 const UserMeta = require('../models/UserMeta')
 
+async function countView(episode_id) {
+    var data = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
+    var oldData = JSON.parse(data)
+    var index = oldData.findIndex(x => x.episode_id === episode_id)
+    if (index > -1) {
+        oldData[index].views += 1
+        await fs.writeFileSync('../newupload.json', JSON.stringify(oldData), { encoding: 'utf8' })
+    }
+}
+
 module.exports = {
     async getEpisodes(req, res) {
         try {
-            // New
             var animes = []
-            var newUpload = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
-            newUpload = JSON.parse(newUpload)
-            for (var item of newUpload) {
-                var anime_id = item.anime_id
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    continue;
-                }
-                var anime = await Anime.findOne({ anime_id }, { _id: 0 }).select('title anime_id')
-                animes.push(anime)
-            }
             // Recommended
             var recomAnime = []
-            var recommended = await Anime.find({}, { _id: 0 }).sort({ followers: -1 }).limit(12).select('title anime_id thumbnail')
+            var recommended = await Anime.find({}, { _id: 0 }).sort({ followers: -1 }).limit(12).select('title anime_id thumbnail views')
             for (var item of recommended) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -39,7 +38,7 @@ module.exports = {
             var randomAnime = []
             var totalAnime = await Anime.countDocuments()
             var randomNumber = Math.floor(Math.random() * totalAnime)
-            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail')
+            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail views')
             for (var item of random) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -56,7 +55,7 @@ module.exports = {
             }
             // Top Trending
             var trendingAnime = []
-            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail')
+            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail views')
             for (var item of trending) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -76,7 +75,7 @@ module.exports = {
             var settings = JSON.parse(Settings)
             var cur_season = settings.cur_season
             var currentSeason = []
-            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail')
+            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail views')
             for (var item of currentAnime) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -98,7 +97,6 @@ module.exports = {
             return res.send({
                 success: true,
                 episodes: {
-                    recent: newUpload,
                     recoment: recomAnime,
                     random: randomAnime,
                     trending: trendingAnime,
@@ -116,8 +114,10 @@ module.exports = {
             var { episode_id } = req.query
             var { user_id } = res.locals
             var episode = await Episode.findOne({ episode_id }, { __v: 0, _id: 0 })
-            episode.source = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
+            var source = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
+            episode.set('source', source, { strict: false })
             var { anime_id, type, audio, subtitle, fansub } = episode
+            var old_anime_id = anime_id
             var usermeta = []
             if (user_id) {
                 usermeta = await UserMeta
@@ -130,19 +130,23 @@ module.exports = {
             var playList = await Episode
                 .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
                 .sort({ number: -1 }).limit(24)
-            var random = await Episode
-                .aggregate([{ $sample: { size: 15 } }])
-                .project({ _id: 0, __v: 0 })
+            var randomNumber = Math.floor(Math.random() * total)
+            var randomAnime = await Anime.find({}, { _id: 0 }).limit(15).skip(randomNumber).select('title anime_id')
             var animeRandom = []
-            for (let item of random) {
+            for (let item of randomAnime) {
                 var anime_id = item.anime_id
-                var animes = await Anime.findOne({ anime_id }, { _id: 0 }).select('title')
-                animeRandom.push({ data: item, anime: animes })
+                var totalEp = await Episode.countDocuments({ anime_id })
+                var randomEp = Math.floor(Math.random() * totalEp)
+                var randEp = await Episode.findOne({ anime_id }, { _id: 0 }).skip(randomEp)
+                if (!randEp) continue;
+                randEp.set('count', totalEp, { strict: false })
+                animeRandom.push({ data: randEp, anime: item })
             }
 
             if (req.rateLimit.limit >= req.rateLimit.current) {
                 await Episode.updateOne({ episode_id }, { $inc: { views: 1 } }, { new: true })
-                await Anime.updateOne({ anime_id }, { $inc: { views: 1 } }, { new: true })
+                await Anime.updateOne({ anime_id: old_anime_id }, { $inc: { views: 1 } }, { new: true })
+                await countView(episode_id)
             }
             return res.send({
                 success: true,

@@ -8,7 +8,7 @@ module.exports = () => {
     const mongoose = require('mongoose')
     const routes = require('./routes')
 
-    mongoose.connect(process.env.MONGO_URL, { useCreateIndex: true, useNewUrlParser: true })
+    mongoose.connect(process.env.MONGO_URL, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
 
     mongoose.connection.on('connected', function () {
         console.log('Mongoose successfully connected.')

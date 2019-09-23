@@ -3,6 +3,7 @@ import { checkUserToken } from "../services/Auth"
 import { getFollowing } from "../services/User"
 import { getFlags } from "../services/Language"
 import { getTerms, getSettings } from "../services/Anime"
+
 export const state = () => {
     return {
         signIn: false,

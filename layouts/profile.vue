@@ -1,8 +1,8 @@
 <template>
   <v-app dark>
-    <no-ssr>
+    <client-only>
       <AppBar />
-    </no-ssr>
+    </client-only>
     <v-content>
       <v-container fluid>
         <DialogSignIn />
