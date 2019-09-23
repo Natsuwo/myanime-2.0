@@ -17,6 +17,16 @@ module.exports = {
     async getEpisodes(req, res) {
         try {
             var animes = []
+            var newUpload = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
+            newUpload = JSON.parse(newUpload)
+            for (var item of newUpload) {
+                var anime_id = item.anime_id
+                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
+                    continue;
+                }
+                var anime = await Anime.findOne({ anime_id }, { _id: 0 }).select('title anime_id')
+                animes.push(anime)
+            }
             // Recommended
             var recomAnime = []
             var recommended = await Anime.find({}, { _id: 0 }).sort({ followers: -1 }).limit(12).select('title anime_id thumbnail views')
@@ -97,6 +107,7 @@ module.exports = {
             return res.send({
                 success: true,
                 episodes: {
+                    recent: newUpload,
                     recoment: recomAnime,
                     random: randomAnime,
                     trending: trendingAnime,
