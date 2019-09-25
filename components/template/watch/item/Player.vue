@@ -1,11 +1,16 @@
 <template>
-  <div id="player">
-    <div id="loading"></div>
+  <div class="player">
+    <div id="player">
+      <div id="loading"></div>
+    </div>
+    <div id="player2">
+      <div id="loading"></div>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["source", "thumbnail"],
+  props: ["source", "backup", "thumbnail"],
   data() {
     return {
       config: {
@@ -31,46 +36,45 @@ export default {
     };
   },
   methods: {
-    validm3u8(url) {
-      var result = /^(.*\.m3u8)*$/g.test(url);
-      return result;
-    },
     Player(source) {
       try {
-        var type = this.validm3u8(this.source) ? "hls" : "mp4";
-        if (p2pml.hlsjs.Engine.isSupported()) {
-          var engine = new p2pml.hlsjs.Engine(this.config);
-          var player = jwplayer("player");
+        var engine = new p2pml.hlsjs.Engine(this.config);
+        var player = jwplayer("player");
+        player.setup({
+          file: this.source || "error.mp4",
+          type: "hls",
+          image: this.thumbnail || "/thumb-error.jpg",
+          autostart: true,
+          logo: {
+            file: "/logo-season.png",
+            link: "https://www.myanime.co",
+            hide: true,
+            position: "control-bar"
+          }
+        });
+        player.on("error", () => {
+          var player = jwplayer("player2");
           player.setup({
-            file: this.source,
-            type: this.validm3u8(this.source) ? "hls" : "mp4",
-            image: this.thumbnail || "/thumb-error.jpg",
-            logo: {
-              file: "/logo-season.png",
-              link: "https://www.myanime.co",
-              hide: true,
-              position: "control-bar"
-            }
+            file: this.backup,
+            type: "mp4",
+            autostart: true
           });
-
-          jwplayer_hls_provider.attach();
-          p2pml.hlsjs.initJwPlayer(player, {
-            liveSyncDurationCount: 7,
-            loader: engine.createLoaderClass()
-          });
-        } else {
-          var player = jwplayer("player");
+          jwplayer("player").remove();
+        });
+        player.on("setupError", error => {
+          var player = jwplayer("player2");
           player.setup({
-            logo: {
-              file: "/logo-season.png",
-              link: "https://www.myanime.co",
-              hide: true,
-              position: "control-bar"
-            },
-            file: this.source,
-            type: this.validm3u8(this.source) ? "hls" : "mp4"
+            file: this.backup,
+            type: "mp4",
+            autostart: true
           });
-        }
+          jwplayer("player").remove();
+        });
+        jwplayer_hls_provider.attach();
+        p2pml.hlsjs.initJwPlayer(player, {
+          liveSyncDurationCount: 7,
+          loader: engine.createLoaderClass()
+        });
       } catch (err) {
         setTimeout(() => {
           this.$router.go({

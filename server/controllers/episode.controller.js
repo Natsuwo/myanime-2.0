@@ -22,7 +22,7 @@ async function getSource(drive_id) {
     var query = `?user_id=${user_id}&drive_id=${drive_id}&secret_token=${token}`
     var resp = await axios.get(endpoint + query)
     var data = resp.data
-    if (!data.success) return false
+    if (!data.success) return null
     var id = data.results.id
     var link = drDomain + '/hls/' + id + '.m3u8'
     return link
@@ -141,10 +141,9 @@ module.exports = {
             var { user_id } = res.locals
             var episode = await Episode.findOne({ episode_id }, { __v: 0, _id: 0 })
             var source = await getSource(episode.source)
-            if (!source) {
-                source = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
-            }
+            backup = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
             episode.set('source', source, { strict: false })
+            episode.set('backup', backup, { strict: false })
             var { anime_id, type, audio, subtitle, fansub } = episode
             var old_anime_id = anime_id
             var usermeta = []
