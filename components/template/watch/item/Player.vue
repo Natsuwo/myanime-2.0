@@ -8,7 +8,6 @@ export default {
   props: ["source", "thumbnail"],
   data() {
     return {
-      p2p: false,
       config: {
         loader: {
           trackerAnnounce: [
@@ -32,42 +31,30 @@ export default {
     };
   },
   methods: {
+    validm3u8(url) {
+      var result = /^.+\\([^.]+)\.pdf$/g.test(url);
+      return result
+    },
     Player(source) {
-      if (p2pml.hlsjs.Engine.isSupported()) {
-        this.p2p = true;
-        var engine = new p2pml.hlsjs.Engine(this.config);
-        var player = jwplayer("player");
+      var engine = new p2pml.hlsjs.Engine(this.config);
+      var player = jwplayer("player");
+      player.setup({
+        file: this.source,
+        type: this.validm3u8(this.source) ? 'hls' : 'mp4',
+        image: this.thumbnail || "/thumb-error.jpg",
+        logo: {
+          file: "/logo-season.png",
+          link: "https://www.myanime.co",
+          hide: true,
+          position: "control-bar"
+        }
+      });
 
-        player.setup({
-          file: this.source,
-          type: "mp4",
-          image: this.thumbnail || '/thumb-error.jpg',
-          logo: {
-            file: "/logo-season.png",
-            link: "https://www.myanime.co",
-            hide: true,
-            position: "control-bar"
-          }
-        });
-
-        jwplayer_hls_provider.attach();
-        p2pml.hlsjs.initJwPlayer(player, {
-          liveSyncDurationCount: 7,
-          loader: engine.createLoaderClass()
-        });
-      } else {
-        var player = jwplayer("player");
-        player.setup({
-          logo: {
-            file: "/logo-season.png",
-            link: "https://www.myanime.co",
-            hide: true,
-            position: "control-bar"
-          },
-          file: this.source,
-          type: "mp4"
-        });
-      }
+      jwplayer_hls_provider.attach();
+      p2pml.hlsjs.initJwPlayer(player, {
+        liveSyncDurationCount: 7,
+        loader: engine.createLoaderClass()
+      });
     }
   },
   mounted() {
