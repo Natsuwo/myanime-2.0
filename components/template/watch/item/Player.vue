@@ -32,29 +32,53 @@ export default {
   },
   methods: {
     validm3u8(url) {
-      var result = /^.+\\([^.]+)\.pdf$/g.test(url);
-      return result
+      var result = /^(.*\.m3u8)*$/g.test(url);
+      return result;
     },
     Player(source) {
-      var engine = new p2pml.hlsjs.Engine(this.config);
-      var player = jwplayer("player");
-      player.setup({
-        file: this.source,
-        type: this.validm3u8(this.source) ? 'hls' : 'mp4',
-        image: this.thumbnail || "/thumb-error.jpg",
-        logo: {
-          file: "/logo-season.png",
-          link: "https://www.myanime.co",
-          hide: true,
-          position: "control-bar"
-        }
-      });
+      try {
+        var type = this.validm3u8(this.source) ? "hls" : "mp4";
+        if (p2pml.hlsjs.Engine.isSupported()) {
+          var engine = new p2pml.hlsjs.Engine(this.config);
+          var player = jwplayer("player");
+          player.setup({
+            file: this.source,
+            type: this.validm3u8(this.source) ? "hls" : "mp4",
+            image: this.thumbnail || "/thumb-error.jpg",
+            logo: {
+              file: "/logo-season.png",
+              link: "https://www.myanime.co",
+              hide: true,
+              position: "control-bar"
+            }
+          });
 
-      jwplayer_hls_provider.attach();
-      p2pml.hlsjs.initJwPlayer(player, {
-        liveSyncDurationCount: 7,
-        loader: engine.createLoaderClass()
-      });
+          jwplayer_hls_provider.attach();
+          p2pml.hlsjs.initJwPlayer(player, {
+            liveSyncDurationCount: 7,
+            loader: engine.createLoaderClass()
+          });
+        } else {
+          var player = jwplayer("player");
+          player.setup({
+            logo: {
+              file: "/logo-season.png",
+              link: "https://www.myanime.co",
+              hide: true,
+              position: "control-bar"
+            },
+            file: this.source,
+            type: this.validm3u8(this.source) ? "hls" : "mp4"
+          });
+        }
+      } catch (err) {
+        setTimeout(() => {
+          this.$router.go({
+            path: "/a/1",
+            force: true
+          });
+        }, 500);
+      }
     }
   },
   mounted() {
