@@ -1,11 +1,6 @@
 <template>
-  <div class="player">
-    <div id="player">
-      <div id="loading"></div>
-    </div>
-    <div id="player2">
-      <div id="loading"></div>
-    </div>
+  <div id="player">
+    <div id="loading"></div>
   </div>
 </template>
 <script>
@@ -36,13 +31,19 @@ export default {
     };
   },
   methods: {
+    validm3u8(url) {
+      var result = /^(.*\.m3u8)*$/g.test(url);
+      return result;
+    },
     Player(source) {
       try {
         var engine = new p2pml.hlsjs.Engine(this.config);
         var player = jwplayer("player");
+        var type = this.validm3u8(this.source) ? "hls" : "mp4";
+        var source = this.validm3u8(this.source) ? this.source : this.backup;
         player.setup({
-          file: this.source || "error.mp4",
-          type: "hls",
+          file: source || "error.mp4",
+          type: type,
           image: this.thumbnail || "/thumb-error.jpg",
           autostart: true,
           logo: {
@@ -52,23 +53,12 @@ export default {
             position: "control-bar"
           }
         });
-        player.on("error", () => {
-          var player = jwplayer("player2");
-          player.setup({
-            file: this.backup,
-            type: "mp4",
-            autostart: true
-          });
-          jwplayer("player").remove();
-        });
         player.on("setupError", error => {
-          var player = jwplayer("player2");
           player.setup({
             file: this.backup,
             type: "mp4",
             autostart: true
           });
-          jwplayer("player").remove();
         });
         jwplayer_hls_provider.attach();
         p2pml.hlsjs.initJwPlayer(player, {
@@ -86,12 +76,14 @@ export default {
     }
   },
   mounted() {
-    var source = this.source;
-    this.Player(source);
+    this.Player();
   },
   watch: {
-    source(val) {
-      this.Player(val);
+    source() {
+      this.Player();
+    },
+    backup() {
+      this.Player();
     }
   }
 };
