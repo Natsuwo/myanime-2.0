@@ -43,10 +43,8 @@ export default {
     loadData(res) {
       var newAnimes = this.animeSeasons.animes.concat(res.data.animes);
       var newEps = this.animeSeasons.totalEps.concat(res.data.totalEps);
-      var newViews = this.animeSeasons.views.concat(res.data.views);
       this.animeSeasons.animes = newAnimes;
       this.animeSeasons.totalEps = newEps;
-      this.animeSeasons.views = newViews;
     }
   },
   computed: {

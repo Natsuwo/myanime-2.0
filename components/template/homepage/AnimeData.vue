@@ -2,7 +2,7 @@
   <div class="recent-anime">
     <h2 class="anime-head-title">{{title}}</h2>
     <v-layout row wrap>
-      <v-flex xs6 sm4 md2 v-for="episode in data" :key="episode.id">
+      <v-flex xs12 sm4 md2 v-for="episode in data" :key="episode.id">
         <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
           <v-img class="episode-thumbnail" :src="episode.thumbnail">
             <div class="play-icon">

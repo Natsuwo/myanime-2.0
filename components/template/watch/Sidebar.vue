@@ -7,13 +7,22 @@
             <v-img width="40" :src="getFlag(episode.subtitle)"></v-img>
           </div>
           <div class="player-playlist-title">{{anime.title}}</div>
-          <div
-            class="player-playlist-fansub-title"
-          >{{episode.fansub}} - {{episode.number}}/{{total}}</div>
+          <div class="player-playlist-fansub-title">
+            {{episode.fansub}} -
+            <input
+              v-on:keyup.enter="findEp(episode.anime_id, number, episode.fansub)"
+              class="jump-ep"
+              type="number"
+              v-model="number"
+              min="0"
+              :max="total"
+            />
+            /{{total}}
+          </div>
         </div>
         <div class="player-playlist-video">
           <div
-            class="layout align-center player-playlist py-2 px-3"
+            :class="'layout align-center player-playlist py-2 px-3 ep-' +item.episode_id"
             v-for="item in playList"
             :key="item.episode_id"
           >
@@ -46,12 +55,12 @@
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
         <div class="player-sidebar-thumbnail">
           <v-img width="168px" :src="item.data.thumbnail"></v-img>
-           <div class="search-overlay">
-                <div class="multiple-episode">
-                  <div class="count">{{item.data.count}}</div>
-                  <v-icon>mdi-playlist-play</v-icon>
-                </div>
-              </div>
+          <div class="search-overlay">
+            <div class="multiple-episode">
+              <div class="count">{{item.data.count}}</div>
+              <v-icon>mdi-playlist-play</v-icon>
+            </div>
+          </div>
         </div>
         <div class="player-sidebar-right-content column">
           <div class="player-sidebar-title">{{item.anime.title}} {{item.data.number}}</div>
@@ -63,12 +72,14 @@
   </div>
 </template>
 <script>
-import { sidebarLoadmore } from "@/services/Episode";
+import { sidebarLoadmore, jumpEpisode } from "@/services/Episode";
+import { mapMutations } from "vuex";
 export default {
   props: ["flags", "episode", "sidebar", "anime"],
   data() {
     return {
       skip: 24,
+      number: 0,
       loading: false
     };
   },
@@ -83,7 +94,27 @@ export default {
       return this.sidebar.total;
     }
   },
+  mounted() {
+    this.number = this.episode.number;
+    var id = this.$route.query.a;
+    var currentEp = this.$el.getElementsByClassName("ep-" + id)[0];
+    if (currentEp) {
+      currentEp.scrollIntoView();
+    }
+  },
   methods: {
+    ...mapMutations("snackbar", ["snackBar"]),
+    async findEp(anime_id, number, fansub) {
+      var headers = {
+        "X-User-Session": this.$store.state.auth.userToken
+      };
+      var resp = await jumpEpisode(headers, anime_id, number, fansub);
+      if (resp.data.success) {
+        this.$router.push({ path: "/watch?a=" + resp.data.result });
+      } else {
+        this.snackBar({ active: true, message: resp.data });
+      }
+    },
     getFlag(lang) {
       return this.flags
         .filter(x => x.key === lang)

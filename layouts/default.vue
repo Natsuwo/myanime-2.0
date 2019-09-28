@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import AppBar from "@/components/main/AppBar";
+import AppBar from "@/components/main/AppBarWatch";
 import SnackBar from "@/components/template/SnackBar";
 import DialogSignIn from "@/components/template/dialog/requireSignIn";
 export default {

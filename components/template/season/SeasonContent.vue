@@ -23,7 +23,7 @@
               >{{animeSeasons.totalEps[index][item.anime_id]}} Eps</div>
               <div
                 class="season-anime-total-views"
-              >{{animeSeasons.views[index][item.anime_id]}} views</div>
+              >{{item.views}} views</div>
             </div>
           </nuxt-link>
         </v-flex>

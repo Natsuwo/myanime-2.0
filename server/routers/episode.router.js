@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const route = Router()
-const { getEpisodes, getSingleEp, loadMoreSidebar } = require('../controllers/episode.controller')
+const { getEpisodes, getSingleEp, loadMoreSidebar, findbyNumber } = require('../controllers/episode.controller')
 const { isUserLogin } = require('../middlewares/auth.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 
@@ -20,8 +20,9 @@ const countView = rateLimit({
 var apicache = require('apicache')
 var cache = apicache.middleware
 
-route.get('/episode/get', checkSecure, cache('5 minutes'), getEpisodes)
+route.get('/episode/get', checkSecure, cache('15 minutes'), getEpisodes)
 route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
 route.get('/episode/get-episode', checkSecure, countView, isUserLogin, getSingleEp)
+route.get('/episode/jump-episode', checkSecure, findbyNumber)
 
 module.exports = route

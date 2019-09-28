@@ -3,7 +3,10 @@ const User = require('../models/User')
 const cookieParser = require('cookie-parser')
 
 function jwtSignUser(user) {
-    return jwt.sign(user, process.env.JWTSECRET)
+    const ONE_MONTH = 60 * 60 * 24 * 60
+    return jwt.sign(user, process.env.JWTSECRET, {
+        expiresIn: ONE_MONTH
+    })
 }
 
 module.exports = {

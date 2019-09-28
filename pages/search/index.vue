@@ -1,6 +1,6 @@
 <template>
   <v-container fuild grid-list-md>
-    <div class="myanime-home">
+    <div class="myanime-home-1240">
       <v-layout column wrap>
         <div v-if="results.length > 0">
           <div class="search-content py-1" v-for="(item, index) in results" :key="item.anime_id">

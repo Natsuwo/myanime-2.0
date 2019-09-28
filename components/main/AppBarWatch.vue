@@ -8,11 +8,11 @@
       fixed
       app
     >
-      <v-list-item class="px-1">
-        <v-btn icon @click.stop="drawer = !drawer">
+      <v-list-item class="px-1 h-64" >
+        <v-btn class="i-48" icon @click.stop="drawer = !drawer">
           <v-icon>mdi-menu</v-icon>
         </v-btn>
-        <nuxt-link to="/">
+        <nuxt-link class="ml-5" to="/">
           <v-img width="150" src="/summer.svg"></v-img>
         </nuxt-link>
       </v-list-item>

@@ -1,41 +1,8 @@
 const fs = require('fs')
-const axios = require('axios')
 const Anime = require('../models/Anime')
 const Episode = require('../models/Episode')
 const UserMeta = require('../models/UserMeta')
-
-async function countView(episode_id) {
-    var data = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
-    var oldData = JSON.parse(data)
-    var index = oldData.findIndex(x => x.episode_id === episode_id)
-    if (index > -1) {
-        oldData[index].views += 1
-        await fs.writeFileSync('../newupload.json', JSON.stringify(oldData), { encoding: 'utf8' })
-    }
-}
-
-async function getSource(drive_id) {
-    var drDomain = process.env.DRDOMAIN
-    var endpoint = drDomain + '/api/v2/hls-drive/get-data'
-    var token = process.env.DRTOKEN
-    var user_id = process.env.DRUSER
-    var query = `?user_id=${user_id}&drive_id=${drive_id}&secret_token=${token}`
-    var checkProgress = await axios.get(drDomain + '/api/v2/hls-drive/progress' + query)
-    if (checkProgress.data.success) {
-        var progress = checkProgress.data.progress
-        if (progress.rendered && progress.deleted) {
-            var resp = await axios.get(endpoint + query)
-            var data = resp.data
-            if (!data.success) return null
-            var id = data.results.id
-            var link = drDomain + '/hls/' + id + '.m3u8'
-            return link
-        }
-        return null
-    }
-    return null
-
-}
+const { getSource, countView } = require('../helpers/episode.helper')
 
 module.exports = {
     async getEpisodes(req, res) {
@@ -51,28 +18,11 @@ module.exports = {
                 var anime = await Anime.findOne({ anime_id }, { _id: 0 }).select('title anime_id')
                 animes.push(anime)
             }
-            // Recommended
-            var recomAnime = []
-            var recommended = await Anime.find({}, { _id: 0 }).sort({ followers: -1 }).limit(12).select('title anime_id thumbnail views')
-            for (var item of recommended) {
-                var anime_id = item.anime_id
-                var count = await Episode.countDocuments({ anime_id })
-                var episode = await Episode.findOne({ anime_id }, { _id: 0, source: 0 }).sort({ updated_at: -1 })
-                if (!episode) continue;
-
-                recomAnime.push(episode)
-                episode.set('count', count, { strict: false })
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    var index = animes.findIndex(x => x.anime_id === anime_id)
-                    animes.splice(index, 1)
-                }
-                animes.push(item)
-            }
             // Random
             var randomAnime = []
             var totalAnime = await Anime.countDocuments()
             var randomNumber = Math.floor(Math.random() * totalAnime)
-            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail views')
+            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail')
             for (var item of random) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -89,7 +39,7 @@ module.exports = {
             }
             // Top Trending
             var trendingAnime = []
-            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail views')
+            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail')
             for (var item of trending) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -109,7 +59,7 @@ module.exports = {
             var settings = JSON.parse(Settings)
             var cur_season = settings.cur_season
             var currentSeason = []
-            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail views')
+            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail')
             for (var item of currentAnime) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -132,7 +82,6 @@ module.exports = {
                 success: true,
                 episodes: {
                     recent: newUpload,
-                    recoment: recomAnime,
                     random: randomAnime,
                     trending: trendingAnime,
                     current: currentSeason
@@ -153,7 +102,7 @@ module.exports = {
             backup = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
             episode.set('source', source, { strict: false })
             episode.set('backup', backup, { strict: false })
-            var { anime_id, type, audio, subtitle, fansub } = episode
+            var { anime_id, type, audio, subtitle, fansub, number } = episode
             var old_anime_id = anime_id
             var usermeta = []
             if (user_id) {
@@ -164,9 +113,17 @@ module.exports = {
             var anime = await Anime.findOne({ anime_id }, { _id: 0, __v: 0 })
             // Sidebar
             var total = await Episode.countDocuments({ anime_id, type, audio, subtitle, fansub })
-            var playList = await Episode
-                .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
-                .sort({ number: -1 }).limit(24)
+            if (total <= 24) {
+                var playList = await Episode
+                    .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
+                    .sort({ number: -1 })
+            } else {
+                var skip = total - number
+                var playList = await Episode
+                    .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
+                    .sort({ number: -1 }).skip(skip).limit(24)
+            }
+
             var randomNumber = Math.floor(Math.random() * total)
             var randomAnime = await Anime.find({}, { _id: 0 }).limit(15).skip(randomNumber).select('title anime_id')
             var animeRandom = []
@@ -185,19 +142,13 @@ module.exports = {
                 await Anime.updateOne({ anime_id: old_anime_id }, { $inc: { views: 1 } }, { new: true })
                 await countView(episode_id)
             }
-            return res.send({
-                success: true,
-                result: {
-                    episode,
-                    anime,
-                    sidebar: {
-                        total,
-                        playList,
-                        animeRandom
-                    },
-                    usermeta
-                }
-            })
+
+            var result = {
+                episode, anime,
+                sidebar: { total, playList, animeRandom },
+                usermeta
+            }
+            return res.send({ success: true, result })
 
         } catch (err) {
             res.send({ success: false, error: err.message })
@@ -212,6 +163,17 @@ module.exports = {
                 .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0, source: 0 })
                 .sort({ number: -1 }).limit(24).skip(parseInt(skip))
             res.send({ success: true, data: playList })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async findbyNumber(req, res) {
+        try {
+            var { anime_id, number, fansub } = req.query
+            if (!anime_id && !number && !fansub) throw Error('Something error.')
+            var episode = await Episode.findOne({ anime_id, number: parseInt(number), fansub }, { __v: 0, _id: 0 })
+            if (!episode) throw Error('Not found.')
+            return res.send({ success: true, result: episode.episode_id })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

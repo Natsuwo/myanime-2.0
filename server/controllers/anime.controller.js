@@ -75,23 +75,15 @@ module.exports = {
                 season = req.query.season
             }
             var total = await Anime.countDocuments({ season })
-            var animes = await Anime.find({ season }, { _id: 0 }).select('thumbnail title anime_id').skip(parseInt(skip)).limit(30)
-            var views = []
+            var animes = await Anime.find({ season }, { _id: 0 }).select('thumbnail title anime_id views').skip(parseInt(skip)).limit(30)
             var totalEps = []
             for (var anime of animes) {
                 var anime_id = anime.anime_id
-                var view = {}
                 var eps = {}
-                view[anime_id] = 0
                 eps[anime_id] = await Episode.countDocuments({ anime_id })
-                var episodes = await Episode.find({ anime_id }).select('views')
-                for (var episode of episodes) {
-                    view[anime_id] += episode.views
-                }
-                views.push(view)
                 totalEps.push(eps)
             }
-            res.send({ success: true, data: { animes, views, totalEps, season, total } })
+            res.send({ success: true, data: { animes, totalEps, season, total } })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

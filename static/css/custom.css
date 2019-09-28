@@ -16,6 +16,8 @@
 }
 
 .metadata-line {
+    width: 260px;
+    margin: auto;
     color: #999;
 }
 
@@ -38,7 +40,6 @@
 }
 
 .play-icon .v-icon {
-    color: red;
     font-size: 4rem!important;
     background: rgba(0, 0, 0, 0.75);
     width: 4rem;
@@ -75,7 +76,12 @@ div.siema {
 
 .myanime-home {
     margin: auto;
-    max-width: 1284px
+    max-width: 1640px;
+}
+
+.myanime-home-1240 {
+    margin: auto;
+    max-width: 1240px;
 }
 
 .anime-head-title {
@@ -93,6 +99,8 @@ div.siema {
 }
 
 .episode-title {
+    width: 260px;
+    margin: auto;
     display: -webkit-box;
     max-height: 2.4rem;
     -webkit-box-orient: vertical;
@@ -652,9 +660,9 @@ div.siema {
 }
 
 .season-thumbnail {
-    width: 204px;
+    width: 260px;
     margin-right: 16px;
-    display: inline-block;
+    margin: auto;
     position: relative;
     -ms-flex: none;
     -webkit-flex: none;
@@ -697,7 +705,9 @@ div.siema {
 
 .episode-thumbnail {
     background: url('/thumb-error.jpg');
-    height: 114.89px;
+    width: 260px;
+    margin: auto;
+    height: 146px;
 }
 
 .season-anime-title {
@@ -749,6 +759,25 @@ div[button="logo"] {
     width: 100px;
 }
 
+.h-64 {
+    height: 64px!important;
+}
+
+.i-48 {
+    height: 48px!important;
+    width: 48px!important;
+}
+
+.jump-ep {
+    height: 20px;
+    background: #000;
+    line-height: normal;
+    text-align: center;
+    border: 0;
+    border-radius: 2px;
+    outline: 0;
+}
+
 @media (max-width: 575.98px) {
     .anime-container {
         margin: 0 10px!important;
@@ -763,6 +792,14 @@ div[button="logo"] {
     .user-lists-title {
         max-width: 150px;
         overflow: hidden;
+    }
+}
+
+@media (min-width: 1264px) and (max-width: 1500px) {
+    .lg2-custom {
+        flex-basis: 25%!important;
+        flex-grow: 0;
+        max-width: 25%!important;
     }
 }
 

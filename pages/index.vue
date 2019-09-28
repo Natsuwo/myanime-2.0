@@ -3,12 +3,6 @@
     <div class="myanime-home">
       <AnimeData :title="'Recent Uploads'" :data="episodes.recent" :flags="flags" :animes="animes" />
       <AnimeDataThumb
-        :title="'Recommended'"
-        :data="episodes.recoment"
-        :flags="flags"
-        :animes="animes"
-      />
-      <AnimeDataThumb
         :title="'Trending'"
         :data="episodes.trending"
         :flags="flags"
