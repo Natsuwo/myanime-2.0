@@ -150,3 +150,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.v-item-group {
+  flex: 1 auto!important;
+}
+</style>

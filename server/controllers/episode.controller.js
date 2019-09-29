@@ -22,7 +22,7 @@ module.exports = {
             var randomAnime = []
             var totalAnime = await Anime.countDocuments()
             var randomNumber = Math.floor(Math.random() * totalAnime)
-            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail')
+            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail views created_at')
             for (var item of random) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -39,7 +39,7 @@ module.exports = {
             }
             // Top Trending
             var trendingAnime = []
-            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail')
+            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail views created_at')
             for (var item of trending) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -59,7 +59,7 @@ module.exports = {
             var settings = JSON.parse(Settings)
             var cur_season = settings.cur_season
             var currentSeason = []
-            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail')
+            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail views created_at')
             for (var item of currentAnime) {
                 var anime_id = item.anime_id
                 var count = await Episode.countDocuments({ anime_id })
@@ -118,7 +118,11 @@ module.exports = {
                     .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
                     .sort({ number: -1 })
             } else {
+                if (number <= 23) {
+                    number = 23
+                }
                 var skip = total - number
+                if (skip <= -1) skip = 0
                 var playList = await Episode
                     .find({ anime_id, type, audio, subtitle, fansub }, { _id: 0, __v: 0 })
                     .sort({ number: -1 }).skip(skip).limit(24)

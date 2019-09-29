@@ -132,6 +132,11 @@ export default {
         this.loading = false;
       }
     }
+  },
+  watch: {
+    "episode.number"() {
+      this.number = this.episode.number;
+    }
   }
 };
 </script>

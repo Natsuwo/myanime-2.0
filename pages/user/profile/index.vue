@@ -47,7 +47,12 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn @click="isEdit = !isEdit">Cancel</v-btn>
-                    <v-btn @click="updateProfile" color="primary">Save</v-btn>
+                    <v-btn
+                      :loading="loading"
+                      :disabled="loading"
+                      @click="updateProfile"
+                      color="primary"
+                    >Save</v-btn>
                   </v-card-actions>
                 </v-col>
               </v-row>
@@ -86,6 +91,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       avatarUrl: "",
       avatarFile: "",
       isEdit: false,
@@ -110,6 +116,7 @@ export default {
   methods: {
     async updateProfile() {
       if (this.cur_pass && !this.$refs.form.validate()) return;
+      this.loading = true;
       var headers = {
         "X-User-Session": this.$store.state.auth.userToken
       };
@@ -132,6 +139,7 @@ export default {
         message: response.data
       });
       this.$store.commit("auth/updateAvatar", response.data.avatar);
+      this.loading = false;
       if (response.data.success) return this.isEdit != this.isEdit;
     },
     pickFile() {

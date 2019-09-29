@@ -14,7 +14,10 @@
                     </div>
                   </v-img>
                   <div class="search-overlay">
-                    <v-img class="season-anime-thumbnail" :src="animeThumb(episode.anime_id)"></v-img>
+                    <v-img
+                      class="season-anime-thumbnail"
+                      :src="getAnime(episode.anime_id, 'thumbnail')"
+                    ></v-img>
                     <div class="season-anime">
                       <div class="count">{{episode.count}}</div>
                       <v-icon>mdi-animation-play</v-icon>
@@ -22,9 +25,9 @@
                   </div>
                 </div>
                 <div
-                  :title="`${animeTitle(episode.anime_id)} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+                  :title="getAnime(episode.anime_id, 'title')"
                   class="subheading episode-title"
-                  v-html="`${animeTitle(episode.anime_id)} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+                  v-html="getAnime(episode.anime_id, 'title')"
                 ></div>
               </nuxt-link>
               <div class="metadata-line">
@@ -34,8 +37,10 @@
                     <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
                   </nuxt-link>
                 </div>
-                <span class="episode-view">{{episode.views}} views</span>
-                <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
+                <span class="episode-view">{{getAnime(episode.anime_id, 'views')}} views</span>
+                <span
+                  class="episode-moment"
+                >{{getAnime(episode.anime_id, 'created_at') | moment("from", "now")}}</span>
               </div>
             </div>
           </div>
@@ -93,13 +98,8 @@ export default {
         .map(x => x.value)
         .toString();
     },
-    animeTitle(id) {
-      return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];
-    },
-    animeThumb(id) {
-      return this.animes
-        .filter(x => x.anime_id === id)
-        .map(x => x.thumbnail)[0];
+    getAnime(id, key) {
+      return this.animes.filter(x => x.anime_id === id).map(x => x[key])[0];
     }
   }
 };

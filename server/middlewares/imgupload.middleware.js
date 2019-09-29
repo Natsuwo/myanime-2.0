@@ -1,15 +1,11 @@
+const fs = require('fs')
 const axios = require('axios')
-axios.defaults.headers.common['Authorization'] = 'Bot ' + process.env.TOKEN_DISCORD
-const { Client, Attachment } = require('discord.js')
-const token = process.env.TOKEN_DISCORD
-const client = new Client()
+const { Attachment } = require('discord.js')
+const { discordLogin } = require('../helpers/discord.helper')
 const channel = '624929128763621388'
-client.login(token).catch(err => {
-    console.log(err.message)
-})
-client.on('error', (err) => console.error(err.message))
-client.on('ready', () => {
-    console.log('Bot ready!')
+var client;
+discordLogin().then(res => {
+    client = res
 })
 
 module.exports = {
@@ -18,6 +14,9 @@ module.exports = {
             var images = req.files
             if (!images) return next()
             var files = {}
+            var discord = fs.readFileSync('./discord.json')
+            var { token } = JSON.parse(discord)
+            axios.defaults.headers.common['Authorization'] = 'Bot ' + token
             for (var image of images) {
                 var buffer = image.buffer
                 var name = image.fieldname
@@ -34,6 +33,14 @@ module.exports = {
             }
             res.locals.files = files
             next()
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async tryLogin(req, res, next) {
+        try {
+            client = await discordLogin()
+            res.send({ success: true, message: "Ok" })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

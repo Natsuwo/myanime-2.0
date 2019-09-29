@@ -4,7 +4,7 @@ const { updateProfile, getFollowAnime, getLists, loadmoreLists } = require('../c
 const { updatePassword } = require('../middlewares/user.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 const { isUserLogin } = require('../middlewares/auth.middleware')
-const { uploadImage } = require('../middlewares/imgupload.middleware')
+const { uploadImage, tryLogin } = require('../middlewares/imgupload.middleware')
 
 const multer = require('multer')
 var path = require('path')
@@ -22,6 +22,7 @@ var upload = multer({
 })
 
 route.put('/user/profile', checkSecure, isUserLogin, upload.any(), uploadImage, updatePassword, updateProfile)
+route.delete('/bot/discord-relogin', tryLogin)
 route.get('/user/following', checkSecure, isUserLogin, getFollowAnime)
 route.get('/user/profile/follow', checkSecure, isUserLogin, getLists)
 route.get('/user/profile/follow-loadmore', checkSecure, isUserLogin, loadmoreLists)
