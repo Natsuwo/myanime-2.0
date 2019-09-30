@@ -7,7 +7,8 @@
     </v-layout>
     <div
       class="pt-3 player-episode-title"
-    v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"></div>
+      v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+    ></div>
     <v-layout row wrap>
       <div class="views flex" style="display: inline;">{{episode.views}} views</div>
       <v-spacer></v-spacer>
@@ -26,7 +27,7 @@
       </div>
       <Follow class="text-right" :follow="follow" :anime="anime" />
     </v-layout>
-    <Description :anime="anime" :episode="episode" :flags="flags"/>
+    <Description :anime="anime" :episode="episode" :flags="flags" />
     <v-divider />
     <Comment />
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar-playlist" v-if="sidebar.total > 1">
+    <div class="sidebar-playlist" >
       <v-card flat>
         <div class="player-playlist-header pa-4">
           <div style="float: right;">
@@ -50,6 +50,7 @@
         </div>
       </v-card>
     </div>
+    <Banner300 /> 
     <h3 class="py-2">May you like</h3>
     <div class="player-sidebar py-1" v-for="item in random" :key="item.data.episode_id">
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
@@ -73,8 +74,12 @@
 </template>
 <script>
 import { sidebarLoadmore, jumpEpisode } from "@/services/Episode";
+import Banner300 from "@/components/main/item/300x250"
 import { mapMutations } from "vuex";
 export default {
+  components: {
+    Banner300
+  },
   props: ["flags", "episode", "sidebar", "anime"],
   data() {
     return {

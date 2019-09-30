@@ -13,7 +13,7 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <nuxt-link class="ml-5" to="/">
-          <v-img width="150" src="/summer.svg"></v-img>
+          <v-img width="150" src="/logo/logo-default.svg"></v-img>
         </nuxt-link>
       </v-list-item>
 
@@ -36,7 +36,7 @@
 
       <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">
         <nuxt-link to="/">
-          <v-img width="150" src="/summer.svg"></v-img>
+          <v-img width="150" src="/logo/logo-default.svg"></v-img>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />

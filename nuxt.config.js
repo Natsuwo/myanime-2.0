@@ -39,7 +39,8 @@ module.exports = {
   */
   plugins: [
     '@/plugins/moment',
-    '@/plugins/siema'
+    '@/plugins/siema',
+    { src: '@/plugins/ga.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules

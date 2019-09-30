@@ -1,6 +1,9 @@
 <template>
-  <div id="player">
-    <div id="loading"></div>
+  <div>
+    <script type="text/javascript" src="//st.bebi.com/bebi_v3.js"></script>
+    <div id="player">
+      <div id="loading"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -37,28 +40,31 @@ export default {
     },
     Player(source) {
       try {
+        var vasturl = BB.getVASTUrl(43612);
         var engine = new p2pml.hlsjs.Engine(this.config);
         var player = jwplayer("player");
         var type = this.validm3u8(this.source) ? "hls" : "mp4";
         var source = this.validm3u8(this.source) ? this.source : this.backup;
-        player.setup({
-          file: source || "error.mp4",
-          type: type,
+        var config = {
+          type,
           image: this.thumbnail || "/thumb-error.jpg",
           autostart: true,
+          advertising: {
+            client: "googima",
+            tag: vasturl
+          },
           logo: {
-            file: "/logo-season.png",
+            file: "/logo/logo-player.svg",
             link: "https://www.myanime.co",
             hide: true,
             position: "control-bar"
           }
-        });
+        };
+        config.file = source;
+        player.setup(config);
         player.on("setupError", error => {
-          player.setup({
-            file: this.backup,
-            type: "mp4",
-            autostart: true
-          });
+          config.file = this.backup;
+          player.setup(config);
         });
         jwplayer_hls_provider.attach();
         p2pml.hlsjs.initJwPlayer(player, {
@@ -76,7 +82,9 @@ export default {
     }
   },
   mounted() {
-    this.Player();
+    if (process.client) {
+      this.Player();
+    }
   },
   watch: {
     source() {
