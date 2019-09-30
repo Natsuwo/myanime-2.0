@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <script type="text/javascript" src="//st.bebi.com/bebi_v3.js"></script>
-    <div id="player">
-      <div id="loading"></div>
-    </div>
+  <div id="player">
+    <div id="loading"></div>
   </div>
 </template>
 <script>
@@ -40,7 +37,6 @@ export default {
     },
     Player(source) {
       try {
-        var vasturl = BB.getVASTUrl(43612);
         var engine = new p2pml.hlsjs.Engine(this.config);
         var player = jwplayer("player");
         var type = this.validm3u8(this.source) ? "hls" : "mp4";
@@ -49,10 +45,6 @@ export default {
           type,
           image: this.thumbnail || "/thumb-error.jpg",
           autostart: true,
-          advertising: {
-            client: "googima",
-            tag: vasturl
-          },
           logo: {
             file: "/logo/logo-player.svg",
             link: "https://www.myanime.co",
@@ -72,12 +64,17 @@ export default {
           loader: engine.createLoaderClass()
         });
       } catch (err) {
-        setTimeout(() => {
-          this.$router.go({
-            path: "/a/1",
-            force: true
-          });
-        }, 500);
+        console.log(err.message)
+        var err1 =
+          "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.";
+        if (err.message === err1) {
+          setTimeout(() => {
+            this.$router.go({
+              path: "/a/1",
+              force: true
+            });
+          }, 500);
+        }
       }
     }
   },
