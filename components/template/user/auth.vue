@@ -135,7 +135,7 @@ export default {
         };
         this.$cookies.set("USER_ACCESS_TOKEN", response.access, {
           path: "/",
-          maxAge: 60 * 60 * 24 * 1
+          maxAge: 60 * 60 * 24 * 60
         });
         this.$store.commit("auth/setAuth", data);
       }
