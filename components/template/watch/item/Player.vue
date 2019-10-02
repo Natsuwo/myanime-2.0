@@ -64,10 +64,11 @@ export default {
           loader: engine.createLoaderClass()
         });
       } catch (err) {
-        console.log(err.message)
+        console.log(err.message);
         var err1 =
           "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.";
-        if (err.message === err1) {
+        var err2 = "Cannot convert undefined or null to object";
+        if (err.message === err1 || err.message === err2) {
           setTimeout(() => {
             this.$router.go({
               path: "/a/1",
