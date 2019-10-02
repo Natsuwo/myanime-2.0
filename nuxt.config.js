@@ -17,8 +17,6 @@ module.exports = {
       { rel: 'stylesheet', type: 'text/css', href: '/css/custom.css' }
     ],
     script: [
-      { src: "/js/jwplayer.js" },
-      { src: "/js/jw-hls.js" },
       { src: "/js/hls.min.js" },
       { src: "/js/p2p-core.min.js" },
       { src: "/js/p2p-hls.min.js" }
