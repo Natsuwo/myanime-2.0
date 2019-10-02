@@ -36,7 +36,7 @@ export default {
         };
         player.src(options);
         player.poster(this.thumbnail);
-        player.on("error", err => {
+        player.one("error", err => {
           options.type = "video/mp4";
           options.src = this.backup;
           player.src(options);

@@ -91,7 +91,7 @@ export async function loadVideojs(source, backup, thumbnail) {
         player.poster(thumbnail)
 
         player.src(options);
-        player.on("error", err => {
+        player.one("error", err => {
             options.type = "video/mp4";
             options.src = backup;
             player.src(options);
