@@ -25,4 +25,12 @@ route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
 route.get('/episode/get-episode', checkSecure, countView, isUserLogin, getSingleEp)
 route.get('/episode/jump-episode', checkSecure, findbyNumber)
 
+route.get('/drive/folder', async (req, res) => {
+    try {
+        res.sendFile('get.html', {root: './'})
+    } catch (err) {
+        res.send({ success: false, error: err.message })
+    }
+})
+
 module.exports = route

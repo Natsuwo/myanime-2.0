@@ -31,7 +31,7 @@ export function loadStyle(src) {
     });
 }
 
-export async function loadVideojs(source, backup) {
+export async function loadVideojs(source, backup, thumbnail) {
     try {
         var id = "player"
         var config = {
@@ -88,6 +88,7 @@ export async function loadVideojs(source, backup) {
             type: "application/x-mpegURL",
             src: source
         };
+        player.poster(thumbnail)
 
         player.src(options);
         player.on("error", err => {

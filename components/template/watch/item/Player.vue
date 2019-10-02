@@ -17,7 +17,6 @@ export default {
         // await loadScript("https://imasdk.googleapis.com/js/sdkloader/ima3.js");
         // await loadScript("/videojs/ads/videojs-contrib-ads.js");
         // await loadScript("/videojs/ads/videojs.ima.js");
-        
 
         await loadStyle("/videojs/videojs.css");
         // await loadStyle("/videojs/ads/videojs.ima.css");
@@ -36,22 +35,29 @@ export default {
           src: this.source
         };
         player.src(options);
+        player.poster(this.thumbnail);
         player.on("error", err => {
           options.type = "video/mp4";
           options.src = this.backup;
           player.src(options);
         });
+
         player.ready(() => {
-            player.play();
+          player.play();
         });
       } else {
-        var player = await loadVideojs(this.source, this.backup);
+        var player = await loadVideojs(
+          this.source,
+          this.backup,
+          this.thumbnail
+        );
         // await loadScript("/videojs/ads/ads.js");
       }
     }
   },
   async mounted() {
     if (process.client) {
+      document.exitPictureInPicture();
       await this.loadscript();
       await this.Player();
     }
