@@ -57,7 +57,9 @@ export default {
   },
   async mounted() {
     if (process.client) {
-      document.exitPictureInPicture();
+      if (document.pictureInPictureElement) {
+        document.exitPictureInPicture();
+      }
       await this.loadscript();
       await this.Player();
     }
