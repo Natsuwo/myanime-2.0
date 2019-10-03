@@ -1,18 +1,19 @@
 var player = videojs('player');
-var urlTag = BB.getVASTUrl(2008513)
-var options = {
-  id: 'player',
-  adTagUrl: urlTag,
-  timeout: 5000
-};
+var options = { id: 'player', adTagUrl: BB.getVASTUrl(2008513) };
 player.ima(options);
 
-var contentPlayer = document.getElementById('player_html5_api');
+var contentPlayer = document.getElementById('content_video_html5_api');
 if ((navigator.userAgent.match(/iPad/i) ||
   navigator.userAgent.match(/Android/i)) &&
   contentPlayer.hasAttribute('controls')) {
   contentPlayer.removeAttribute('controls');
 }
+
+var initAdDisplayContainer = function () {
+  player.ima.initializeAdDisplayContainer();
+  wrapperDiv.removeEventListener(startEvent, initAdDisplayContainer);
+}
+
 var startEvent = 'click';
 if (navigator.userAgent.match(/iPhone/i) ||
   navigator.userAgent.match(/iPad/i) ||
@@ -20,12 +21,5 @@ if (navigator.userAgent.match(/iPhone/i) ||
   startEvent = 'touchend';
 }
 
-player.one(startEvent, function () {
-  player.ima.initializeAdDisplayContainer();
-  player.ima.requestAds();
-  player.play();
-});
-
-player.on('contentchanged', function () {
-  player.trigger('adsready');
-});
+var wrapperDiv = document.getElementById('player');
+wrapperDiv.addEventListener(startEvent, initAdDisplayContainer);

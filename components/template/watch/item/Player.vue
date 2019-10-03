@@ -1,8 +1,16 @@
 <template>
-  <video id="player" class="video-js vjs-16-9" controls playsinline></video>
+  <div id="player-container">
+    <video id="player" class="video-js vjs-16-9" controls playsinline></video>
+  </div>
 </template>
 <script>
-import { loadScript, loadStyle, loadVideojs } from "@/plugins/helpers";
+import {
+  loadScript,
+  loadStyle,
+  loadVideojs,
+  loadNewEp,
+  loadAds
+} from "@/plugins/helpers";
 export default {
   props: ["source", "backup", "thumbnail"],
   methods: {
@@ -12,47 +20,23 @@ export default {
     },
     async loadscript() {
       const scriptPromise = (async () => {
-        await loadScript("/videojs/videojs.min.js");
-        await loadScript("/videojs/videojs.logo.js");
-        // await loadScript("https://imasdk.googleapis.com/js/sdkloader/ima3.js");
-        // await loadScript("/videojs/ads/videojs-contrib-ads.js");
-        // await loadScript("/videojs/ads/videojs.ima.js");
-
         await loadStyle("/videojs/videojs.css");
-        // await loadStyle("/videojs/ads/videojs.ima.css");
+        await loadStyle("/videojs/ads/videojs.ads.css");
+        await loadStyle("/videojs/ads/videojs.ima.css");
         await loadStyle("/videojs/videojs.myani.css");
         await loadStyle("/videojs/videojs.logo.css");
+
+        await loadScript("//imasdk.googleapis.com/js/sdkloader/ima3.js");
+        await loadScript("/videojs/videojs.min.js");
+        await loadScript("/videojs/ads/videojs-contrib-ads.js");
+        await loadScript("/videojs/ads/videojs.ima.js");
+        await loadScript("/videojs/videojs.logo.js");
       })();
       await scriptPromise;
     },
-    async Player(renew) {
-      if (renew) {
-        var player = videojs("player");
-        var options = {
-          autoplay: true,
-          preload: "auto",
-          type: "application/x-mpegURL",
-          src: this.source
-        };
-        player.src(options);
-        player.poster(this.thumbnail);
-        player.one("error", err => {
-          options.type = "video/mp4";
-          options.src = this.backup;
-          player.src(options);
-        });
-
-        player.ready(() => {
-          player.play();
-        });
-      } else {
-        var player = await loadVideojs(
-          this.source,
-          this.backup,
-          this.thumbnail
-        );
-        // await loadScript("/videojs/ads/ads.js");
-      }
+    async Player() {
+      await loadAds();
+      var player = await loadVideojs(this.source, this.backup, this.thumbnail);
     }
   },
   async mounted() {
@@ -65,11 +49,13 @@ export default {
     }
   },
   watch: {
-    source() {
-      this.Player(true);
+    async source() {
+      await loadNewEp();
+      await this.Player();
     },
-    backup() {
-      this.Player(true);
+    async backup() {
+      await loadNewEp();
+      await this.Player();
     }
   }
 };
