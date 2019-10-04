@@ -32,6 +32,8 @@
       </v-list>
       <!-- Follow -->
       <FollowAnime v-if="$store.state.auth.isLogin" />
+      <!-- Credit -->
+      <Credit />
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
@@ -55,12 +57,14 @@
 import Auth from "../template/user/auth";
 import LoginMenu from "./item/LoginMenu";
 import FollowAnime from "./item/FollowAnime";
+import Credit from "./item/Credit";
 import SearchBar from "./item/SearchBar";
 import Items from "@/items/items";
 export default {
   components: {
     LoginMenu,
     Auth,
+    Credit,
     FollowAnime,
     SearchBar
   },

@@ -15,11 +15,6 @@ module.exports = {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', type: 'text/css', href: '/css/custom.css' }
-    ],
-    script: [
-      { src: "/js/hls.min.js" },
-      { src: "/js/p2p-core.min.js" },
-      { src: "/js/p2p-hls.min.js" }
     ]
   },
 

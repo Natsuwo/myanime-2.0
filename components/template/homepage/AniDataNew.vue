@@ -28,7 +28,7 @@
             <div class="title-anime">
               <nuxt-link :to="`/anime/${episode.anime_id}`">
                 {{episode.fansub}}
-                <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
+                <v-img maxWidth="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
               </nuxt-link>
             </div>
             <span class="episode-view">{{episode.views}} views</span>
@@ -52,7 +52,7 @@
             <div class="title-anime">
               <nuxt-link v-if="animes" :to="`/anime/${episode.anime_id}`">
                 {{episode.fansub}}
-                <v-img width="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
+                <v-img maxWidth="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
               </nuxt-link>
             </div>
             <span class="episode-view">{{episode.views}} views</span>
