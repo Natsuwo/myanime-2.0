@@ -31,16 +31,28 @@ export function loadStyle(src) {
     });
 }
 
-export function loadNewEp() {
-    videojs("player").dispose();
-    var videoContainer = document.getElementById("player-container");
-    var video = document.createElement("video");
-    video.id = "player";
-    video.className = "video-js vjs-16-9";
-    video.setAttribute("autoplay", "");
-    video.setAttribute("playsinline", "");
-    video.setAttribute("controls", "");
-    videoContainer.appendChild(video);
+export async function loadNewEp(source, backup, thumbnail) {
+    var player = videojs("player")
+    player.pause()
+    player.reset()
+    player.ima.setContentWithAdTag()
+    var options = {
+        autoplay: true,
+        preload: "auto",
+        type: "application/x-mpegURL",
+        src: source
+    };
+    player.poster(thumbnail)
+    await player.src(options);
+    await player.ima.requestAds()
+    await player.play()
+
+    player.one("error", async err => {
+        options.type = "video/mp4";
+        options.src = backup;
+        await player.src(options);
+        await player.play()
+    });
 }
 
 export function loadAds() {
@@ -135,6 +147,7 @@ export async function loadVideojs(source, backup, thumbnail) {
         options.type = "video/mp4";
         options.src = backup;
         player.src(options);
+        player.play()
     });
     player.ready(() => {
         player.play();

@@ -1,6 +1,11 @@
 <template>
   <div id="player-container">
-    <video id="player" class="video-js vjs-16-9" controls playsinline></video>
+    <div v-if="adblock">
+      <v-row align="center" justify="center" style="height: 720px;">
+        <h3>We are supported primarily by advertisements. We hope you will disable Adblock on our site, thank you.</h3>
+      </v-row>
+    </div>
+    <video v-else id="player" class="video-js vjs-16-9" controls playsinline></video>
   </div>
 </template>
 <script>
@@ -13,13 +18,18 @@ import {
 } from "@/plugins/helpers";
 export default {
   props: ["source", "backup", "thumbnail"],
+  data() {
+    return {
+      adblock: false
+    };
+  },
   methods: {
     validm3u8(url) {
       var result = /^(.*\.m3u8)*$/g.test(url);
       return result;
     },
     async loadscript() {
-      const scriptPromise = (async () => {
+      try {
         await loadStyle("/videojs/videojs.css");
         await loadStyle("/videojs/ads/videojs.ads.css");
         await loadStyle("/videojs/ads/videojs.ima.css");
@@ -31,12 +41,15 @@ export default {
         await loadScript("/videojs/ads/videojs-contrib-ads.js");
         await loadScript("/videojs/ads/videojs.ima.js");
         await loadScript("/videojs/videojs.logo.js");
-      })();
-      await scriptPromise;
+        return true;
+      } catch (err) {
+        this.adblock = true;
+        return false;
+      }
     },
     async Player() {
-      await loadAds();
       var player = await loadVideojs(this.source, this.backup, this.thumbnail);
+       await loadAds();
     }
   },
   async mounted() {
@@ -45,17 +58,20 @@ export default {
         document.exitPictureInPicture();
       }
       await this.loadscript();
-      await this.Player();
+      var ads = await this.loadscript();
+      if (ads !== true) {
+        this.adblock = true;
+      } else {
+        await this.Player();
+      }
     }
   },
   watch: {
     async source() {
-      await loadNewEp();
-      await this.Player();
+      await loadNewEp(this.source, this.backup, this.thumbnail);
     },
     async backup() {
-      await loadNewEp();
-      await this.Player();
+      await loadNewEp(this.source, this.backup, this.thumbnail);
     }
   }
 };

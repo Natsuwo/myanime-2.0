@@ -188,7 +188,7 @@ div.siema {
 }
 
 .multiple-episode {
-    width: 70px;
+    width: 90px;
     position: absolute;
     right: 0;
     top: 0;
@@ -770,6 +770,7 @@ div[button="logo"] {
 
 .jump-ep {
     height: 20px;
+    max-width: 50px;
     background: #000;
     line-height: normal;
     text-align: center;
