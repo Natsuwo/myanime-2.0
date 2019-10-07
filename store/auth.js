@@ -7,6 +7,7 @@ export const state = () => {
         profile: {},
         usermeta: [],
         following: [],
+        noti: [],
         lists: ""
     }
 }
@@ -82,8 +83,14 @@ export const mutations = {
                 }
             }
         }
-
-
+    },
+    setNoti(state, noti) {
+        state.noti = noti
+    },
+    readNoti(state, index) {
+        if (state.noti[index]) {
+            state.noti[index].read = true
+        }
     },
     [USERMETA](state, { data }) {
         state.usermeta = data

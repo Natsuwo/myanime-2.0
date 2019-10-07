@@ -37,10 +37,7 @@ export default {
     async loadscript() {
       try {
         await loadStyle("/videojs/videojs.css");
-        await loadStyle("/videojs/ads/videojs.ads.css");
-        await loadStyle("/videojs/ads/videojs.ima.css");
-        await loadStyle("/videojs/videojs.myani.css");
-        await loadStyle("/videojs/videojs.logo.css");
+        await loadStyle("/css/vsplugins.min.css");
 
         await loadScript("//imasdk.googleapis.com/js/sdkloader/ima3.js");
         await loadScript("/js/hls.min.js");
@@ -48,7 +45,7 @@ export default {
         await loadScript("/js/p2p-hls.min.js");
         await loadScript("/videojs/videojs.min.js");
         await loadScript("/videojs/videojs-contrib-hls.js");
-        await loadScript("/videojs/ads/videojs-contrib-ads.js");
+        await loadScript("/videojs/ads/contrib.min.js");
         await loadScript("/videojs/ads/videojs.ima.js");
         await loadScript("/videojs/videojs.logo.js");
         return true;
@@ -58,7 +55,25 @@ export default {
       }
     },
     async Player() {
-      var player = await loadVideojs(this.source, this.backup, this.thumbnail);
+      await loadScript("/videojs/core.min.js");
+      var player = await loadPlayer("player");
+      var options = {
+        autoplay: true,
+        preload: "auto",
+        type: "application/x-mpegURL",
+        src: this.source
+      };
+      player.poster(this.thumbnail);
+      player.src(options);
+      player.one("error", err => {
+        options.type = "video/mp4";
+        options.src = this.backup;
+        player.src(options);
+        player.play();
+      });
+      player.ready(() => {
+        player.play();
+      });
       await loadAds();
     }
   },

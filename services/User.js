@@ -15,6 +15,14 @@ export function getFollowing(headers) {
     return Api(headers).get('/user/following');
 }
 
+export function getNoti(headers) {
+    return Api(headers).get('/user/noti');
+}
+
+export function readNoti(headers, form) {
+    return Api(headers).put('/user/readnoti', form);
+}
+
 export function getLists(headers) {
     return Api(headers).get('/user/profile/follow');
 }

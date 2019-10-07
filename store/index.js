@@ -1,6 +1,6 @@
 const cookieparser = process.server ? require('cookieparser') : undefined
 import { checkUserToken } from "../services/Auth"
-import { getFollowing } from "../services/User"
+import { getFollowing, getNoti } from "../services/User"
 import { getFlags } from "../services/Language"
 import { getTerms, getSettings } from "../services/Anime"
 
@@ -40,6 +40,9 @@ export const actions = {
                 // // following
                 var follow = await getFollowing(headers)
                 commit('auth/getFollowing', follow.data.data)
+                // Noti
+                var noti = await getNoti(headers)
+                commit('auth/setNoti', noti.data.results)
             }
         }
         // Get Flags

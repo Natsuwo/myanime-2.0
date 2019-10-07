@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar-playlist" >
+    <div class="sidebar-playlist">
       <v-card flat>
         <div class="player-playlist-header pa-4">
           <div style="float: right;">
@@ -8,16 +8,21 @@
           </div>
           <div class="player-playlist-title">{{anime.title}}</div>
           <div class="player-playlist-fansub-title">
-            {{episode.fansub}} -
-            <input
-              v-on:keyup.enter="findEp(episode.anime_id, number, episode.fansub)"
-              class="jump-ep"
-              type="number"
-              v-model="number"
-              min="0"
-              :max="total"
-            />
-            /{{total}}
+            <div class="episode-select">
+              {{episode.fansub}} -
+              <input
+                v-on:keyup.enter="findEp(episode.anime_id, number, episode.fansub)"
+                class="jump-ep"
+                type="number"
+                v-model="number"
+                min="0"
+                :max="total"
+              />
+              <div class="play-button" @click="findEp(episode.anime_id, number, episode.fansub)">
+                <i class="mdi mdi-play"></i>
+              </div>
+              <div class="total-epsiode">/{{total}}</div>
+            </div>
           </div>
         </div>
         <div class="player-playlist-video">
@@ -34,7 +39,6 @@
                 </div>
                 <div class="player-sidebar-right-content column">
                   <div class="player-sidebar-title">{{anime.title}} {{item.number}}</div>
-
                   <div class="player-sidebar-fansub-name">{{item.fansub}}</div>
                   <div class="player-sidebar-views">{{item.views}} views</div>
                 </div>
@@ -50,7 +54,7 @@
         </div>
       </v-card>
     </div>
-    <Banner300 /> 
+    <Banner300 />
     <h3 class="py-2">May you like</h3>
     <div class="player-sidebar py-1" v-for="item in random" :key="item.data.episode_id">
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
@@ -74,7 +78,7 @@
 </template>
 <script>
 import { sidebarLoadmore, jumpEpisode } from "@/services/Episode";
-import Banner300 from "@/components/main/item/300x250"
+import Banner300 from "@/components/main/item/300x250";
 import { mapMutations } from "vuex";
 export default {
   components: {
@@ -145,42 +149,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.player-sidebar-thumbnail {
-  position: relative;
-}
-.now-playing {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  line-height: 90px;
-  text-align: center;
-  font-size: 18px;
-}
-.player-sidebar a {
-  display: inline-flex;
-  text-decoration: none;
-  color: #fff;
-}
-.playlist-playlist-right-title {
-  width: 100%;
-}
-
-.player-playlist-video-title {
-  display: -webkit-box;
-  max-height: 3.2rem;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  -webkit-line-clamp: 2;
-  line-height: 20px;
-  font-weight: 400;
-  font-size: 16px;
-  text-transform: uppercase;
-}
-</style>

@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const route = Router()
-const { updateProfile, getFollowAnime, getLists, loadmoreLists } = require('../controllers/user.controller')
+const { updateProfile, getFollowAnime, getLists, loadmoreLists, getNoti, readNoti } = require('../controllers/user.controller')
 const { updatePassword } = require('../middlewares/user.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 const { isUserLogin } = require('../middlewares/auth.middleware')
@@ -20,10 +20,17 @@ var upload = multer({
         fileSize: 1024 * 1024
     }
 })
+var apicache = require('apicache')
+var cache = apicache.middleware
+apicache.options({
+    appendKey: (req, res) => req.body.episode_id
+})
 
 route.put('/user/profile', checkSecure, isUserLogin, upload.any(), uploadImage, updatePassword, updateProfile)
+route.put('/user/readnoti', cache("5 minutes"), checkSecure, isUserLogin, readNoti)
 route.delete('/bot/discord-relogin', tryLogin)
 route.get('/user/following', checkSecure, isUserLogin, getFollowAnime)
+route.get('/user/noti', checkSecure, isUserLogin, getNoti)
 route.get('/user/profile/follow', checkSecure, isUserLogin, getLists)
 route.get('/user/profile/follow-loadmore', checkSecure, isUserLogin, loadmoreLists)
 module.exports = route

@@ -2,7 +2,7 @@ const User = require('../models/User')
 const Anime = require('../models/Anime')
 const AnimeMeta = require('../models/AnimeMeta')
 const UserMeta = require('../models/UserMeta')
-const md5 = require('md5')
+const Noti = require('../models/Noti')
 
 module.exports = {
     async updateProfile(req, res) {
@@ -103,6 +103,25 @@ module.exports = {
                 }
             }
             res.send({ success: true, data: { animes, metas, result: results } })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async getNoti(req, res) {
+        try {
+            var { user_id } = res.locals
+            var noti = await Noti.find({ user_id }, { _id: 0, __v: 0 }).sort({ created_at: -1 })
+            res.send({ success: true, results: noti })
+        } catch (err) {
+            res.send({ success: false, error: err.message })
+        }
+    },
+    async readNoti(req, res) {
+        try {
+            var { user_id } = res.locals
+            var { episode_id } = req.body
+            await Noti.updateOne({ episode_id, user_id }, { read: true })
+            res.send({ success: true })
         } catch (err) {
             res.send({ success: false, error: err.message })
         }

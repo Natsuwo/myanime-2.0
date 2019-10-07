@@ -22,8 +22,7 @@ module.exports = {
             return null
         }
         return null
-    }
-    ,
+    },
     async countView(episode_id) {
         var data = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
         var oldData = JSON.parse(data)

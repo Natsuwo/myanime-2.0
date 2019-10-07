@@ -7,6 +7,7 @@ module.exports = () => {
     const bodyParser = require('body-parser')
     const mongoose = require('mongoose')
     const routes = require('./routes')
+    require('./noti')
 
     mongoose.connect(process.env.MONGO_URL, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -28,6 +29,7 @@ module.exports = () => {
     // io.on('connection', function (socket) {
     //     console.log('connected');
     // });
+
     app.use(cookieParser(process.env.COOKIE_SECRET))
     app.use('/library', express.static('../library'))
     app.use(bodyParser.json())
