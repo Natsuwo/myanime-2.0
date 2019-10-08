@@ -10,18 +10,20 @@
           <div class="player-playlist-fansub-title">
             <div class="episode-select">
               {{episode.fansub}} -
-              <input
-                v-on:keyup.enter="findEp(episode.anime_id, number, episode.fansub)"
-                class="jump-ep"
-                type="number"
-                v-model="number"
-                min="0"
-                :max="total"
-              />
-              <div class="play-button" @click="findEp(episode.anime_id, number, episode.fansub)">
-                <i class="mdi mdi-play"></i>
+              <div class="esbox">
+                <input
+                  v-on:keyup.enter="findEp(episode.anime_id, number, episode.fansub)"
+                  class="jump-ep"
+                  type="number"
+                  v-model="number"
+                  min="0"
+                  :max="total"
+                />
+                <div class="play-button" @click="findEp(episode.anime_id, number, episode.fansub)">
+                  <i class="mdi mdi-play"></i>
+                </div>
+                <div class="total-epsiode">/{{total}}</div>
               </div>
-              <div class="total-epsiode">/{{total}}</div>
             </div>
           </div>
         </div>

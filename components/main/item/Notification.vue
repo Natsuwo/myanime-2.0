@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       noMess:
-        "Save anime(s) and put them your watch list to get notified about new upload episodes.",
+        "Save anime(s) and put them in your watch list to get notified about new upload episodes.",
       showCount: true,
       headers: {
         "X-User-Session": this.$store.state.auth.userToken

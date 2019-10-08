@@ -884,7 +884,7 @@ div[button="logo"] {
 .play-button {
     position: absolute;
     top: 0;
-    left: 130px;
+    left: 32px;
     width: 25px;
     height: 20px;
     line-height: 20px;
@@ -893,10 +893,6 @@ div[button="logo"] {
     cursor: pointer;
     background: #000;
     border-radius: 0 2px 2px;
-}
-
-.episode-select {
-    position: relative;
 }
 
 .jump-ep {
@@ -913,6 +909,11 @@ div[button="logo"] {
 
 .total-epsiode {
     position: absolute;
-    left: 160px;
+    left: 60px;
     display: inline;
+}
+
+.esbox {
+    display: inline-block;
+    position: relative;
 }
