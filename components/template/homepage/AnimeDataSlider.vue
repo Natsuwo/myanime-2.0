@@ -1,6 +1,6 @@
 <template>
   <div class="recent-anime">
-    <h2 class="anime-head-title">{{title}}</h2>
+    <h1 class="anime-head-title">{{title}}</h1>
     <div placeholder="loading...">
       <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
         <template v-for="(episode, index) in data">

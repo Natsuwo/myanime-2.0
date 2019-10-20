@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const notiSchema = new mongoose.Schema({
     user_id: Number,
     anime_id: Number,
+    lang: String,
     episode_id: String,
-    thumbnail: String,
     cover: String,
     message: String,
     read: Boolean,

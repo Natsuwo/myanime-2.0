@@ -1,6 +1,6 @@
 <template>
   <div class="recent-anime">
-    <h2 class="anime-head-title">{{title}}</h2>
+    <h1 class="anime-head-title">{{title}}</h1>
     <div placeholder="loading...">
       <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
         <template v-for="(episode, index) in data">
@@ -37,10 +37,8 @@
                     <v-img maxWidth="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
                   </nuxt-link>
                 </div>
-                <span class="episode-view">{{getAnime(episode.anime_id, 'views')}} views</span>
-                <span
-                  class="episode-moment"
-                >{{getAnime(episode.anime_id, 'created_at') | moment("from", "now")}}</span>
+                <span class="episode-view">{{episode.views}} views</span>
+                <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
               </div>
             </div>
           </div>

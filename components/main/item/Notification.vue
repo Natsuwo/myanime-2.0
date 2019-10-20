@@ -34,7 +34,7 @@
               <v-list-item-subtitle v-html="item.message"></v-list-item-subtitle>
               <v-list-item-title class="message-title">{{getMoment(item.created_at)}}</v-list-item-title>
             </v-list-item-content>
-            <v-img max-width="87" :src="item.thumbnail"></v-img>
+            <v-img max-width="30" :src="getFlag(item.lang)"></v-img>
           </v-list-item>
         </template>
       </v-list>
@@ -51,9 +51,12 @@
 <script>
 import moment from "moment";
 import { readNoti } from "@/services/User";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   props: ["data"],
+  computed: {
+    ...mapState(["flags"])
+  },
   data() {
     return {
       noMess:
@@ -69,6 +72,12 @@ export default {
     getMoment(time) {
       var action = new Date(time);
       return moment(action).fromNow();
+    },
+    getFlag(lang) {
+      return this.flags
+        .filter(x => x.key === lang)
+        .map(x => x.value)
+        .toString();
     },
     async viewEp(item) {
       var data = this.data;

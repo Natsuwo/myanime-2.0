@@ -1,6 +1,6 @@
 <template >
   <div class="recent-anime">
-    <h2 class="anime-head-title">{{title}}</h2>
+    <h1 class="anime-head-title">{{title}}</h1>
     <v-layout row wrap>
       <v-flex xs12 sm4 md3 lg2 lg2-custom v-for="episode in data" :key="episode.id">
         <div class="multiple-ep" v-if="episode.multi">

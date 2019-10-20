@@ -40,6 +40,7 @@ module.exports = {
   */
   devModules: [
     '@nuxtjs/vuetify',
+    '@nuxtjs/sitemap'
   ],
   /*
   ** Nuxt.js modules
@@ -47,6 +48,14 @@ module.exports = {
   modules: [
     'cookie-universal-nuxt'
   ],
+  sitemap: {
+    hostname: 'https://myanime.co',
+    gzip: true,
+    exclude: [
+      '/watch',
+      '/user/**'
+    ],
+  },
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
