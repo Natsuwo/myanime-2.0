@@ -6,9 +6,9 @@
           <div class="search-content py-1" v-for="(item, index) in results" :key="item.anime_id">
             <nuxt-link class="search-thumbnail-link" :to="`/watch?a=${item.episode_id}`">
               <div class="search-thumbnail">
-                <v-img width="246px" :src="item.thumbnail"></v-img>
+                <v-img width="246px" :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
                 <div class="search-overlay">
-                  <v-img class="search-anime-thumbnail" :src="getAnime(item.anime_id, 'thumbnail')"></v-img>
+                  <v-img class="search-anime-thumbnail" :lazy-src="getAnime(item.anime_id, 'thumbnail')" :src="getAnime(item.anime_id, 'thumbnail')"></v-img>
                   <div class="search-anime">
                     <div class="count">{{counts[index]}}</div>
                     <v-icon>mdi-animation-play</v-icon>

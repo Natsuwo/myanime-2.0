@@ -1,11 +1,11 @@
 <template>
   <v-layout class="anime-channel-header" row wrap align-center>
-    <v-img class="anime-channel-banner" :src="data.cover || '/default-cover.jpg'"></v-img>
+    <v-img class="anime-channel-banner" :lazy-src="data.cover  || '/default-cover.jpg'" :src="data.cover || '/default-cover.jpg'"></v-img>
     <div class="anime-overlay"></div>
     <v-layout row wrap justify-center align-center>
       <div class="anime-channel-content">
         <div class="anime-channel-cover">
-          <v-img width="184px" :src="data.thumbnail"></v-img>
+          <v-img width="184px" :lazy-src="data.thumbnail" :src="data.thumbnail"></v-img>
         </div>
         <div class="anime-channel-details">
           <div class="anime-channel-title">{{data.title}}</div>

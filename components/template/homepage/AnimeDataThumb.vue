@@ -8,7 +8,11 @@
             <div class="flex">
               <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
                 <div class="season-thumbnail">
-                  <v-img class="episode-thumbnail" :src="episode.thumbnail">
+                  <v-img
+                    class="episode-thumbnail"
+                    :lazy-src="episode.thumbnail"
+                    :src="episode.thumbnail"
+                  >
                     <div class="play-icon">
                       <v-icon>mdi-play</v-icon>
                     </div>
@@ -16,6 +20,7 @@
                   <div class="search-overlay">
                     <v-img
                       class="season-anime-thumbnail"
+                      :lazy-src="getAnime(episode.anime_id, 'thumbnail')"
                       :src="getAnime(episode.anime_id, 'thumbnail')"
                     ></v-img>
                     <div class="season-anime">
@@ -34,7 +39,12 @@
                 <div class="title-anime">
                   <nuxt-link :to="`/anime/${episode.anime_id}`">
                     {{episode.fansub}}
-                    <v-img maxWidth="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
+                    <v-img
+                      maxWidth="18px"
+                      class="anime-flag"
+                      :lazy-src="getFlag(episode.subtitle)"
+                      :src="getFlag(episode.subtitle)"
+                    ></v-img>
                   </nuxt-link>
                 </div>
                 <span class="episode-view">{{episode.views}} views</span>

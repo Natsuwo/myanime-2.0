@@ -15,7 +15,7 @@
           <nuxt-link class="season-anime-link" :to="`/anime/${item.anime_id}`">
             <div class="season-anime-card">
               <div class="season-anime-cover">
-                <v-img :src="item.thumbnail"></v-img>
+                <v-img :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
               </div>
               <div class="season-anime-title">{{item.title}}</div>
               <div

@@ -9,7 +9,7 @@
       <div class="description" v-html="anime.description"></div>
       <div class="anime-info pt-10">
         <div class="anime-cover">
-          <v-img :src="anime.thumbnail"></v-img>
+          <v-img :lazy-src="anime.thumbnail" :src="anime.thumbnail"></v-img>
         </div>
         <div class="anime-info-content" v-for="item in animeInfo" :key="item.key">
           <div v-if="hideKeyDes" class="title-name">{{item.key}}</div>

@@ -28,13 +28,13 @@
           <v-list-item class="notification" :key="index" @click="viewEp(item)">
             <v-list-item-avatar>
               <div :class="item.read ? '' : 'noti-new'"></div>
-              <v-img :src="item.cover"></v-img>
+              <v-img :lazy-src="item.cover" :src="item.cover"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-subtitle v-html="item.message"></v-list-item-subtitle>
               <v-list-item-title class="message-title">{{getMoment(item.created_at)}}</v-list-item-title>
             </v-list-item-content>
-            <v-img max-width="30" :src="getFlag(item.lang)"></v-img>
+            <v-img max-width="30" :lazy-src="getFlag(item.lang)" :src="getFlag(item.lang)"></v-img>
           </v-list-item>
         </template>
       </v-list>

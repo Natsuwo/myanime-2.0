@@ -1,6 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
-
+const { encrypt } = require('./crypto.helper')
 module.exports = {
     async getSource(drive_id) {
         var drDomain = process.env.DRDOMAIN
@@ -22,6 +22,11 @@ module.exports = {
             return null
         }
         return null
+    },
+    async getProxy(drive_id) {
+        var proxyDomain = "https://s1.myanime.co"
+        var endpoint = proxyDomain + "/video/" + encrypt(drive_id)
+        return endpoint
     },
     async countView(episode_id) {
         var data = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })

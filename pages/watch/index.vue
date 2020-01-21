@@ -42,6 +42,7 @@ export default {
       return redirect("/");
     }
     var headers = {
+      "key": "episodes",
       "X-User-Session": store.state.auth.userToken
     };
     var response = (await getEpisode(headers, episode_id)).data;

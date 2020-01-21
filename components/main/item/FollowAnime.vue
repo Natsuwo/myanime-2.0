@@ -14,7 +14,7 @@
       >
         <v-list-item-action>
           <v-avatar size="24">
-            <v-img :src="item.thumbnail"></v-img>
+            <v-img :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
           </v-avatar>
         </v-list-item-action>
         <v-list-item-content>

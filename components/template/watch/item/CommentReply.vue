@@ -32,7 +32,7 @@
         :key="item.comment_id"
       >
         <v-avatar size="35px" class="reply-user avatar">
-          <v-img :src="item.user.avatar"></v-img>
+          <v-img :lazy-src="item.user.avatar" :src="item.user.avatar"></v-img>
         </v-avatar>
         <div class="reply-user px-2">
           <div class="reply-user name px-1">{{item.user.username}}</div>

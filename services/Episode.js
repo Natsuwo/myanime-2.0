@@ -1,7 +1,7 @@
 import Api from './Api'
 
-export function getEpisodes() {
-    return Api().get('/episode/get');
+export function getEpisodes(headers) {
+    return Api(headers).get('/episode/get');
 }
 
 export function getEpisode(headers, episode_id) {

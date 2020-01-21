@@ -1,9 +1,10 @@
 const fs = require('fs')
+const path = require('path')
+const pug = require('pug')
 const Anime = require('../models/Anime')
 const Episode = require('../models/Episode')
 const UserMeta = require('../models/UserMeta')
-const { getSource, countView } = require('../helpers/episode.helper')
-
+const { getSource, countView, getProxy } = require('../helpers/episode.helper')
 module.exports = {
     async getEpisodes(req, res) {
         try {
@@ -90,7 +91,7 @@ module.exports = {
             })
 
         } catch (err) {
-            res.send({ success: false, error: err.message })
+            res.status(204).send({ success: false, error: err.message })
         }
     },
     async getSingleEp(req, res) {
@@ -98,8 +99,9 @@ module.exports = {
             var { episode_id } = req.query
             var { user_id } = res.locals
             var episode = await Episode.findOne({ episode_id }, { __v: 0, _id: 0 })
-            var source = await getSource(episode.source)
-            backup = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
+            var source = await getProxy(episode.source)
+            backup = await getSource(episode.source)
+            // backup = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
             episode.set('source', source, { strict: false })
             episode.set('backup', backup, { strict: false })
             var { anime_id, type, audio, subtitle, fansub, number } = episode
@@ -180,6 +182,18 @@ module.exports = {
             return res.send({ success: true, result: episode.episode_id })
         } catch (err) {
             res.send({ success: false, error: err.message })
+        }
+    },
+    async myPlayer(req, res) {
+        try {
+            var { source, backup, thumbnail } = req.query
+            if (!source && !backup) {
+                return res.send("Access denied.")
+            }
+            res.send(pug.renderFile(path.join(__dirname, '../../views/player.pug'), { source, backup, thumbnail }))
+        } catch (err) {
+            console.log(err.message)
+            return res.status(403).send("Access denied.")
         }
     }
 }

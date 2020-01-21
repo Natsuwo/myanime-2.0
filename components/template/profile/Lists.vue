@@ -26,7 +26,7 @@
                 </v-list-item-content>
 
                 <v-list-item-avatar width="75" height="100%" tile>
-                  <v-img :src="getAnime(item.parent_id).thumbnail"></v-img>
+                  <v-img :lazy-src="getAnime(item.parent_id).thumbnail" :src="getAnime(item.parent_id).thumbnail"></v-img>
                 </v-list-item-avatar>
               </v-list-item>
               <v-card-actions>

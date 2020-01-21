@@ -13,7 +13,7 @@
             </v-list-item-content>
             <v-row align="center" justify="center">
               <v-avatar size="220" fill-height>
-                <v-img :src="avatarUrl"></v-img>
+                <v-img :lazy-src="avatarUrl" :src="avatarUrl"></v-img>
                 <div v-if="isEdit" class="user-avatar-edit" @click="pickFile">
                   <v-icon large>mdi-image-plus</v-icon>
                   <input

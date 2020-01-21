@@ -41,6 +41,7 @@ export default {
   },
   asyncData({ store, query, error }) {
     var headers = {
+      key: "home",
       "X-User-Session": store.state.auth.userToken
     };
     return getEpisodes(headers)

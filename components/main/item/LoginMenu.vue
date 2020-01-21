@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-btn dark icon v-on="on">
         <v-avatar>
-          <v-img :src="avatar"></v-img>
+          <v-img :lazy-src="avatar" :src="avatar"></v-img>
         </v-avatar>
       </v-btn>
     </template>

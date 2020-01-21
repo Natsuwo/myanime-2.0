@@ -5,7 +5,7 @@
         <div class="slide" :key="index">
           <div class="flex">
             <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-              <v-img class="episode-thumbnail" :src="episode.thumbnail">
+              <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
                 <div class="play-icon">
                   <v-icon>mdi-play</v-icon>
                 </div>
@@ -20,7 +20,7 @@
               <div class="title-anime">
                 <nuxt-link :to="`/anime/${episode.anime_id}`">
                   {{episode.fansub}}
-                  <v-img maxWidth="18px" class="anime-flag" :src="getFlag(episode.subtitle)"></v-img>
+                  <v-img maxWidth="18px" class="anime-flag" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
                 </nuxt-link>
               </div>
               <span class="episode-view">{{episode.views}} views</span>

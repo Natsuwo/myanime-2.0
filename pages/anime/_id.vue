@@ -44,6 +44,7 @@ export default {
   },
   async fetch({ store, params }) {
     var headers = {
+      "key": "channel",
       "X-User-Session": store.state.auth.userToken
     };
     var anime_id = params.id;

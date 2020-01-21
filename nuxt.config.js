@@ -1,4 +1,31 @@
 const colors = require('vuetify/es5/util/colors').default
+const axios = require('axios')
+
+function range(size, startAt = 0) {
+  return [...Array(size).keys()].map(i => i + startAt);
+}
+
+const getSitemapBlogsFn = sitemapIndex => () =>
+  axios.get(`http://localhost:3000/api/getSiteMapRoutes?index=${sitemapIndex}`)
+    .then(response => response && response.data)
+    .then(offers =>
+      offers.code.map((code) => ({
+        url: `https://myanime.co/watch?a=${code}`,
+        changefreq: 'daily',
+        priority: 1,
+      })),
+    )
+
+
+const getSitemapsConfigurations = () =>
+  range(31).map(index => ({
+    path: `sitemap-${index}.xml`,
+    routes: getSitemapBlogsFn(index),
+    cacheTime: 1000 * 60 * 60 * 2,
+    trailingSlash: true,
+    exclude: ['/**'], //here we exclude all static routes
+  }))
+
 module.exports = {
   mode: 'universal',
   /*
@@ -49,12 +76,18 @@ module.exports = {
     'cookie-universal-nuxt'
   ],
   sitemap: {
-    hostname: 'https://myanime.co',
+    path: '/sitemap.xml',
     gzip: true,
-    exclude: [
-      '/watch',
-      '/user/**'
-    ],
+    sitemaps:
+      [
+        {
+          path: 'sitemap-routes.xml',
+          cacheTime: 1000 * 60 * 60 * 2,
+          trailingSlash: true,
+          exclude: ['/user/**', '/watch']
+        },
+        ...getSitemapsConfigurations(),
+      ]
   },
   /*
   ** vuetify module configuration

@@ -27,7 +27,9 @@
       </div>
       <Follow class="text-right" :follow="follow" :anime="anime" />
     </v-layout>
-    <Description :anime="anime" :episode="episode" :flags="flags" />
+    <client-only>
+      <Description :anime="anime" :episode="episode" :flags="flags" />
+    </client-only>
     <v-divider />
     <Comment />
   </div>

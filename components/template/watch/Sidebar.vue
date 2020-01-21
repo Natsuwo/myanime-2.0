@@ -4,7 +4,7 @@
       <v-card flat>
         <div class="player-playlist-header pa-4">
           <div style="float: right;">
-            <v-img width="40" :src="getFlag(episode.subtitle)"></v-img>
+            <v-img width="40" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
           </div>
           <div class="player-playlist-title">{{anime.title}}</div>
           <div class="player-playlist-fansub-title">
@@ -36,7 +36,7 @@
             <div class="player-sidebar">
               <nuxt-link :to="`/watch?a=${item.episode_id}`">
                 <div class="player-sidebar-thumbnail">
-                  <v-img width="168px" :src="item.thumbnail"></v-img>
+                  <v-img width="168px" :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
                   <div class="now-playing" v-if="$route.query.a === item.episode_id">Now Playing</div>
                 </div>
                 <div class="player-sidebar-right-content column">
@@ -61,7 +61,7 @@
     <div class="player-sidebar py-1" v-for="item in random" :key="item.data.episode_id">
       <nuxt-link :to="`/watch?a=${item.data.episode_id}`">
         <div class="player-sidebar-thumbnail">
-          <v-img width="168px" :src="item.data.thumbnail"></v-img>
+          <v-img width="168px" :lazy-src="item.data.thumbnail" :src="item.data.thumbnail"></v-img>
           <div class="search-overlay">
             <div class="multiple-episode">
               <div class="count">{{item.data.count}}</div>

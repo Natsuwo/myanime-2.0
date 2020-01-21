@@ -1,9 +1,9 @@
 const { Router } = require('express')
 const route = Router()
-const { getEpisodes, getSingleEp, loadMoreSidebar, findbyNumber } = require('../controllers/episode.controller')
+const { getEpisodes, getSingleEp, loadMoreSidebar, findbyNumber, myPlayer } = require('../controllers/episode.controller')
 const { isUserLogin } = require('../middlewares/auth.middleware')
 const { checkSecure } = require('../validate/secure.validate')
-
+const { cacheGroup } = require('../middlewares/cache.middleware')
 const rateLimit = require("express-rate-limit");
 const countView = rateLimit({
     windowMs: 24 * 60 * 1000,
@@ -19,15 +19,16 @@ const countView = rateLimit({
 
 var apicache = require('apicache')
 var cache = apicache.middleware
+const onlyStatus200 = (req, res) => res.statusCode === 200
 
-route.get('/episode/get', checkSecure, cache('15 minutes'), getEpisodes)
+route.get('/episode/get', checkSecure, cacheGroup, cache('15 minutes', onlyStatus200), getEpisodes)
 route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
-route.get('/episode/get-episode', checkSecure, countView, isUserLogin, getSingleEp)
+route.get('/episode/get-episode', checkSecure, cacheGroup, cache('30 minutes', onlyStatus200), countView, isUserLogin, getSingleEp)
 route.get('/episode/jump-episode', checkSecure, findbyNumber)
-
+route.get('/player', cacheGroup, cache('15 minutes', onlyStatus200), myPlayer)
 route.get('/drive/folder', async (req, res) => {
     try {
-        res.sendFile('get.html', {root: './'})
+        res.sendFile('get.html', { root: './' })
     } catch (err) {
         res.send({ success: false, error: err.message })
     }
