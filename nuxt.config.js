@@ -22,7 +22,7 @@ const getSitemapsConfigurations = () =>
     path: `sitemap-${index}.xml`,
     routes: getSitemapBlogsFn(index),
     cacheTime: 1000 * 60 * 60 * 2,
-    trailingSlash: true,
+    trailingSlash: false,
     exclude: ['/**'], //here we exclude all static routes
   }))
 
@@ -83,7 +83,7 @@ module.exports = {
         {
           path: 'sitemap-routes.xml',
           cacheTime: 1000 * 60 * 60 * 2,
-          trailingSlash: true,
+          trailingSlash: false,
           exclude: ['/user/**', '/watch']
         },
         ...getSitemapsConfigurations(),
