@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
     Counter = require('./Counter'),
-    bcrypt = require('bcrypt'),
+    bcrypt = require('bcryptjs'),
     SALT_FACTOR = 12
 
 

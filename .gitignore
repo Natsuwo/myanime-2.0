@@ -89,3 +89,7 @@ sw.*
 
 # Mac OSX
 .DS_Store
+
+#Custom
+selfsigned.cert
+selfsigned.key

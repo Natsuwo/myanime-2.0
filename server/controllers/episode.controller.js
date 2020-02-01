@@ -100,7 +100,7 @@ module.exports = {
             var { user_id } = res.locals
             var episode = await Episode.findOne({ episode_id }, { __v: 0, _id: 0 })
             var source = await getProxy(episode.source)
-            backup = await getSource(episode.source)
+            var backup = await getSource(episode.source)
             // backup = `https://www.googleapis.com/drive/v3/files/${episode.source}?alt=media&key=${process.env.GOOGLE_API_KEY}`
             episode.set('source', source, { strict: false })
             episode.set('backup', backup, { strict: false })

@@ -5,22 +5,41 @@ function range(size, startAt = 0) {
   return [...Array(size).keys()].map(i => i + startAt);
 }
 
-const getSitemapBlogsFn = sitemapIndex => () =>
-  axios.get(`http://localhost:3000/api/getSiteMapRoutes?index=${sitemapIndex}`)
+const getSitemapEpisodes = sitemapIndex => () =>
+  axios.get(`http://localhost:3000/api/getSiteMapEpisodes?index=${sitemapIndex}`)
     .then(response => response && response.data)
     .then(offers =>
       offers.code.map((code) => ({
-        url: `https://myanime.co/watch?a=${code}`,
+        url: `/watch?a=${code}`,
         changefreq: 'daily',
         priority: 1,
       })),
     )
 
+const getSitemapAnimes = sitemapIndex => () =>
+  axios.get(`http://localhost:3000/api/getSiteMapAnimes?index=${sitemapIndex}`)
+    .then(response => response && response.data)
+    .then(offers =>
+      offers.code.map((code) => ({
+        url: `/anime/${code}`,
+        changefreq: 'daily',
+        priority: 1,
+      })),
+    )
 
-const getSitemapsConfigurations = () =>
-  range(31).map(index => ({
-    path: `sitemap-${index}.xml`,
-    routes: getSitemapBlogsFn(index),
+const getSitemapsEpisodes = () =>
+  range(34).map(index => ({
+    path: `sitemap-episodes-${index}.xml`,
+    routes: getSitemapEpisodes(index),
+    cacheTime: 1000 * 60 * 60 * 2,
+    trailingSlash: false,
+    exclude: ['/**'], //here we exclude all static routes
+  }))
+
+const getSitemapsAnimes = () =>
+  range(3).map(index => ({
+    path: `sitemap-animes-${index}.xml`,
+    routes: getSitemapAnimes(index),
     cacheTime: 1000 * 60 * 60 * 2,
     trailingSlash: false,
     exclude: ['/**'], //here we exclude all static routes
@@ -73,6 +92,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/pwa',
     'cookie-universal-nuxt'
   ],
   sitemap: {
@@ -86,8 +106,25 @@ module.exports = {
           trailingSlash: false,
           exclude: ['/user/**', '/watch']
         },
-        ...getSitemapsConfigurations(),
+        ...getSitemapsEpisodes(),
+        ...getSitemapsAnimes()
       ]
+  },
+  pwa: {
+    workbox: {
+      runtimeCaching: [
+        {
+          urlPattern: '/api/.*',
+          strategyOptions: {
+            cacheName: 'api-cache',
+            cacheExpiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 300
+            }
+          }
+        }
+      ]
+    },
   },
   /*
   ** vuetify module configuration

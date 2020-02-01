@@ -1,6 +1,6 @@
 const UserMeta = require('../models/UserMeta')
 const User = require('../models/User')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const SALT_FACTOR = 12;
 module.exports = {
     async updatePassword(req, res, next) {
