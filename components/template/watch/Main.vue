@@ -17,7 +17,7 @@
     <v-divider />
     <v-layout row wrap pt-3>
       <v-avatar class="player-fansub mr-3">
-        <img :src="anime.thumbnail" alt="avatar-fansub" />
+        <img :src="imgproxy(anime.thumbnail, 48)" alt="avatar-fansub" />
       </v-avatar>
       <div class="flex column">
         <span class="title fansub-title">
@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 import Player from "./item/Player";
 import Vote from "./item/Vote";
 import Follow from "./item/Follow";
@@ -48,6 +49,11 @@ export default {
     Follow,
     Comment,
     Description
+  },
+  methods: {
+    imgproxy(img, rs) {
+      return proxyimg(img, rs);
+    }
   },
   computed: {
     follow() {

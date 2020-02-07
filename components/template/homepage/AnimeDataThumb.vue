@@ -10,8 +10,8 @@
                 <div class="season-thumbnail">
                   <v-img
                     class="episode-thumbnail"
-                    :lazy-src="episode.thumbnail"
-                    :src="episode.thumbnail"
+                    :lazy-src="imgproxy(episode.thumbnail, 260)"
+                    :src="imgproxy(episode.thumbnail, 260)"
                   >
                     <div class="play-icon">
                       <v-icon>mdi-play</v-icon>
@@ -20,8 +20,8 @@
                   <div class="search-overlay">
                     <v-img
                       class="season-anime-thumbnail"
-                      :lazy-src="getAnime(episode.anime_id, 'thumbnail')"
-                      :src="getAnime(episode.anime_id, 'thumbnail')"
+                      :lazy-src="imgproxy(getAnime(episode.anime_id, 'thumbnail'), 60)"
+                      :src="imgproxy(getAnime(episode.anime_id, 'thumbnail'), 60)"
                     ></v-img>
                     <div class="season-anime">
                       <div class="count">{{episode.count}}</div>
@@ -68,6 +68,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["title", "data", "flags", "animes"],
   data() {
@@ -105,6 +106,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img, rs) {
+      return proxyimg(img, rs);
     },
     getAnime(id, key) {
       return this.animes.filter(x => x.anime_id === id).map(x => x[key])[0];

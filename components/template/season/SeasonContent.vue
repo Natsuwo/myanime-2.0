@@ -15,15 +15,16 @@
           <nuxt-link class="season-anime-link" :to="`/anime/${item.anime_id}`">
             <div class="season-anime-card">
               <div class="season-anime-cover">
-                <v-img :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
+                <v-img
+                  :lazy-src="imgproxy(item.thumbnail, 210)"
+                  :src="imgproxy(item.thumbnail, 210)"
+                ></v-img>
               </div>
               <div class="season-anime-title">{{item.title}}</div>
               <div
                 class="season-anime-total-eps"
               >{{animeSeasons.totalEps[index][item.anime_id]}} Eps</div>
-              <div
-                class="season-anime-total-views"
-              >{{item.views}} views</div>
+              <div class="season-anime-total-views">{{item.views}} views</div>
             </div>
           </nuxt-link>
         </v-flex>
@@ -34,6 +35,7 @@
 </template>
 <script>
 import InfiniteScroll from "@/components/main/item/InfiniteScroll";
+import { proxyimg } from "@/plugins/helpers";
 import { getSeason } from "@/services/Anime";
 import Loading from "@/components/main/item/Loading";
 import { mapMutations } from "vuex";
@@ -54,13 +56,16 @@ export default {
       };
       var response = await getSeason(headers, this.season, this.skip);
       if (response.data.success) {
-        this.$emit('loadData', response.data)
+        this.$emit("loadData", response.data);
         this.skip += 30;
         if (this.skip >= this.animeSeasons.total) {
           this.hasNext = false;
         }
       }
       this.SET_LOADING(false);
+    },
+    imgproxy(img, rs) {
+      return proxyimg(img, rs);
     }
   },
   created() {

@@ -2,7 +2,11 @@
   <v-layout row wrap>
     <v-flex xs12 sm4 md3 lg2 v-for="episode in data" :key="episode.id" pa-1>
       <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-        <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
+        <v-img
+          class="episode-thumbnail"
+          :lazy-src="imgproxy(episode.thumbnail, 260)"
+          :src="imgproxy(episode.thumbnail, 260)"
+        >
           <div class="play-icon">
             <v-icon>mdi-play</v-icon>
           </div>
@@ -23,7 +27,12 @@
               </template>
               <span>Trusted fansub</span>
             </v-tooltip>-->
-            <v-img maxWidth="18px" class="anime-flag" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
+            <v-img
+              maxWidth="18px"
+              class="anime-flag"
+              :lazy-src="getFlag(episode.subtitle)"
+              :src="getFlag(episode.subtitle)"
+            ></v-img>
           </nuxt-link>
         </div>
         <span class="episode-view">{{episode.views}} views</span>
@@ -33,6 +42,7 @@
   </v-layout>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["data", "flags", "anime"],
   methods: {
@@ -41,6 +51,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img, rs) {
+      return proxyimg(img, rs);
     }
   }
 };

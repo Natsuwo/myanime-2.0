@@ -4,7 +4,7 @@
     <v-layout row wrap>
       <v-flex xs12 sm4 md2 v-for="episode in data" :key="episode.id">
         <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-          <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
+          <v-img class="episode-thumbnail" :lazy-src="imgproxy(episode.thumbnail)" :src="imgproxy(episode.thumbnail)">
             <div class="play-icon">
               <v-icon>mdi-play</v-icon>
             </div>
@@ -30,6 +30,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["title", "data", "flags", "animes"],
   methods: {
@@ -38,6 +39,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img) {
+      return proxyimg(img, 260);
     },
     animeTitle(id) {
       return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];

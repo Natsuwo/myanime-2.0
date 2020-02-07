@@ -7,7 +7,7 @@
           <div class="slide" :key="index">
             <div class="flex">
               <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-                <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
+                <v-img class="episode-thumbnail" :lazy-src="proxyimg(episode.thumbnail)" :src="proxyimg(episode.thumbnail)">
                   <div class="play-icon">
                     <v-icon>mdi-play</v-icon>
                   </div>
@@ -46,6 +46,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["title", "data", "flags", "animes"],
   data() {
@@ -79,6 +80,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img) {
+      return proxyimg(img, 260);
     },
     animeTitle(id) {
       return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];

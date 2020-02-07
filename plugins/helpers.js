@@ -83,9 +83,15 @@ export function loadAds() {
     }
 }
 
-export function proxyimg(img) {
-    img = img.split('https://')[1]
+export function getDomain(url) {
+    var arr = url.split("/")
+    var result = arr[2]
+    return result
+}
+
+export function proxyimg(img, rsw) {
+    if (!rsw) rsw = false
     var proxy =
-        `https://i1.wp.com/${img}`;
+        `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&resize_w=${rsw}&gadget=a&no_expand=1&refresh=86400&url=${encodeURIComponent(img)}`;
     return proxy;
 }

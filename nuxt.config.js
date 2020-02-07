@@ -60,8 +60,23 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'apple-touch-icon', href: '/logo/512.png' },
       { rel: 'stylesheet', type: 'text/css', href: '/css/custom.css' }
-    ]
+    ],
+    __dangerouslyDisableSanitizers: ['script'],
+    script: [{
+      innerHTML: `{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://www.myanime.co/",
+        "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.myanime.co/search/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+        }
+      }`,
+      type: "application/ld+json"
+    }]
   },
 
   /*

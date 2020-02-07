@@ -6,7 +6,11 @@
         <div class="multiple-ep" v-if="episode.multi">
           <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
             <div class="season-thumbnail">
-              <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
+              <v-img
+                class="episode-thumbnail"
+                :lazy-src="episode.thumbnail"
+                :src="episode.thumbnail"
+              >
                 <div class="play-icon">
                   <v-icon>mdi-play</v-icon>
                 </div>
@@ -28,7 +32,12 @@
             <div class="title-anime">
               <nuxt-link :to="`/anime/${episode.anime_id}`">
                 {{episode.fansub}}
-                <v-img maxWidth="18px" class="anime-flag" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
+                <v-img
+                  maxWidth="18px"
+                  class="anime-flag"
+                  :lazy-src="getFlag(episode.subtitle)"
+                  :src="getFlag(episode.subtitle)"
+                ></v-img>
               </nuxt-link>
             </div>
             <span class="episode-view">{{episode.views}} views</span>
@@ -37,7 +46,7 @@
         </div>
         <div class="single-ep" v-else>
           <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-            <v-img class="episode-thumbnail" :lazy-src="episode.thumbnail" :src="episode.thumbnail">
+            <v-img class="episode-thumbnail" :lazy-src="imgproxy(episode.thumbnail)" :src="imgproxy(episode.thumbnail)">
               <div class="play-icon">
                 <v-icon>mdi-play</v-icon>
               </div>
@@ -52,7 +61,12 @@
             <div class="title-anime">
               <nuxt-link v-if="animes" :to="`/anime/${episode.anime_id}`">
                 {{episode.fansub}}
-                <v-img maxWidth="18px" class="anime-flag" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
+                <v-img
+                  maxWidth="18px"
+                  class="anime-flag"
+                  :lazy-src="getFlag(episode.subtitle)"
+                  :src="getFlag(episode.subtitle)"
+                ></v-img>
               </nuxt-link>
             </div>
             <span class="episode-view">{{episode.views}} views</span>
@@ -64,6 +78,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["title", "data", "flags", "animes"],
   methods: {
@@ -72,6 +87,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img) {
+      return proxyimg(img, 260);
     },
     animeTitle(id) {
       return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];

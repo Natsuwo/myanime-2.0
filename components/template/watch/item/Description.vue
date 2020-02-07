@@ -9,7 +9,7 @@
       <div class="description" v-html="anime.description"></div>
       <div class="anime-info pt-10">
         <div class="anime-cover">
-          <v-img :lazy-src="anime.thumbnail" :src="anime.thumbnail"></v-img>
+          <v-img :lazy-src="imgproxy(anime.thumbnail, 140)" :src="imgproxy(anime.thumbnail, 140)"></v-img>
         </div>
         <div class="anime-info-content" v-for="item in animeInfo" :key="item.key">
           <div v-if="hideKeyDes" class="title-name">{{item.key}}</div>
@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+import { proxyimg } from "@/plugins/helpers";
 export default {
   props: ["episode", "anime", "flags"],
   data() {
@@ -66,6 +67,9 @@ export default {
         .filter(x => x.key === lang)
         .map(x => x.value)
         .toString();
+    },
+    imgproxy(img, rs) {
+      return proxyimg(img, rs);
     }
   }
 };
