@@ -1,6 +1,10 @@
 <template>
   <v-layout class="anime-channel-header" row wrap align-center>
-    <v-img class="anime-channel-banner" :lazy-src="data.cover  || '/default-cover.jpg'" :src="data.cover || '/default-cover.jpg'"></v-img>
+    <v-img
+      class="anime-channel-banner"
+      :lazy-src="data.cover  || '/default-cover.jpg'"
+      :src="data.cover || '/default-cover.jpg'"
+    ></v-img>
     <div class="anime-overlay"></div>
     <v-layout row wrap justify-center align-center>
       <div class="anime-channel-content">
@@ -43,6 +47,35 @@ export default {
       }
       return this.usermeta[0].meta_value;
     }
+  },
+  jsonld() {
+    var meta = this.meta.find(x => x.meta_key === "genre");
+    if (meta) {
+      var genres = this.meta.find(x => x.meta_key === "genre").meta_value || [];
+      var terms = [];
+      for (var item of genres) {
+        var term = this.terms
+          .filter(x => x.term_id === parseInt(item))
+          .map(x => x.key)
+          .join();
+        terms.push(term);
+      }
+    } else {
+      var terms = [];
+    }
+    const items = terms.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@id": "/anime/" + this.$route.params.id,
+        name: item
+      }
+    }));
+    return {
+      "@context": "http://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items
+    };
   },
   methods: {
     getTerm(key) {

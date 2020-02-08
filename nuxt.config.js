@@ -92,6 +92,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@/plugins/jsonld',
     '@/plugins/moment',
     '@/plugins/siema',
     { src: '@/plugins/ga.js', ssr: false }

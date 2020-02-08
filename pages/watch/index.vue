@@ -42,7 +42,7 @@ export default {
       return redirect("/");
     }
     var headers = {
-      "key": "episodes",
+      key: "episodes",
       "X-User-Session": store.state.auth.userToken
     };
     var response = (await getEpisode(headers, episode_id)).data;
@@ -63,6 +63,23 @@ export default {
     ...mapState("anime", ["anime"]),
     ...mapState("episode", ["episode", "sidebar"]),
     ...mapState("auth", ["usermeta"])
+  },
+  jsonld() {
+    const items = [
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@id": "/watch?a=" + this.$route.query.a,
+          name: this.episode.fansub
+        }
+      }
+    ];
+    return {
+      "@context": "http://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: items
+    };
   },
   layout: "watch",
   components: {

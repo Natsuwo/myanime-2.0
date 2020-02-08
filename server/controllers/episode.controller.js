@@ -4,7 +4,7 @@ const pug = require('pug')
 const Anime = require('../models/Anime')
 const Episode = require('../models/Episode')
 const UserMeta = require('../models/UserMeta')
-const { getSource, countView, getProxy } = require('../helpers/episode.helper')
+const { getSource, getProxy } = require('../helpers/episode.helper')
 module.exports = {
     async getEpisodes(req, res) {
         try {
@@ -105,7 +105,6 @@ module.exports = {
             episode.set('source', source, { strict: false })
             episode.set('backup', backup, { strict: false })
             var { anime_id, type, audio, subtitle, fansub, number } = episode
-            var old_anime_id = anime_id
             var usermeta = []
             if (user_id) {
                 usermeta = await UserMeta
@@ -141,12 +140,6 @@ module.exports = {
                 if (!randEp) continue;
                 randEp.set('count', totalEp, { strict: false })
                 animeRandom.push({ data: randEp, anime: item })
-            }
-
-            if (req.rateLimit.limit >= req.rateLimit.current) {
-                await Episode.updateOne({ episode_id }, { $inc: { views: 1 } }, { new: true })
-                await Anime.updateOne({ anime_id: old_anime_id }, { $inc: { views: 1 } }, { new: true })
-                await countView(episode_id)
             }
 
             var result = {
