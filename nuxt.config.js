@@ -95,7 +95,8 @@ module.exports = {
     '@/plugins/jsonld',
     '@/plugins/moment',
     '@/plugins/siema',
-    { src: '@/plugins/ga.js', ssr: false }
+    { src: '@/plugins/ga.js', ssr: false },
+    { src: '@/plugins/fbpixel.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
