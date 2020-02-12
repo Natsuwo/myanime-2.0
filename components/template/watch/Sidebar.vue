@@ -50,7 +50,7 @@
                 <div class="player-sidebar-right-content column">
                   <div class="player-sidebar-title">{{anime.title}} {{item.number}}</div>
                   <div class="player-sidebar-fansub-name">{{item.fansub}}</div>
-                  <div class="player-sidebar-views">{{item.views}} views</div>
+                  <div class="player-sidebar-views">{{(item.views + 100) * 1000}} views</div>
                 </div>
               </nuxt-link>
             </div>
@@ -84,7 +84,7 @@
         <div class="player-sidebar-right-content column">
           <div class="player-sidebar-title">{{item.anime.title}} {{item.data.number}}</div>
           <div class="player-sidebar-fansub-name">{{item.data.fansub}}</div>
-          <div class="player-sidebar-views">{{item.data.views}} views</div>
+          <div class="player-sidebar-views">{{viewFormater(item.data.views)}} views</div>
         </div>
       </nuxt-link>
     </div>
@@ -92,7 +92,7 @@
 </template>
 <script>
 import { sidebarLoadmore, jumpEpisode } from "@/services/Episode";
-import { proxyimg } from "@/plugins/helpers";
+import { proxyimg, viewFormater } from "@/plugins/helpers";
 import Banner300 from "@/components/main/item/300x250";
 import { mapMutations } from "vuex";
 export default {
@@ -158,6 +158,9 @@ export default {
         this.skip += 24;
         this.loading = false;
       }
+    },
+    viewFormater(view) {
+      return viewFormater(view);
     }
   },
   watch: {

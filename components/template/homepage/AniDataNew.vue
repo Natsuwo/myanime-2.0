@@ -40,7 +40,7 @@
                 ></v-img>
               </nuxt-link>
             </div>
-            <span class="episode-view">{{episode.views}} views</span>
+            <span class="episode-view">{{viewFormater(episode.views)}} views</span>
             <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
           </div>
         </div>
@@ -69,7 +69,7 @@
                 ></v-img>
               </nuxt-link>
             </div>
-            <span class="episode-view">{{episode.views}} views</span>
+            <span class="episode-view">{{viewFormater(episode.views)}} views</span>
             <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
           </div>
         </div>
@@ -78,7 +78,7 @@
   </div>
 </template>
 <script>
-import { proxyimg } from "@/plugins/helpers";
+import { proxyimg, viewFormater } from "@/plugins/helpers";
 export default {
   props: ["title", "data", "flags", "animes"],
   methods: {
@@ -90,6 +90,9 @@ export default {
     },
     imgproxy(img) {
       return proxyimg(img, 260);
+    },
+    viewFormater(view) {
+      return viewFormater(view);
     },
     animeTitle(id) {
       return this.animes.filter(x => x.anime_id === id).map(x => x.title)[0];

@@ -10,7 +10,7 @@
       v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
     ></div>
     <v-layout row wrap>
-      <div class="views flex" style="display: inline;">{{episode.views}} views</div>
+      <div class="views flex" style="display: inline;">{{viewFormater(episode.views)}} views</div>
       <v-spacer></v-spacer>
       <Vote :likes="episode.likes" :dislikes="episode.dislikes" :usermeta="usermeta" />
     </v-layout>
@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { proxyimg } from "@/plugins/helpers";
+import { proxyimg, viewFormater } from "@/plugins/helpers";
 import Player from "./item/Player";
 import Vote from "./item/Vote";
 import Follow from "./item/Follow";
@@ -53,6 +53,9 @@ export default {
   methods: {
     imgproxy(img, rs) {
       return proxyimg(img, rs);
+    },
+    viewFormater(view) {
+      return viewFormater(view);
     }
   },
   computed: {

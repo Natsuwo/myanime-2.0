@@ -8,7 +8,11 @@
               <div class="search-thumbnail">
                 <v-img width="246px" :lazy-src="item.thumbnail" :src="item.thumbnail"></v-img>
                 <div class="search-overlay">
-                  <v-img class="search-anime-thumbnail" :lazy-src="getAnime(item.anime_id, 'thumbnail')" :src="getAnime(item.anime_id, 'thumbnail')"></v-img>
+                  <v-img
+                    class="search-anime-thumbnail"
+                    :lazy-src="getAnime(item.anime_id, 'thumbnail')"
+                    :src="getAnime(item.anime_id, 'thumbnail')"
+                  ></v-img>
                   <div class="search-anime">
                     <div class="count">{{counts[index]}}</div>
                     <v-icon>mdi-animation-play</v-icon>
@@ -21,7 +25,7 @@
                 <div class="search-title">{{getAnime(item.anime_id, 'title')}}</div>
                 <div
                   class="search-views"
-                >{{item.views}} views - {{getAnime(item.anime_id, 'followers') || 0}} followers</div>
+                >{{viewFormater(item.views)}} views - {{getAnime(item.anime_id, 'followers') || 0}} followers</div>
                 <client-only>
                   <div
                     class="search-description"
@@ -38,11 +42,12 @@
 </template>
 <script>
 import { search } from "@/services/Search";
+import { viewFormater } from "@/plugins/helpers";
 export default {
   head() {
     return {
-      title: 'Search'
-    }
+      title: "Search"
+    };
   },
   async fetch({ store, query }) {
     var headers = {
@@ -67,6 +72,9 @@ export default {
       return (
         this.animes.filter(x => x.anime_id === id).map(x => x[type])[0] || ""
       );
+    },
+    viewFormater(view) {
+      return viewFormater(view);
     }
   },
   filters: {

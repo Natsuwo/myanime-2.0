@@ -24,7 +24,7 @@
               <div
                 class="season-anime-total-eps"
               >{{animeSeasons.totalEps[index][item.anime_id]}} Eps</div>
-              <div class="season-anime-total-views">{{item.views}} views</div>
+              <div class="season-anime-total-views">{{viewFormater(item.views)}} views</div>
             </div>
           </nuxt-link>
         </v-flex>
@@ -35,7 +35,7 @@
 </template>
 <script>
 import InfiniteScroll from "@/components/main/item/InfiniteScroll";
-import { proxyimg } from "@/plugins/helpers";
+import { proxyimg, viewFormater } from "@/plugins/helpers";
 import { getSeason } from "@/services/Anime";
 import Loading from "@/components/main/item/Loading";
 import { mapMutations } from "vuex";
@@ -63,6 +63,9 @@ export default {
         }
       }
       this.SET_LOADING(false);
+    },
+    viewFormater(view) {
+      return viewFormater(view);
     },
     imgproxy(img, rs) {
       return proxyimg(img, rs);
