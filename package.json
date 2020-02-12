@@ -2,7 +2,7 @@
   "name": "myanime-2.0",
   "version": "1.0.0",
   "description": "Great Anime",
-  "author": "kirigayakazuto42@gmail.com",
+  "author": "admin@myanime.co",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",

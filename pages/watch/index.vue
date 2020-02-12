@@ -18,6 +18,7 @@
 </template>
 <script>
 import Main from "@/components/template/watch/Main";
+import { viewFormater } from "@/plugins/helpers";
 import Sidebar from "@/components/template/watch/Sidebar";
 import { getEpisode } from "@/services/Episode";
 import { mapState } from "vuex";
@@ -58,6 +59,11 @@ export default {
       await store.dispatch("auth/userMetaData", result.usermeta);
     }
   },
+  methods: {
+    viewFormater(view) {
+      return viewFormater(view);
+    }
+  },
   computed: {
     ...mapState(["settings", "flags"]),
     ...mapState("anime", ["anime"]),
@@ -65,6 +71,9 @@ export default {
     ...mapState("auth", ["usermeta"])
   },
   jsonld() {
+    if (!this.episode.fansub) {
+      return null;
+    }
     const items = [
       {
         "@type": "ListItem",
@@ -73,12 +82,40 @@ export default {
           "@id": "/watch?a=" + this.$route.query.a,
           name: this.episode.fansub
         }
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@id": "/watch?a=" + this.$route.query.a,
+          name: this.anime.title
+        }
       }
     ];
     return {
       "@context": "http://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: items
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          name: this.anime.title,
+          itemListElement: items
+        },
+        {
+          "@type": "VideoObject",
+          name: this.anime.title,
+          description: this.anime.description,
+          thumbnailUrl: [this.episode.thumbnail],
+          uploadDate: new Date(this.episode.updated_at),
+          duration: "PT1M54S",
+          contentUrl: this.episode.source,
+          embedUrl: "/watch?a=" + this.$route.query.a,
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: { "@type": "http://schema.org/WatchAction" },
+            userInteractionCount: this.viewFormater(this.episode.views)
+          }
+        }
+      ]
     };
   },
   layout: "watch",

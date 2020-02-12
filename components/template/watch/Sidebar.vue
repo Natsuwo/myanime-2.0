@@ -50,7 +50,7 @@
                 <div class="player-sidebar-right-content column">
                   <div class="player-sidebar-title">{{anime.title}} {{item.number}}</div>
                   <div class="player-sidebar-fansub-name">{{item.fansub}}</div>
-                  <div class="player-sidebar-views">{{(item.views + 100) * 1000}} views</div>
+                  <div class="player-sidebar-views">{{viewFormater(item.views)}} views</div>
                 </div>
               </nuxt-link>
             </div>
