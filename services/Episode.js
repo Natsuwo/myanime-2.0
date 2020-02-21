@@ -1,7 +1,19 @@
 import Api from './Api'
 
-export function getEpisodes(headers) {
-    return Api(headers).get('/episode/get');
+export function getRecent(headers) {
+    return Api(headers).get('/episode/recent');
+}
+
+export function getTrending(headers) {
+    return Api(headers).get('/episode/trending');
+}
+
+export function getRandom(headers) {
+    return Api(headers).get('/episode/random');
+}
+
+export function getCurrent(headers) {
+    return Api(headers).get('/episode/current');
 }
 
 export function getEpisode(headers, episode_id) {

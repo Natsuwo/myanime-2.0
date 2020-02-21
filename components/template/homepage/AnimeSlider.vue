@@ -4,53 +4,21 @@
     <div v-if="data">
       <client-only>
         <flickity ref="flickity" :options="flickityOptions">
-          <template v-for="(episode, index) in data">
+          <template v-for="(item, index) in data">
             <div class="slide" :key="index">
               <div class="flex">
-                <a class="anime-url" @click.once="goLink(`/watch?a=${episode.episode_id}`)">
-                  <div class="season-thumbnail">
-                    <v-img
-                      class="episode-thumbnail"
-                      :lazy-src="imgproxy(episode.thumbnail, 260)"
-                      :src="imgproxy(episode.thumbnail, 260)"
-                    >
-                      <div class="play-icon">
-                        <v-icon>mdi-play</v-icon>
-                      </div>
-                    </v-img>
-                    <div class="search-overlay">
+                <a class="season-anime-link" @click="goLink(`/anime/${item.anime_id}`)">
+                  <div class="home-anime-card">
+                    <div class="home-anime-cover">
                       <v-img
-                        class="season-anime-thumbnail"
-                        :lazy-src="imgproxy(getAnime(episode.anime_id, 'thumbnail'), 60)"
-                        :src="imgproxy(getAnime(episode.anime_id, 'thumbnail'), 60)"
+                        :lazy-src="imgproxy(item.thumbnail, 210)"
+                        :src="imgproxy(item.thumbnail, 210)"
                       ></v-img>
-                      <div class="season-anime">
-                        <div class="count">{{episode.count}}</div>
-                        <v-icon>mdi-animation-play</v-icon>
-                      </div>
                     </div>
+                    <div class="season-anime-title">{{item.title}}</div>
+                    <div class="season-anime-total-views">{{viewFormater(item.views)}} views</div>
                   </div>
-                  <div
-                    :title="getAnime(episode.anime_id, 'title')"
-                    class="subheading episode-title"
-                    v-html="getAnime(episode.anime_id, 'title')"
-                  ></div>
                 </a>
-                <div class="metadata-line">
-                  <div class="title-anime">
-                    <nuxt-link :to="`/anime/${episode.anime_id}`">
-                      {{episode.fansub}}
-                      <v-img
-                        maxWidth="18px"
-                        class="anime-flag"
-                        :lazy-src="getFlag(episode.subtitle)"
-                        :src="getFlag(episode.subtitle)"
-                      ></v-img>
-                    </nuxt-link>
-                  </div>
-                  <span class="episode-view">{{viewFormater(episode.views)}} views</span>
-                  <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
-                </div>
               </div>
             </div>
           </template>
@@ -106,7 +74,6 @@ export default {
       var slide = flkty.slides();
       var index = flkty.selectedIndex();
       this.currentSlide = index + 1;
-
       return this.$refs.flickity.next();
     },
     prev() {

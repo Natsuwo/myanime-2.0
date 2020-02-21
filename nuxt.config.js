@@ -67,6 +67,7 @@ module.exports = {
     script: [{
       innerHTML: `{
         "@context": "https://schema.org",
+        "name": "searchBox",
         "@type": "WebSite",
         "url": "https://www.myanime.co/",
         "potentialAction": {
@@ -94,7 +95,7 @@ module.exports = {
   plugins: [
     '@/plugins/jsonld',
     '@/plugins/moment',
-    '@/plugins/siema',
+    { src: '@/plugins/flick.js', ssr: false },
     { src: '@/plugins/ga.js', ssr: false },
     { src: '@/plugins/fbpixel.js', ssr: false }
   ],

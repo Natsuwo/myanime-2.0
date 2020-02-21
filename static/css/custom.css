@@ -744,7 +744,16 @@ div.siema {
     margin: 0 4px;
 }
 
+.home-anime-card {
+    width: 210px!important;
+}
+
 .season-anime-cover .v-image {
+    width: 100%!important;
+    height: 402px!important;
+}
+
+.home-anime-cover .v-image {
     width: 210px!important;
     height: 290px!important;
 }

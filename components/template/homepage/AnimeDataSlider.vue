@@ -2,12 +2,16 @@
   <div class="recent-anime">
     <h1 class="anime-head-title">{{title}}</h1>
     <div placeholder="loading...">
-      <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
+      <flickity ref="flickity" :options="flickityOptions">
         <template v-for="(episode, index) in data">
           <div class="slide" :key="index">
             <div class="flex">
               <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-                <v-img class="episode-thumbnail" :lazy-src="proxyimg(episode.thumbnail)" :src="proxyimg(episode.thumbnail)">
+                <v-img
+                  class="episode-thumbnail"
+                  :lazy-src="proxyimg(episode.thumbnail)"
+                  :src="proxyimg(episode.thumbnail)"
+                >
                   <div class="play-icon">
                     <v-icon>mdi-play</v-icon>
                   </div>
@@ -22,7 +26,12 @@
                 <div class="title-anime">
                   <nuxt-link :to="`/anime/${episode.anime_id}`">
                     {{episode.fansub}}
-                    <v-img maxWidth="18px" class="anime-flag" :lazy-src="getFlag(episode.subtitle)" :src="getFlag(episode.subtitle)"></v-img>
+                    <v-img
+                      maxWidth="18px"
+                      class="anime-flag"
+                      :lazy-src="getFlag(episode.subtitle)"
+                      :src="getFlag(episode.subtitle)"
+                    ></v-img>
                   </nuxt-link>
                 </div>
                 <span class="episode-view">{{viewFormater(episode.views)}} views</span>
@@ -31,7 +40,7 @@
             </div>
           </div>
         </template>
-      </siema>
+      </flickity>
       <v-layout align-end justify-end row>
         <v-flex class="text-right">
           <v-btn text @click="prev" :disabled="currentSlide < 1 ? true : false ">
@@ -51,29 +60,45 @@ export default {
   props: ["title", "data", "flags", "animes"],
   data() {
     return {
-      options: {
-        duration: 200,
-        easing: "ease-out",
-        perPage: {
-          1640: "6",
-          1288: "5",
-          1070: "4",
-          840: "3",
-          576: "2",
-          0: "1"
-        },
-        startIndex: 0
+      flickityOptions: {
+        contain: true,
+        groupCells: false,
+        cellAlign: "left",
+        lazyLoad: 2,
+        initialIndex: 0,
+        prevNextButtons: false,
+        pageDots: false,
+        wrapAround: false
       },
       currentSlide: 0,
-      anime: []
+      totalSlide: 0
     };
   },
+  watch: {
+    data(val) {
+      this.totalSlide = Math.floor(val.length - 6) || 0;
+    }
+  },
   methods: {
+    goLink(path) {
+      this.$refs.flickity.on("staticClick", event => {
+        this.$router.push(path);
+      });
+    },
     next() {
-      return this.$refs.siema.next();
+      var flkty = this.$refs.flickity;
+      var slide = flkty.slides();
+      var index = flkty.selectedIndex();
+      this.currentSlide = index + 1;
+
+      return this.$refs.flickity.next();
     },
     prev() {
-      return this.$refs.siema.prev();
+      var flkty = this.$refs.flickity;
+      var slide = flkty.slides();
+      var index = flkty.selectedIndex();
+      this.currentSlide = index - 1;
+      return this.$refs.flickity.previous();
     },
     viewFormater(view) {
       return viewFormater(view);

@@ -16,16 +16,18 @@
             <div class="season-anime-card">
               <div class="season-anime-cover">
                 <v-img
-                  :lazy-src="imgproxy(item.thumbnail, 210)"
-                  :src="imgproxy(item.thumbnail, 210)"
+                  :lazy-src="imgproxy(item.thumbnail, 270)"
+                  :src="imgproxy(item.thumbnail, 270)"
                 ></v-img>
               </div>
-              <div class="season-anime-title">{{item.title}}</div>
+              <div>
+                <div class="season-anime-title">{{item.title}}</div>
               <div
                 class="season-anime-total-eps"
               >{{animeSeasons.totalEps[index][item.anime_id]}} Eps</div>
               <div class="season-anime-total-views">{{viewFormater(item.views)}} views</div>
             </div>
+              </div>
           </nuxt-link>
         </v-flex>
       </v-layout>
