@@ -67,6 +67,7 @@ module.exports = {
     script: [{
       innerHTML: `{
         "@context": "https://schema.org",
+        "name": "searchBox",
         "@type": "WebSite",
         "url": "https://www.myanime.co/",
         "potentialAction": {
