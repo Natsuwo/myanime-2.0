@@ -739,9 +739,23 @@ div.siema {
     text-transform: none;
 }
 
+.anime-anime-total-views, .anime-anime-total-eps {
+    color: #606060;
+    display: inline-flex;
+    max-height: 1.2rem;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: none;
+}
+
 .season-anime-total-views::before {
     content: '•';
     margin: 0 4px;
+}
+
+.nopointer {
+    pointer-events: none!important;
 }
 
 .home-anime-card {

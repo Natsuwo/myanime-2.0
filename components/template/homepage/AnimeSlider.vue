@@ -7,7 +7,7 @@
           <template v-for="(item, index) in data">
             <div class="slide" :key="index">
               <div class="flex">
-                <a class="season-anime-link" @click="goLink(`/anime/${item.anime_id}`)">
+                <a class="season-anime-link" :href="`/anime/${item.anime_id}`">
                   <div class="home-anime-card">
                     <div class="home-anime-cover">
                       <v-img
@@ -16,7 +16,7 @@
                       ></v-img>
                     </div>
                     <div class="season-anime-title">{{item.title}}</div>
-                    <div class="season-anime-total-views">{{viewFormater(item.views)}} views</div>
+                    <div class="anime-anime-total-views">{{viewFormater(item.views)}} views</div>
                   </div>
                 </a>
               </div>
@@ -64,11 +64,6 @@ export default {
     }
   },
   methods: {
-    goLink(path) {
-      this.$refs.flickity.on("staticClick", event => {
-        this.$router.push(path);
-      });
-    },
     next() {
       var flkty = this.$refs.flickity;
       var slide = flkty.slides();
