@@ -1,7 +1,7 @@
 <template >
   <div class="recent-anime">
     <h1 class="anime-head-title">{{title}}</h1>
-    <v-layout row wrap>
+    <v-layout row wrap v-if="data">
       <v-flex xs12 sm4 md3 lg2 lg2-custom v-for="episode in data" :key="episode.id">
         <div class="multiple-ep" v-if="episode.multi">
           <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
@@ -46,7 +46,11 @@
         </div>
         <div class="single-ep" v-else>
           <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
-            <v-img class="episode-thumbnail" :lazy-src="imgproxy(episode.thumbnail)" :src="imgproxy(episode.thumbnail)">
+            <v-img
+              class="episode-thumbnail"
+              :lazy-src="imgproxy(episode.thumbnail)"
+              :src="imgproxy(episode.thumbnail)"
+            >
               <div class="play-icon">
                 <v-icon>mdi-play</v-icon>
               </div>
@@ -75,6 +79,7 @@
         </div>
       </v-flex>
     </v-layout>
+    <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
   </div>
 </template>
 <script>

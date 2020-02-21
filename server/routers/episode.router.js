@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const route = Router()
-const { getEpisodes, getSingleEp, loadMoreSidebar, findbyNumber, myPlayer } = require('../controllers/episode.controller')
+const { getCurrent, getRandom, getRecent, getTrending,
+     getSingleEp, loadMoreSidebar, findbyNumber, myPlayer } = require('../controllers/episode.controller')
 const { isUserLogin } = require('../middlewares/auth.middleware')
 const { checkSecure } = require('../validate/secure.validate')
 const { cacheGroup } = require('../middlewares/cache.middleware')
@@ -23,11 +24,15 @@ var apicache = require('apicache')
 var cache = apicache.middleware
 const onlyStatus200 = (req, res) => res.statusCode === 200
 
-route.get('/episode/get', checkSecure, cacheGroup, cache('15 minutes', onlyStatus200), getEpisodes)
+route.get('/episode/recent', checkSecure, cacheGroup, cache('5 minutes', onlyStatus200), getRecent)
+route.get('/episode/trending', checkSecure, cacheGroup, cache('5 minutes', onlyStatus200), getTrending)
+route.get('/episode/random', checkSecure, cacheGroup, cache('5 minutes', onlyStatus200), getRandom)
+route.get('/episode/current', checkSecure, cacheGroup, cache('5 minutes', onlyStatus200), getCurrent)
+
 route.get('/episode/sidebar-loadmore', checkSecure, loadMoreSidebar)
-route.get('/episode/get-episode', checkSecure, countViewMidd, cacheGroup, cache('30 minutes', onlyStatus200), isUserLogin, getSingleEp)
+route.get('/episode/get-episode', checkSecure, countViewMidd, cacheGroup, cache('5 minutes', onlyStatus200), isUserLogin, getSingleEp)
 route.get('/episode/jump-episode', checkSecure, findbyNumber)
-route.get('/player', cacheGroup, cache('15 minutes', onlyStatus200), myPlayer)
+route.get('/player', cacheGroup, cache('5 minutes', onlyStatus200), myPlayer)
 route.get('/drive/folder', async (req, res) => {
     try {
         res.sendFile('get.html', { root: './' })

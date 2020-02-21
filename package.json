@@ -31,7 +31,6 @@
     "moment": "^2.24.0",
     "mongoose": "^5.7.1",
     "multer": "^1.4.2",
-    "npm": "^6.11.3",
     "nuxt": "^2.9.2",
     "nuxt-jsonld": "^1.4.5",
     "pug": "^2.0.4",
@@ -39,8 +38,8 @@
     "socket.io-client": "^2.3.0",
     "tinify": "^1.6.0-beta.2",
     "uniqid": "^5.0.3",
-    "vue-moment": "^4.0.0",
-    "vue2-siema": "^0.2.2"
+    "vue-flickity": "^1.2.1",
+    "vue-moment": "^4.0.0"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.8.5",

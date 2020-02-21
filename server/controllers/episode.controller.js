@@ -6,7 +6,7 @@ const Episode = require('../models/Episode')
 const UserMeta = require('../models/UserMeta')
 const { getSource, getProxy } = require('../helpers/episode.helper')
 module.exports = {
-    async getEpisodes(req, res) {
+    async getRecent(req, res) {
         try {
             var animes = []
             var newUpload = await fs.readFileSync('../newupload.json', { encoding: 'utf8' })
@@ -19,77 +19,52 @@ module.exports = {
                 var anime = await Anime.findOne({ anime_id }, { _id: 0 }).select('title anime_id')
                 animes.push(anime)
             }
+            return res.send({
+                success: true,
+                episodes: newUpload,
+                animes
+            })
+        } catch (err) {
+            res.status(204).send({ success: false, error: err.message })
+        }
+    },
+    async getTrending(req, res) {
+        try {
+            // Top Trending
+            var trending = await Anime.find({}, { _id: 0, __v: 0 }).limit(12)
+                .sort({ views: -1 })
+            return res.send({
+                success: true,
+                animes: trending
+            })
+        } catch (err) {
+            res.status(204).send({ success: false, error: err.message })
+        }
+    },
+    async getRandom(req, res) {
+        try {
             // Random
-            var randomAnime = []
             var totalAnime = await Anime.countDocuments()
             var randomNumber = Math.floor(Math.random() * totalAnime)
-            var random = await Anime.find({}, { _id: 0 }).limit(12).skip(randomNumber).select('title anime_id thumbnail views created_at')
-            for (var item of random) {
-                var anime_id = item.anime_id
-                var count = await Episode.countDocuments({ anime_id })
-                var episode = await Episode.findOne({ anime_id }, { _id: 0, source: 0 }).sort({ updated_at: -1 })
-                if (!episode) continue;
-
-                randomAnime.push(episode)
-                episode.set('count', count, { strict: false })
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    var index = animes.findIndex(x => x.anime_id === anime_id)
-                    animes.splice(index, 1)
-                }
-                animes.push(item)
-            }
-            // Top Trending
-            var trendingAnime = []
-            var trending = await Anime.find({}, { _id: 0 }).limit(12).sort({ views: -1 }).select('title anime_id thumbnail views created_at')
-            for (var item of trending) {
-                var anime_id = item.anime_id
-                var count = await Episode.countDocuments({ anime_id })
-                var episode = await Episode.findOne({ anime_id }, { _id: 0, source: 0 }).sort({ updated_at: -1 })
-                if (!episode) continue;
-
-                trendingAnime.push(episode)
-                episode.set('count', count, { strict: false })
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    var index = animes.findIndex(x => x.anime_id === anime_id)
-                    animes.splice(index, 1)
-                }
-                animes.push(item)
-            }
-            // Current Season
+            var random = await Anime.find({}, { _id: 0, __v: 0 }).limit(12).skip(randomNumber)
+            return res.send({
+                success: true,
+                animes: random
+            })
+        } catch (err) {
+            res.status(204).send({ success: false, error: err.message })
+        }
+    },
+    async getCurrent(req, res) {
+        try {
             var Settings = fs.readFileSync('../settings.json', { encoding: 'utf8' })
             var settings = JSON.parse(Settings)
             var cur_season = settings.cur_season
-            var currentSeason = []
-            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0 }).select('title anime_id thumbnail views created_at')
-            for (var item of currentAnime) {
-                var anime_id = item.anime_id
-                var count = await Episode.countDocuments({ anime_id })
-                var episode = await Episode.findOne({ anime_id }, { _id: 0, source: 0 }).sort({ updated_at: -1 })
-                if (!episode) continue;
-
-                currentSeason.push(episode)
-                episode.set('count', count, { strict: false })
-                if (animes.length > 0 && animes.find(x => x.anime_id === anime_id)) {
-                    var index = animes.findIndex(x => x.anime_id === anime_id)
-                    animes.splice(index, 1)
-                }
-                animes.push(item)
-            }
-            var currentSeason = currentSeason.sort((a, b) => {
-                return b.updated_at - a.updated_at
-            }).slice(0, 12)
-
+            var currentAnime = await Anime.find({ season: cur_season }, { _id: 0, __v: 0 })
             return res.send({
                 success: true,
-                episodes: {
-                    recent: newUpload,
-                    random: randomAnime,
-                    trending: trendingAnime,
-                    current: currentSeason
-                },
-                animes
+                animes: currentAnime
             })
-
         } catch (err) {
             res.status(204).send({ success: false, error: err.message })
         }

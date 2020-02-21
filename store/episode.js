@@ -4,14 +4,19 @@ const SIDEBAR = 'sidebar'
 const LOADMORE = 'loadmore'
 
 export const state = () => ({
-    episodes: [],
+    episodes: {
+        recent: [],
+        trending: [],
+        random: [],
+        current: []
+    },
     episode: [],
     sidebar: []
 })
 
 export const actions = {
-    async episodesData({ commit }, data) {
-        return commit(EPISODES, { episodes: data })
+    async episodesData({ commit }, { type, data }) {
+        return commit(EPISODES, { type, data })
     },
     async episodeData({ commit }, data) {
         return commit(EPISODE, { episode: data })
@@ -25,8 +30,8 @@ export const actions = {
 }
 
 export const mutations = {
-    [EPISODES](state, { episodes }) {
-        return state.episodes = episodes;
+    [EPISODES](state, { type, data }) {
+         state.episodes[type] = data;
     },
     [EPISODE](state, { episode }) {
         return state.episode = episode;

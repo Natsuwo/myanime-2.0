@@ -1,10 +1,10 @@
 <template>
   <div placeholder="loading...">
-    <siema class="siema" ref="siema" :options="options" :current.sync="currentSlide">
+    <flickity ref="flickity" :options="flickityOptions">
       <template v-for="(episode, index) in data">
         <div class="slide" :key="index">
           <div class="flex">
-            <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
+            <a class="anime-url" @click="goLink(`/watch?a=${episode.episode_id}`)">
               <v-img
                 class="episode-thumbnail"
                 :lazy-src="imgproxy(episode.thumbnail, 260)"
@@ -19,10 +19,10 @@
                 class="subheading episode-title"
                 v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
               ></div>
-            </nuxt-link>
+            </a>
             <div class="metadata-line">
               <div class="title-anime">
-                <nuxt-link :to="`/anime/${episode.anime_id}`">
+                <a href="#">
                   {{episode.fansub}}
                   <v-img
                     maxWidth="18px"
@@ -30,7 +30,7 @@
                     :lazy-src="getFlag(episode.subtitle)"
                     :src="getFlag(episode.subtitle)"
                   ></v-img>
-                </nuxt-link>
+                </a>
               </div>
               <span class="episode-view">{{viewFormater(episode.views)}} views</span>
               <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
@@ -38,7 +38,7 @@
           </div>
         </div>
       </template>
-    </siema>
+    </flickity>
     <v-layout align-end justify-end row>
       <v-flex class="text-right">
         <v-btn text @click="prev" :disabled="currentSlide < 1 ? true : false ">
@@ -57,31 +57,45 @@ export default {
   props: ["data", "flags", "anime"],
   data() {
     return {
-      options: {
-        duration: 200,
-        easing: "ease-out",
-        perPage: {
-          1640: "6",
-          1288: "5",
-          1070: "4",
-          840: "3",
-          576: "2",
-          0: "1"
-        },
-        startIndex: 0
+      flickityOptions: {
+        contain: true,
+        groupCells: false,
+        cellAlign: "left",
+        lazyLoad: 2,
+        initialIndex: 0,
+        prevNextButtons: false,
+        pageDots: false,
+        wrapAround: false
       },
-      currentSlide: 0
+      currentSlide: 0,
+      totalSlide: 0
     };
   },
+  watch: {
+    data(val) {
+      this.totalSlide = Math.floor(val.length - 6) || 0;
+    }
+  },
   methods: {
-    onImgError: function(index) {
-      this.animes[index].thumbnail = "/thumb-error.jpg";
+    goLink(path) {
+      this.$refs.flickity.on("staticClick", event => {
+        this.$router.push(path);
+      });
     },
     next() {
-      return this.$refs.siema.next();
+      var flkty = this.$refs.flickity;
+      var slide = flkty.slides();
+      var index = flkty.selectedIndex();
+      this.currentSlide = index + 1;
+
+      return this.$refs.flickity.next();
     },
     prev() {
-      return this.$refs.siema.prev();
+      var flkty = this.$refs.flickity;
+      var slide = flkty.slides();
+      var index = flkty.selectedIndex();
+      this.currentSlide = index - 1;
+      return this.$refs.flickity.previous();
     },
     getFlag(lang) {
       return this.flags
