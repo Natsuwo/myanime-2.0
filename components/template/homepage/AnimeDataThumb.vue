@@ -3,11 +3,11 @@
     <h1 class="anime-head-title">{{title}}</h1>
     <div v-if="data">
       <client-only>
-        <flickity ref="flickity" :options="flickityOptions">
+        <flickity ref="flickity" :options="flickityOptions" @init="onInit">
           <template v-for="(episode, index) in data">
             <div class="slide" :key="index">
-              <div class="flex">
-                <a class="anime-url" @click.once="goLink(`/watch?a=${episode.episode_id}`)">
+              <div class="flex flick-link">
+                <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
                   <div class="season-thumbnail">
                     <v-img
                       class="episode-thumbnail"
@@ -35,7 +35,7 @@
                     class="subheading episode-title"
                     v-html="getAnime(episode.anime_id, 'title')"
                   ></div>
-                </a>
+                </nuxt-link>
                 <div class="metadata-line">
                   <div class="title-anime">
                     <nuxt-link :to="`/anime/${episode.anime_id}`">
@@ -87,7 +87,18 @@ export default {
         wrapAround: false
       },
       currentSlide: 0,
-      totalSlide: 0
+      totalSlide: 0,
+      onInit(flickity) {
+        var script = document.createElement("script");
+        script.src = "//code.jquery.com/jquery-2.2.4.min.js";
+        document.body.appendChild(script);
+        flickity.on("dragMove", function(event, pointer, moveVector) {
+          $(".flick-link").addClass("nopointer");
+        });
+        flickity.on("dragEnd", function(event, pointer) {
+          $(".flick-link").removeClass("nopointer");
+        });
+      }
     };
   },
   watch: {
@@ -96,11 +107,6 @@ export default {
     }
   },
   methods: {
-    goLink(path) {
-      this.$refs.flickity.on("staticClick", event => {
-        this.$router.push(path);
-      });
-    },
     next() {
       var flkty = this.$refs.flickity;
       var slide = flkty.slides();

@@ -3,11 +3,11 @@
     <h1 class="anime-head-title">{{title}}</h1>
     <div v-if="data">
       <client-only>
-        <flickity ref="flickity" :options="flickityOptions">
+        <flickity ref="flickity" :options="flickityOptions" @init="onInit">
           <template v-for="(item, index) in data">
             <div class="slide" :key="index">
-              <div class="flex">
-                <a class="season-anime-link" :href="`/anime/${item.anime_id}`">
+              <div class="flex flick-link">
+                <nuxt-link class="season-anime-link" :to="`/anime/${item.anime_id}`">
                   <div class="home-anime-card">
                     <div class="home-anime-cover">
                       <v-img
@@ -18,7 +18,7 @@
                     <div class="season-anime-title">{{item.title}}</div>
                     <div class="anime-anime-total-views">{{viewFormater(item.views)}} views</div>
                   </div>
-                </a>
+                </nuxt-link>
               </div>
             </div>
           </template>
@@ -55,7 +55,18 @@ export default {
         wrapAround: false
       },
       currentSlide: 0,
-      totalSlide: 0
+      totalSlide: 0,
+      onInit(flickity) {
+        var script = document.createElement("script");
+        script.src = "//code.jquery.com/jquery-2.2.4.min.js";
+        document.body.appendChild(script);
+        flickity.on("dragMove", function(event, pointer, moveVector) {
+          $(".flick-link").addClass("nopointer");
+        });
+        flickity.on("dragEnd", function(event, pointer) {
+          $(".flick-link").removeClass("nopointer");
+        });
+      }
     };
   },
   watch: {

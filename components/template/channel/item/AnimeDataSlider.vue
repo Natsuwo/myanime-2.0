@@ -1,44 +1,46 @@
 <template>
   <div placeholder="loading...">
-    <flickity ref="flickity" :options="flickityOptions">
-      <template v-for="(episode, index) in data">
-        <div class="slide" :key="index">
-          <div class="flex">
-            <a class="anime-url" @click="goLink(`/watch?a=${episode.episode_id}`)">
-              <v-img
-                class="episode-thumbnail"
-                :lazy-src="imgproxy(episode.thumbnail, 260)"
-                :src="imgproxy(episode.thumbnail, 260)"
-              >
-                <div class="play-icon">
-                  <v-icon>mdi-play</v-icon>
+    <client-only>
+      <flickity ref="flickity" :options="flickityOptions" @init="onInit">
+        <template v-for="(episode, index) in data">
+          <div class="slide" :key="index">
+            <div class="flex flick-link">
+              <nuxt-link class="anime-url" :to="`/watch?a=${episode.episode_id}`">
+                <v-img
+                  class="episode-thumbnail"
+                  :lazy-src="imgproxy(episode.thumbnail, 260)"
+                  :src="imgproxy(episode.thumbnail, 260)"
+                >
+                  <div class="play-icon">
+                    <v-icon>mdi-play</v-icon>
+                  </div>
+                </v-img>
+                <div
+                  :title="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+                  class="subheading episode-title"
+                  v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
+                ></div>
+              </nuxt-link>
+              <div class="metadata-line">
+                <div class="title-anime">
+                  <a href="#">
+                    {{episode.fansub}}
+                    <v-img
+                      maxWidth="18px"
+                      class="anime-flag"
+                      :lazy-src="getFlag(episode.subtitle)"
+                      :src="getFlag(episode.subtitle)"
+                    ></v-img>
+                  </a>
                 </div>
-              </v-img>
-              <div
-                :title="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
-                class="subheading episode-title"
-                v-html="`${anime.title} ${episode.title ? `- ${episode.title}` : `- Episode ${episode.number}`}`"
-              ></div>
-            </a>
-            <div class="metadata-line">
-              <div class="title-anime">
-                <a href="#">
-                  {{episode.fansub}}
-                  <v-img
-                    maxWidth="18px"
-                    class="anime-flag"
-                    :lazy-src="getFlag(episode.subtitle)"
-                    :src="getFlag(episode.subtitle)"
-                  ></v-img>
-                </a>
+                <span class="episode-view">{{viewFormater(episode.views)}} views</span>
+                <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
               </div>
-              <span class="episode-view">{{viewFormater(episode.views)}} views</span>
-              <span class="episode-moment">{{episode.updated_at | moment("from", "now")}}</span>
             </div>
           </div>
-        </div>
-      </template>
-    </flickity>
+        </template>
+      </flickity>
+    </client-only>
     <v-layout align-end justify-end row>
       <v-flex class="text-right">
         <v-btn text @click="prev" :disabled="currentSlide < 1 ? true : false ">
@@ -68,7 +70,18 @@ export default {
         wrapAround: false
       },
       currentSlide: 0,
-      totalSlide: 0
+      totalSlide: 0,
+      onInit(flickity) {
+        var script = document.createElement("script");
+        script.src = "//code.jquery.com/jquery-2.2.4.min.js";
+        document.body.appendChild(script);
+        flickity.on("dragMove", function(event, pointer, moveVector) {
+          $(".flick-link").addClass("nopointer");
+        });
+        flickity.on("dragEnd", function(event, pointer) {
+          $(".flick-link").removeClass("nopointer");
+        });
+      }
     };
   },
   watch: {
@@ -77,11 +90,6 @@ export default {
     }
   },
   methods: {
-    goLink(path) {
-      this.$refs.flickity.on("staticClick", event => {
-        this.$router.push(path);
-      });
-    },
     next() {
       var flkty = this.$refs.flickity;
       var slide = flkty.slides();
